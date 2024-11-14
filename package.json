@@ -1,0 +1,39 @@
+{
+  "name": "registrations-next",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "NODE_ENV=development ts-node server/index.ts",
+    "build": "next build",
+    "start": "NODE_ENV=production node -r tsconfig-paths/register -r dotenv/config server/index.js"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.6",
+    "@mui/material": "^6.1.6",
+    "@mui/x-charts": "^7.22.2",
+    "@mui/x-data-grid": "^7.22.2",
+    "@mui/x-date-pickers": "^7.22.2",
+    "@mui/x-tree-view": "^7.22.1",
+    "@prisma/client": "^5.22.0",
+    "axios": "^1.7.7",
+    "dayjs": "^1.11.13",
+    "express": "^4.21.1",
+    "next": "^15.0.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}

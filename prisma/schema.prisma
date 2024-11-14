@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model registrations {
+  id                                                              Int       @id @default(autoincrement())
+  datum_prvni_registrace                                          DateTime? @db.Date
+  datum_prvni_registrace_v_cr                                     DateTime? @db.Date
+  cislo_typoveho_schvaleni                                        String?
+  homologace_es                                                   String?
+  druh_vozidla                                                    String?
+  druh_vozidla_2                                                  String?
+  kategorie_vozidla                                               String?
+  tovarni_znacka                                                  String?
+  typ                                                             String?
+  varianta                                                        String?
+  verze                                                           String?
+  vin                                                             String?
+  obchodni_oznaceni                                               String?
+  vyrobce_vozidla                                                 String?
+  vyrobce_motoru                                                  String?
+  typ_motoru                                                      String?
+  max_vykon                                                       String?
+  palivo                                                          String?
+  zdvihovy_objem                                                  Float?    @db.Real
+  predpis_ehk_osn                                                 String?
+  predpis_ehs_es_eu                                               String?
+  stupen_plneni_emisni_urovne                                     String?
+  korigovany_soucinitel_absorpce                                  Float?    @db.Real
+  co2                                                             Float?    @db.Real
+  co2_mesto                                                       Float?    @db.Real
+  co2_mimo_mesto                                                  Float?    @db.Real
+  spotreba_pri_rychlosti                                          String?
+  spotreba_mesto                                                  Float?    @db.Real
+  spotreba_mimo_mesto                                             Float?    @db.Real
+  spotreba_kombinovana                                            Float?    @db.Real
+  vyrobce_karoserie                                               String?
+  druh_karoserie                                                  String?
+  vyrobni_cislo_karoserie                                         String?
+  barva                                                           String?
+  pocet_mist_celkem                                               String?
+  pocet_mist_k_sezeni                                             String?
+  pocet_mist_k_stani                                              String?
+  delka                                                           Int?
+  sirka                                                           Int?
+  vyska                                                           Int?
+  rozchod_1                                                       Int?
+  rozchod_2                                                       Int?
+  rozchod_3                                                       Int?
+  rozchod_4                                                       Int?
+  rozvor                                                          Int?
+  provozni_hmotnost                                               Int?
+  nejvetsi_technicky_pripustna_hmotnost                           Int?
+  nejvetsi_technicky_povolena_hmotnost                            Int?
+  nejvetsi_technicky_pripustna_povolena_hmotnost_na_napravu_n1    String?
+  nejvetsi_technicky_pripustna_povolena_hmotnost_na_napravu_n2    String?
+  nejvetsi_technicky_pripustna_povolena_hmotnost_na_napravu_n3    String?
+  nejvetsi_technicky_pripustna_povolena_hmotnost_na_napravu_n4    String?
+  nejvetsi_povolena_hmotnost_na_napravu_n1                        String?
+  nejvetsi_povolena_hmotnost_na_napravu_n2                        String?
+  nejvetsi_povolena_hmotnost_na_napravu_n3                        String?
+  nejvetsi_povolena_hmotnost_na_napravu_n4                        String?
+  nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_brzden Int?
+  nejvetsi_povolena_hmotnost_pripojneho_vozidla_brzdeneho         Int?
+  nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_ne_brz Int?
+  nejvetsi_povolena_hmotnost_pripojneho_vozidla_ne_brzdeneho      Int?
+  nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy           Int?
+  nejvetsi_povolena_hmotnost_jizdni_soupravy                      Int?
+  spojovaci_zarizeni                                              String?
+  pocet_naprav                                                    String?
+  naprav_pohanenych                                               String?
+  pneumatiky_naprava_1                                            String?
+  pneumatiky_naprava_2                                            String?
+  pneumatiky_naprava_3                                            String?
+  pneumatiky_naprava_4                                            String?
+  kola_naprava_1                                                  String?
+  kola_naprava_2                                                  String?
+  kola_naprava_3                                                  String?
+  kola_naprava_4                                                  String?
+  vnejsi_hluk_vozidla_stojici                                     String?
+  vnejsi_hluk_vozidla_otacky                                      String?
+  vnejsi_hluk_vozidla_jizda                                       String?
+  nejvyssi_rychlost                                               Float?    @db.Real
+  pomer_vykon_hmotnost                                            String?
+  predpis_spotreba_paliva                                         String?
+  dalsi_zaznamy                                                   String?
+  cislo_tp                                                        String?
+  cislo_orv                                                       String?
+  zadrzeno_orv                                                    String?
+  druh_rz                                                         String?
+  zadrzena_rz_posledni                                            String?
+  zarazeni_vozidla                                                String?
+  pravidelna_technicka_prohlidka_do                               String?
+  evidencni_prohlidka_dne                                         String?
+  pcv                                                             String?
+  status                                                          String?
+  abs                                                             String?
+  airbag                                                          String?
+  asr                                                             String?
+  brzdy_nouzova                                                   String?
+  brzdy_odlehcovaci                                               String?
+  brzdy_parkovaci                                                 String?
+  brzdy_provozni                                                  String?
+  doplnkovy_text_na_tp                                            String?
+  hmotnosti_provozni_do                                           String?
+  hmotnosti_zatizeni_sz                                           String?
+  hmotnosti_zatizeni_sz_typ                                       String?
+  hydropohon                                                      String?
+  objem_cisterny                                                  String?
+  zatizeni_strechy                                                String?
+  cislo_motoru                                                    String?
+  nejvyssi_rychlost_omezeni                                       String?
+  ovladani_brzd_sz                                                String?
+  ovladani_brzd_sz_druh                                           String?
+  retarder                                                        String?
+  rok_vyroby                                                      String?
+  delka_do                                                        String?
+  lozna_delka                                                     String?
+  lozna_sirka                                                     String?
+  vyska_do                                                        String?
+  typ_kod                                                         String?
+  ucel_vozidla                                                    String?
+  rm_zaniku                                                       String?
+}
