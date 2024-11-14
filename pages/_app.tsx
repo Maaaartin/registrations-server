@@ -16,6 +16,7 @@ import {
   treeViewCustomizations,
 } from '../theme/customizations';
 import { SearchProvider } from '../context/search';
+import { StatsProvider } from '../context/stats';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -58,9 +59,11 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
               }}
             >
               <Header />
-              <SearchProvider>
-                <Component {...pageProps}></Component>
-              </SearchProvider>
+              <StatsProvider>
+                <SearchProvider>
+                  <Component {...pageProps}></Component>
+                </SearchProvider>
+              </StatsProvider>
             </Stack>
           </Box>
         </Box>

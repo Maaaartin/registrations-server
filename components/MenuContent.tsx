@@ -8,9 +8,11 @@ import Stack from '@mui/material/Stack';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import Search from '@mui/icons-material/Search';
 import Link from 'next/link';
+import { Home } from '@mui/icons-material';
 
 const mainListItems = [
-  { text: 'Statistiky', icon: <SettingsRoundedIcon />, route: '/' },
+  { text: 'Domů', icon: <Home />, route: '/' },
+  { text: 'Statistiky', icon: <SettingsRoundedIcon />, route: '/stats' },
   { text: 'Hledat', icon: <Search />, route: '/search' },
 ];
 
