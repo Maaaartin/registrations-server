@@ -10,7 +10,7 @@ type UseRequestRunProps<D> = {
   query?: URLSearchParams;
   config?: AxiosRequestConfig<D>;
 };
-type UseRequestResult<T, D> = (
+export type UseRequestHook<T, D> = (
   | {
       value: T;
       error: undefined;
@@ -30,7 +30,7 @@ type UseRequestResult<T, D> = (
 export default function useRequest<T, D = any>({
   url,
   decoder,
-}: UseRequestProps<T>): UseRequestResult<T, D> {
+}: UseRequestProps<T>): UseRequestHook<T, D> {
   const [value, setValue] = useState<T>();
   const [error, setError] = useState<AxiosError<T, D> | ZodError<T>>();
   const [loading, setLoading] = useState(true);
@@ -73,5 +73,5 @@ export default function useRequest<T, D = any>({
     return () => abortController.abort();
   }, [run]);
 
-  return { value, error, loading, run } as UseRequestResult<T, D>;
+  return { value, error, loading, run } as UseRequestHook<T, D>;
 }

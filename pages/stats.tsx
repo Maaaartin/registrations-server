@@ -4,10 +4,35 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Copyright from '../internals/components/Copyright';
 import StatCard from '../components/StatCard';
-import useRequest from '../hooks/useRequest';
+import useRequest, { UseRequestHook } from '../hooks/useRequest';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import zod from 'zod';
 import { useStatsContext } from '../context/stats';
+
+type UseStatsCartRenderingProps<T, D> = {
+  request: UseRequestHook<T, D>;
+  contextValue: T | void;
+};
+
+function useStatsCardRendering<T, D = any>({
+  request,
+  contextValue,
+}: UseStatsCartRenderingProps<T, D>) {
+  const isUndefined = typeof contextValue === 'undefined';
+  useEffect(() => {
+    isUndefined && request.run();
+  }, [isUndefined]);
+  if (!isUndefined) {
+    return contextValue;
+  }
+  if (request.loading) {
+    return <CircularProgress></CircularProgress>;
+  }
+  if (request.error) {
+    return request.error.message;
+  }
+  return request.value;
+}
 
 const CountCard = () => {
   const { count, setCount } = useStatsContext();
@@ -15,25 +40,14 @@ const CountCard = () => {
     url: '/api/count',
     decoder: zod.number(),
   });
+  const renderValue = useStatsCardRendering({ request, contextValue: count });
   useEffect(() => {
-    request.run();
-  }, []);
-  useEffect(() => {
-    if (request.value) {
+    if (typeof count === 'undefined' && request.value) {
       setCount(request.value);
     }
-  }, [request.value]);
-  if (typeof count === 'number') {
-    return <StatCard title="Vozidel v databázi" value={count} />;
-  }
-  const value = request.loading ? (
-    <CircularProgress></CircularProgress>
-  ) : request.error ? (
-    request.error.message
-  ) : (
-    request.value
-  );
-  return <StatCard title="Vozidel v databázi" value={value} />;
+  }, [count, request.value]);
+
+  return <StatCard title="Vozidel v databázi" value={renderValue} />;
 };
 
 function CardList<T>({
@@ -65,33 +79,25 @@ const BrandsCard = () => {
     url: '/api/top-brands',
     decoder: zod.string().array(),
   });
+  const renderValue = useStatsCardRendering({ request, contextValue: brands });
   useEffect(() => {
-    request.run();
-  }, []);
-  useEffect(() => {
-    if (request.value) {
+    if (!brands && request.value) {
       setBrands(request.value);
     }
   }, [request.value]);
   const renderPrimary = (value: string) => value;
-  if (brands) {
-    return (
-      <StatCard
-        title="Top značky"
-        value={
-          <CardList data={brands} renderPrimary={renderPrimary}></CardList>
-        }
-      />
-    );
-  }
-  const value = request.loading ? (
-    <CircularProgress></CircularProgress>
-  ) : request.error ? (
-    request.error.message
-  ) : (
-    <CardList data={request.value} renderPrimary={renderPrimary}></CardList>
+  return (
+    <StatCard
+      title="Top značky"
+      value={
+        Array.isArray(renderValue) ? (
+          <CardList data={renderValue} renderPrimary={renderPrimary}></CardList>
+        ) : (
+          renderValue
+        )
+      }
+    />
   );
-  return <StatCard title="Top značky" value={value} />;
 };
 
 const ColorsCard = () => {
@@ -105,9 +111,7 @@ const ColorsCard = () => {
       })
       .array(),
   });
-  useEffect(() => {
-    request.run();
-  }, []);
+  const renderValue = useStatsCardRendering({ request, contextValue: colors });
   useEffect(() => {
     if (request.value) {
       setColors(request.value);
@@ -117,32 +121,22 @@ const ColorsCard = () => {
     value.value;
   const renderSecondary = (value: { value: string; count: number }) =>
     value.count;
-  if (colors) {
-    return (
-      <StatCard
-        title="Top barvy"
-        value={
+  return (
+    <StatCard
+      title="Top barvy"
+      value={
+        Array.isArray(renderValue) ? (
           <CardList
-            data={colors}
+            data={renderValue}
             renderPrimary={renderPrimary}
             renderSecondary={renderSecondary}
           ></CardList>
-        }
-      />
-    );
-  }
-  const value = request.loading ? (
-    <CircularProgress></CircularProgress>
-  ) : request.error ? (
-    request.error.message
-  ) : (
-    <CardList
-      data={request.value}
-      renderPrimary={renderPrimary}
-      renderSecondary={renderSecondary}
-    ></CardList>
+        ) : (
+          renderValue
+        )
+      }
+    />
   );
-  return <StatCard title="Top barvy" value={value} />;
 };
 
 export default function Stats() {
