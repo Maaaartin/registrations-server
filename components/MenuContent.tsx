@@ -9,6 +9,7 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import Search from '@mui/icons-material/Search';
 import Link from 'next/link';
 import { Home } from '@mui/icons-material';
+import { useRouter } from 'next/router';
 
 const mainListItems = [
   { text: 'Domů', icon: <Home />, route: '/' },
@@ -17,13 +18,14 @@ const mainListItems = [
 ];
 
 export default function MenuContent() {
+  const router = useRouter();
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
         {mainListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
             <Link href={item.route}>
-              <ListItemButton selected={index === 0}>
+              <ListItemButton selected={item.route === router.pathname}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItemButton>
