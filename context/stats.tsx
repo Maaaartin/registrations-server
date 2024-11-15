@@ -8,15 +8,27 @@ const StatsContext = createContext<{
   setBrands: (brands: string[]) => void;
   colors: ColorData | void;
   setColors: (colors: ColorData) => void;
+  co2: number | void;
+  setCo2: (co2: number) => void;
 }>(null!);
 
 export const StatsProvider = ({ children }: PropsWithChildren) => {
   const [count, setCount] = useState<number>();
   const [brands, setBrands] = useState<string[]>();
   const [colors, setColors] = useState<ColorData>();
+  const [co2, setCo2] = useState<number>();
   return (
     <StatsContext.Provider
-      value={{ count, setCount, brands, setBrands, colors, setColors }}
+      value={{
+        count,
+        setCount,
+        brands,
+        setBrands,
+        colors,
+        setColors,
+        co2,
+        setCo2,
+      }}
     >
       {children}
     </StatsContext.Provider>

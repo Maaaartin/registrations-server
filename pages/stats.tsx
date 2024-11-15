@@ -139,6 +139,22 @@ const ColorsCard = () => {
   );
 };
 
+const Co2Card = () => {
+  const { co2, setCo2 } = useStatsContext();
+  const request = useRequest({
+    url: '/api/avg-co2',
+    decoder: zod.number(),
+  });
+  const renderValue = useStatsCardRendering({ request, contextValue: co2 });
+  useEffect(() => {
+    if (typeof co2 === 'undefined' && request.value) {
+      setCo2(request.value);
+    }
+  }, [co2, request.value]);
+
+  return <StatCard title="Průměrné emise CO2" value={renderValue} />;
+};
+
 export default function Stats() {
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
@@ -159,6 +175,9 @@ export default function Stats() {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <ColorsCard></ColorsCard>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Co2Card></Co2Card>
         </Grid>
       </Grid>
       <Copyright sx={{ my: 4 }} />
