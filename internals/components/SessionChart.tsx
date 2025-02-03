@@ -6,6 +6,8 @@ import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
+import zod from 'zod';
+import useRequest from '../../hooks/useRequest';
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
   return (
@@ -32,10 +34,24 @@ function getDaysInMonth(month: number, year: number) {
   }
   return days;
 }
+const decoder = zod.array(
+  zod.object({
+    year: zod.number(),
+    count: zod.number(),
+  })
+);
 
 export default function SessionsChart() {
   const theme = useTheme();
   const data = getDaysInMonth(4, 2024);
+  const request = useRequest({
+    url: '/api/registrations-per-year',
+    decoder,
+  });
+  React.useEffect(() => {
+    request.run();
+  }, []);
+  console.log(request.value);
 
   const colorPalette = [
     theme.palette.primary.light,

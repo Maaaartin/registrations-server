@@ -3,7 +3,12 @@ import { prisma } from '../../prisma';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<number>
+  res: NextApiResponse<
+    {
+      year: number;
+      count: number;
+    }[]
+  >
 ) {
   const result = await prisma.$queryRaw<{ year: number; count: bigint }[]>`
     SELECT EXTRACT(YEAR FROM "datum_1_registrace")::INTEGER AS year, COUNT(*) AS count
@@ -17,5 +22,5 @@ export default async function handler(
     year: row.year,
     count: Number(row.count),
   }));
-  res.send(formattedResult as any);
+  res.send(formattedResult);
 }
