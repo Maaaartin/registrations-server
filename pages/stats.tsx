@@ -8,6 +8,7 @@ import useRequest, { UseRequestHook } from '../hooks/useRequest';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import zod from 'zod';
 import { useStatsContext } from '../context/stats';
+import SessionsChart from '../internals/components/SessionChart';
 
 type UseStatsCartRenderingProps<T, D> = {
   request: UseRequestHook<T, D>;
@@ -143,7 +144,7 @@ const Co2Card = () => {
   const { co2, setCo2 } = useStatsContext();
   const request = useRequest({
     url: '/api/avg-co2',
-    decoder: zod.number(),
+    decoder: zod.nullable(zod.number()),
   });
   const renderValue = useStatsCardRendering({ request, contextValue: co2 });
   useEffect(() => {
@@ -179,6 +180,9 @@ export default function Stats() {
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <Co2Card></Co2Card>
         </Grid>
+      </Grid>
+      <Grid size={{ xs: 12, md: 6 }}>
+        <SessionsChart />
       </Grid>
       <Copyright sx={{ my: 4 }} />
     </Box>

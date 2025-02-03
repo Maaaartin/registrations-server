@@ -17,6 +17,8 @@ import {
 } from '../theme/customizations';
 import { SearchProvider } from '../context/search';
 import { StatsProvider } from '../context/stats';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -37,36 +39,38 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
         />
       </Head>
       <AppTheme themeComponents={xThemeComponents}>
-        <CssBaseline enableColorScheme />
-        <Box sx={{ display: 'flex' }}>
-          <SideMenu />
-          <AppNavbar />
-          <Box
-            component="main"
-            sx={(theme) => ({
-              flexGrow: 1,
-              backgroundColor: alpha(theme.palette.background.default, 1),
-              overflow: 'auto',
-            })}
-          >
-            <Stack
-              spacing={2}
-              sx={{
-                alignItems: 'center',
-                mx: 3,
-                pb: 5,
-                mt: { xs: 8, md: 0 },
-              }}
+        <LocalizationProvider dateAdapter={AdapterLuxon}>
+          <CssBaseline enableColorScheme />
+          <Box sx={{ display: 'flex' }}>
+            <SideMenu />
+            <AppNavbar />
+            <Box
+              component="main"
+              sx={(theme) => ({
+                flexGrow: 1,
+                backgroundColor: alpha(theme.palette.background.default, 1),
+                overflow: 'auto',
+              })}
             >
-              <Header />
-              <StatsProvider>
-                <SearchProvider>
-                  <Component {...pageProps}></Component>
-                </SearchProvider>
-              </StatsProvider>
-            </Stack>
+              <Stack
+                spacing={2}
+                sx={{
+                  alignItems: 'center',
+                  mx: 3,
+                  pb: 5,
+                  mt: { xs: 8, md: 0 },
+                }}
+              >
+                <Header />
+                <StatsProvider>
+                  <SearchProvider>
+                    <Component {...pageProps}></Component>
+                  </SearchProvider>
+                </StatsProvider>
+              </Stack>
+            </Box>
           </Box>
-        </Box>
+        </LocalizationProvider>
       </AppTheme>
     </>
   );

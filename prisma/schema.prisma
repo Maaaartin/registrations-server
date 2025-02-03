@@ -9,12 +9,12 @@ datasource db {
 
 model registrations {
   id                                                              Int       @id @default(autoincrement())
-  datum_prvni_registrace                                          DateTime? @db.Date
-  datum_prvni_registrace_v_cr                                     DateTime? @db.Date
-  cislo_typoveho_schvaleni                                        String?
-  homologace_es                                                   String?
+  datum_1_registrace                                              DateTime? @db.Date
+  datum_1_registrace_v_cr                                         DateTime? @db.Date
+  ztp                                                             String?
+  es_eu                                                           String?   @map("es/eu")
   druh_vozidla                                                    String?
-  druh_vozidla_2                                                  String?
+  druh_vozidla_2_radek                                            String?
   kategorie_vozidla                                               String?
   tovarni_znacka                                                  String?
   typ                                                             String?
@@ -25,105 +25,104 @@ model registrations {
   vyrobce_vozidla                                                 String?
   vyrobce_motoru                                                  String?
   typ_motoru                                                      String?
-  max_vykon                                                       String?
+  max_vykon                                                       Float?    @db.Real
+  max_vykon_otacky                                                Float?    @db.Real
   palivo                                                          String?
   zdvihovy_objem                                                  Float?    @db.Real
-  predpis_ehk_osn                                                 String?
-  predpis_ehs_es_eu                                               String?
-  stupen_plneni_emisni_urovne                                     String?
+  plne_elektricke_vozidlo                                         Boolean?
+  hybridni_vozidlo                                                Boolean?
+  trida_hybridniho_vozidla                                        String?
+  emisni_limit                                                    String?
+  stupe__plneni_emisni_urovne                                     String?   @map("stupeň_plneni_emisni_urovne")
   korigovany_soucinitel_absorpce                                  Float?    @db.Real
   co2                                                             Float?    @db.Real
   co2_mesto                                                       Float?    @db.Real
   co2_mimo_mesto                                                  Float?    @db.Real
-  spotreba_pri_rychlosti                                          String?
+  specificke_co2                                                  Float?    @db.Real
+  snizeni_emisi_nedc                                              Float?    @db.Real
+  snizeni_emisi_wltp                                              Float?    @db.Real
   spotreba_mesto                                                  Float?    @db.Real
   spotreba_mimo_mesto                                             Float?    @db.Real
   spotreba_kombinovana                                            Float?    @db.Real
+  spotreba_pri_rychlosti                                          String?
+  spotreba_el_mobil                                               Int?
+  dojezd_zr                                                       Int?
   vyrobce_karoserie                                               String?
   druh_karoserie                                                  String?
   vyrobni_cislo_karoserie                                         String?
   barva                                                           String?
-  pocet_mist_celkem                                               String?
-  pocet_mist_k_sezeni                                             String?
-  pocet_mist_k_stani                                              String?
+  barva_doplnkova                                                 String?
+  pocet_mist_celkem                                               Int?
+  pocet_mist_k_sezeni                                             Int?
+  pocet_mist_k_stani                                              Int?
   delka                                                           Int?
   sirka                                                           Int?
   vyska                                                           Int?
-  rozchod_1                                                       Int?
-  rozchod_2                                                       Int?
-  rozchod_3                                                       Int?
-  rozchod_4                                                       Int?
   rozvor                                                          Int?
+  rozchod                                                         Int?
   provozni_hmotnost                                               Int?
   nejvetsi_technicky_pripustna_hmotnost                           Int?
-  nejvetsi_technicky_povolena_hmotnost                            Int?
-  nejvetsi_technicky_pripustna_povolena_hmotnost_na_napravu_n1    String?
-  nejvetsi_technicky_pripustna_povolena_hmotnost_na_napravu_n2    String?
-  nejvetsi_technicky_pripustna_povolena_hmotnost_na_napravu_n3    String?
-  nejvetsi_technicky_pripustna_povolena_hmotnost_na_napravu_n4    String?
-  nejvetsi_povolena_hmotnost_na_napravu_n1                        String?
-  nejvetsi_povolena_hmotnost_na_napravu_n2                        String?
-  nejvetsi_povolena_hmotnost_na_napravu_n3                        String?
-  nejvetsi_povolena_hmotnost_na_napravu_n4                        String?
+  nejvetsi_povolena_hmotnost                                      Int?
+  nejvetsi_technicky_pripustna_hmotnost_na_napravu                String?
+  nejvetsi_povolena_hmotnost_na_napravu                           String?
   nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_brzden Int?
   nejvetsi_povolena_hmotnost_pripojneho_vozidla_brzdeneho         Int?
   nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_ne_brz Int?
   nejvetsi_povolena_hmotnost_pripojneho_vozidla_ne_brzdeneho      Int?
   nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy           Int?
   nejvetsi_povolena_hmotnost_jizdni_soupravy                      Int?
-  spojovaci_zarizeni                                              String?
-  pocet_naprav                                                    String?
-  naprav_pohanenych                                               String?
-  pneumatiky_naprava_1                                            String?
-  pneumatiky_naprava_2                                            String?
-  pneumatiky_naprava_3                                            String?
-  pneumatiky_naprava_4                                            String?
-  kola_naprava_1                                                  String?
-  kola_naprava_2                                                  String?
-  kola_naprava_3                                                  String?
-  kola_naprava_4                                                  String?
-  vnejsi_hluk_vozidla_stojici                                     String?
-  vnejsi_hluk_vozidla_otacky                                      String?
-  vnejsi_hluk_vozidla_jizda                                       String?
-  nejvyssi_rychlost                                               Float?    @db.Real
-  pomer_vykon_hmotnost                                            String?
+  hmotnosti_vozidla_pri_testu_wltp                                String?
   predpis_spotreba_paliva                                         String?
+  prumerna_hodnota_uzitecneho_zatizeni                            String?
+  spojovaci_zarizeni                                              String?
+  pocet_naprav                                                    Int?
+  naprav_pohanenych                                               String?
+  kola_a_pneumatiky_naprava_1                                     String?
+  kola_a_pneumatiky_naprava_2                                     String?
+  kola_a_pneumatiky_naprava_3                                     String?
+  kola_a_pneumatiky_naprava_4                                     String?
+  vnejsi_hluk_vozidla_stojici                                     Float?    @db.Real
+  vnejsi_hluk_vozidla_otacky                                      Float?    @db.Real
+  vnejsi_hluk_vozidla_jizda                                       Float?    @db.Real
+  nejvyssi_rychlost                                               Float?    @db.Real
+  pomer_vykon_hmotnost                                            Float?    @db.Real
+  inovativni_technologie                                          String?
+  stupe__dokonceni                                                String?   @map("stupeň_dokonceni")
+  faktor_odchylky_de                                              Float?    @db.Real
+  faktor_verifikace_vf                                            Int?
+  ucel_vozidla                                                    String?
   dalsi_zaznamy                                                   String?
+  alternativni_provedeni                                          String?
   cislo_tp                                                        String?
   cislo_orv                                                       String?
-  zadrzeno_orv                                                    String?
   druh_rz                                                         String?
-  zadrzena_rz_posledni                                            String?
   zarazeni_vozidla                                                String?
-  pravidelna_technicka_prohlidka_do                               String?
-  evidencni_prohlidka_dne                                         String?
-  pcv                                                             String?
   status                                                          String?
-  abs                                                             String?
+  pcv                                                             Int?
+  abs                                                             Boolean?
   airbag                                                          String?
-  asr                                                             String?
-  brzdy_nouzova                                                   String?
-  brzdy_odlehcovaci                                               String?
-  brzdy_parkovaci                                                 String?
-  brzdy_provozni                                                  String?
-  doplnkovy_text_na_tp                                            String?
-  hmotnosti_provozni_do                                           String?
-  hmotnosti_zatizeni_sz                                           String?
+  asr                                                             Boolean?
+  brzdy_nouzova                                                   Boolean?
+  brzdy_odlehcovaci                                               Boolean?
+  brzdy_parkovaci                                                 Boolean?
+  brzdy_provozni                                                  Boolean?
+  dopl_kovy_text_na_tp                                            String?   @map("doplňkovy_text_na_tp")
+  hmotnosti_provozni_do                                           Int?
+  hmotnosti_zatizeni_sz                                           Int?
   hmotnosti_zatizeni_sz_typ                                       String?
-  hydropohon                                                      String?
-  objem_cisterny                                                  String?
-  zatizeni_strechy                                                String?
+  hydropohon                                                      Boolean?
+  objem_cisterny                                                  Float?    @db.Real
+  zatizeni_strechy                                                Int?
   cislo_motoru                                                    String?
-  nejvyssi_rychlost_omezeni                                       String?
+  nejvyssi_rychlost_omezeni                                       Int?
   ovladani_brzd_sz                                                String?
   ovladani_brzd_sz_druh                                           String?
-  retarder                                                        String?
-  rok_vyroby                                                      String?
-  delka_do                                                        String?
-  lozna_delka                                                     String?
-  lozna_sirka                                                     String?
-  vyska_do                                                        String?
+  retarder                                                        Boolean?
+  rok_vyroby                                                      Int?
+  delka_do                                                        Int?
+  lozna_delka                                                     Int?
+  lozna_sirka                                                     Int?
+  vyska_do                                                        Int?
   typ_kod                                                         String?
-  ucel_vozidla                                                    String?
   rm_zaniku                                                       String?
 }
