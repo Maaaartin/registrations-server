@@ -43,21 +43,28 @@ const decoder = zod.array(
 
 export default function SessionsChart() {
   const theme = useTheme();
-  const data = getDaysInMonth(4, 2024);
   const request = useRequest({
     url: '/api/registrations-per-year',
     decoder,
   });
+
   React.useEffect(() => {
     request.run();
   }, []);
-  console.log(request.value);
 
   const colorPalette = [
     theme.palette.primary.light,
     theme.palette.primary.main,
     theme.palette.primary.dark,
   ];
+  if (request.loading) {
+    return 'loading';
+  }
+  if (request.error) {
+    return 'error';
+  }
+  const years = request.value.map(({ year }) => year);
+  const values = request.value.map(({ count }) => count);
 
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
@@ -88,7 +95,7 @@ export default function SessionsChart() {
           xAxis={[
             {
               scaleType: 'point',
-              data,
+              data: years,
               tickInterval: (index, i) => (i + 1) % 5 === 0,
             },
           ]}
@@ -101,39 +108,7 @@ export default function SessionsChart() {
               stack: 'total',
               area: true,
               stackOrder: 'ascending',
-              data: [
-                300, 900, 600, 1200, 1500, 1800, 2400, 2100, 2700, 3000, 1800,
-                3300, 3600, 3900, 4200, 4500, 3900, 4800, 5100, 5400, 4800,
-                5700, 6000, 6300, 6600, 6900, 7200, 7500, 7800, 8100,
-              ],
-            },
-            {
-              id: 'referral',
-              label: 'Referral',
-              showMark: false,
-              curve: 'linear',
-              stack: 'total',
-              area: true,
-              stackOrder: 'ascending',
-              data: [
-                500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300,
-                3200, 3500, 3800, 4100, 4400, 2900, 4700, 5000, 5300, 5600,
-                5900, 6200, 6500, 5600, 6800, 7100, 7400, 7700, 8000,
-              ],
-            },
-            {
-              id: 'organic',
-              label: 'Organic',
-              showMark: false,
-              curve: 'linear',
-              stack: 'total',
-              stackOrder: 'ascending',
-              data: [
-                1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800,
-                2500, 3000, 3400, 3700, 3200, 3900, 4100, 3500, 4300, 4500,
-                4000, 4700, 5000, 5200, 4800, 5400, 5600, 5900, 6100, 6300,
-              ],
-              area: true,
+              data: values,
             },
           ]}
           height={250}
@@ -157,8 +132,6 @@ export default function SessionsChart() {
           }}
         >
           <AreaGradient color={theme.palette.primary.dark} id="organic" />
-          <AreaGradient color={theme.palette.primary.main} id="referral" />
-          <AreaGradient color={theme.palette.primary.light} id="direct" />
         </LineChart>
       </CardContent>
     </Card>
