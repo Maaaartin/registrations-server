@@ -1,26 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '../../prisma';
+import { registrationCountsByYear } from '@prisma/client/sql';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<
-    {
-      year: number;
-      count: number;
-    }[]
-  >
+  res: NextApiResponse<{ year: number; count: number }[]>
 ) {
-  const result = await prisma.$queryRaw<{ year: number; count: bigint }[]>`
-    SELECT EXTRACT(YEAR FROM "datum_1_registrace")::INTEGER AS year, COUNT(*) AS count
-    FROM "registrations"
-    WHERE "datum_1_registrace" IS NOT NULL
-    GROUP BY year
-    ORDER BY year ASC;
-  `;
-
-  const formattedResult = result.map((row) => ({
-    year: row.year,
-    count: Number(row.count),
-  }));
-  res.send(formattedResult);
+  const result = await prisma.$queryRawTyped(registrationCountsByYear());
+  res.send(
+    result.map((row) => ({
+      year: Number(row.year),
+      count: Number(row.count),
+    }))
+  );
 }

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
@@ -7,6 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model registrations {
   id                                                              Int       @id @default(autoincrement())
   datum_1_registrace                                              DateTime? @db.Date
@@ -125,4 +127,9 @@ model registrations {
   vyska_do                                                        Int?
   typ_kod                                                         String?
   rm_zaniku                                                       String?
+
+  @@index([datum_1_registrace], map: "idx_registrations_year")
+  @@index([barva])
+  @@index([id])
+  @@index([tovarni_znacka])
 }
