@@ -7,7 +7,6 @@ import StatCard from '../components/StatCard';
 import useRequest, { UseRequestHook } from '../hooks/useRequest';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import zod from 'zod';
-import { useStatsContext } from '../context/stats';
 import SessionsChart from '../internals/components/SessionChart';
 
 type UseStatsCartRenderingProps<T, D> = {
@@ -15,38 +14,15 @@ type UseStatsCartRenderingProps<T, D> = {
   contextValue: T | void;
 };
 
-function useStatsCardRendering<T, D = any>({
-  request,
-  contextValue,
-}: UseStatsCartRenderingProps<T, D>) {
-  const isUndefined = typeof contextValue === 'undefined';
-  useEffect(() => {
-    isUndefined && request.run();
-  }, [isUndefined]);
-  if (!isUndefined) {
-    return contextValue;
-  }
-  if (request.loading) {
-    return <CircularProgress></CircularProgress>;
-  }
-  if (request.error) {
-    return request.error.message;
-  }
-  return request.value;
-}
-
 const CountCard = () => {
-  const { count, setCount } = useStatsContext();
   const request = useRequest({
     url: '/api/count',
     decoder: zod.number(),
   });
-  const renderValue = useStatsCardRendering({ request, contextValue: count });
   useEffect(() => {
-    if (typeof count === 'undefined' && request.value) {
-      setCount(request.value);
-    }
-  }, [count, request.value]);
+    request.run();
+  }, []);
+  const renderValue = request.value;
 
   return <StatCard title="Vozidel v databázi" value={renderValue} />;
 };
@@ -75,17 +51,14 @@ function CardList<T>({
 }
 
 const BrandsCard = () => {
-  const { brands, setBrands } = useStatsContext();
   const request = useRequest({
     url: '/api/top-brands',
     decoder: zod.string().array(),
   });
-  const renderValue = useStatsCardRendering({ request, contextValue: brands });
   useEffect(() => {
-    if (!brands && request.value) {
-      setBrands(request.value);
-    }
-  }, [request.value]);
+    request.run();
+  }, []);
+  const renderValue = request.value;
   const renderPrimary = (value: string) => value;
   return (
     <StatCard
@@ -102,7 +75,6 @@ const BrandsCard = () => {
 };
 
 const ColorsCard = () => {
-  const { colors, setColors } = useStatsContext();
   const request = useRequest({
     url: '/api/top-colors',
     decoder: zod
@@ -112,12 +84,10 @@ const ColorsCard = () => {
       })
       .array(),
   });
-  const renderValue = useStatsCardRendering({ request, contextValue: colors });
   useEffect(() => {
-    if (request.value) {
-      setColors(request.value);
-    }
-  }, [request.value]);
+    request.run();
+  }, []);
+  const renderValue = request.value;
   const renderPrimary = (value: { value: string; count: number }) =>
     value.value;
   const renderSecondary = (value: { value: string; count: number }) =>
@@ -140,22 +110,6 @@ const ColorsCard = () => {
   );
 };
 
-const Co2Card = () => {
-  const { co2, setCo2 } = useStatsContext();
-  const request = useRequest({
-    url: '/api/avg-co2',
-    decoder: zod.nullable(zod.number()),
-  });
-  const renderValue = useStatsCardRendering({ request, contextValue: co2 });
-  useEffect(() => {
-    if (typeof co2 === 'undefined' && request.value) {
-      setCo2(request.value);
-    }
-  }, [co2, request.value]);
-
-  return <StatCard title="Průměrné emise CO2" value={renderValue} />;
-};
-
 export default function Stats() {
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
@@ -176,9 +130,6 @@ export default function Stats() {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <ColorsCard></ColorsCard>
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <Co2Card></Co2Card>
         </Grid>
       </Grid>
       <Grid size={{ xs: 12, md: 6 }}>

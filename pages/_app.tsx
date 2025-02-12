@@ -15,8 +15,6 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from '../theme/customizations';
-import { SearchProvider } from '../context/search';
-import { StatsProvider } from '../context/stats';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
@@ -62,11 +60,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
                 }}
               >
                 <Header />
-                <StatsProvider>
-                  <SearchProvider>
-                    <Component {...pageProps}></Component>
-                  </SearchProvider>
-                </StatsProvider>
+                <Component {...pageProps}></Component>
               </Stack>
             </Box>
           </Box>
