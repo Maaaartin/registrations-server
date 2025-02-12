@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "postinstall": "npx prisma generate --sql",
     "dev": "NODE_ENV=development ts-node server/index.ts",
     "build": "next build",
     "start": "NODE_ENV=production node -r tsconfig-paths/register -r dotenv/config server/index.js"
