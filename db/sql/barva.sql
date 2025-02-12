@@ -1,3 +1,14 @@
-DROP INDEX IF EXISTS registrations_barva_idx;
+DROP MATERIALIZED VIEW IF EXISTS registration_top_colors;
 
-CREATE INDEX IF NOT EXISTS registrations_barva_idx ON registrations (barva);
+CREATE MATERIALIZED VIEW registration_top_colors AS
+SELECT
+    barva,
+    COUNT(barva)
+FROM
+    registrations
+WHERE
+    barva IS NOT NULL
+GROUP BY
+    barva
+ORDER BY
+    COUNT desc;

@@ -1,3 +1,7 @@
-DROP INDEX IF EXISTS registrations_id_idx;
+DROP MATERIALIZED VIEW IF EXISTS registration_ids;
 
-CREATE INDEX IF NOT EXISTS registrations_id_idx ON registrations (id);
+CREATE MATERIALIZED VIEW registration_ids AS
+SELECT
+    COUNT(id)
+FROM
+    registrations;
