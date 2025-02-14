@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 export default function Search({ error, registration }: any) {
   const router = useRouter();
   const [vin, setVin] = useState('');
+  const [brand, setBrand] = useState('');
   return (
     <form
       onSubmit={(e) => {
@@ -21,6 +22,16 @@ export default function Search({ error, registration }: any) {
         value={vin}
         onChange={(e) => {
           setVin(e.target.value);
+        }}
+      ></TextField>
+      <TextField
+        value={brand}
+        onChange={(e) => {
+          const query = new URLSearchParams({ brand: e.target.value });
+          fetch('/api/search-brands?' + query.toString()).then((result) => {
+            console.log(result);
+          });
+          setBrand(e.target.value);
         }}
       ></TextField>
     </form>

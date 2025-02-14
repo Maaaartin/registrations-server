@@ -7,12 +7,13 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
 } from '@mui/material';
 
 type ConvertDatesToString<T> = {
-  [K in keyof T]: T[K] extends Date | null ? string | null : T[K];
+  [K in keyof T]: T[K] extends Date | null
+    ? { type: 'Date'; value: string } | null
+    : T[K];
 };
 
 type SerializableRegistration = ConvertDatesToString<registrations>;
@@ -22,7 +23,12 @@ function serializeRegistration(
 ): SerializableRegistration {
   return Object.fromEntries(
     Object.entries(vehicle).map(([key, value]) => {
-      return [key, value instanceof Date ? value.toISOString() : value];
+      return [
+        key,
+        value instanceof Date
+          ? { type: 'Date', value: value.toISOString() }
+          : value,
+      ];
     })
   ) as SerializableRegistration;
 }
@@ -33,7 +39,7 @@ export default function Page({ vehicle }: Props) {
   if (!vehicle) return 'not found';
   return (
     <div>
-      <h1>Server Rendered Page</h1>
+      <h1>VIN {vehicle.vin}</h1>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableBody>
