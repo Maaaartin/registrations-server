@@ -6,11 +6,12 @@ import useDebounce from '../../hooks/useDebounce';
 import { prisma } from '../../prisma';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useRouter } from 'next/navigation';
+import BrandAutocomplete from '../../internals/components/BrandAutocomplete';
 
 export default function Search({ error, registration }: any) {
   const router = useRouter();
   const [vin, setVin] = useState('');
-  const [brand, setBrand] = useState('');
+
   return (
     <form
       onSubmit={(e) => {
@@ -24,16 +25,7 @@ export default function Search({ error, registration }: any) {
           setVin(e.target.value);
         }}
       ></TextField>
-      <TextField
-        value={brand}
-        onChange={(e) => {
-          const query = new URLSearchParams({ brand: e.target.value });
-          fetch('/api/search-brands?' + query.toString()).then((result) => {
-            console.log(result);
-          });
-          setBrand(e.target.value);
-        }}
-      ></TextField>
+      <BrandAutocomplete />
     </form>
   );
 }
