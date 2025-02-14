@@ -1,6 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { prisma } from '../../prisma';
 import { registrations } from '@prisma/client';
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 
 type ConvertDatesToString<T> = {
   [K in keyof T]: T[K] extends Date | null ? string | null : T[K];
@@ -22,11 +31,28 @@ type Props = { vehicle: SerializableRegistration | null };
 
 export default function Page({ vehicle }: Props) {
   if (!vehicle) return 'not found';
-  const { vin } = vehicle;
   return (
     <div>
       <h1>Server Rendered Page</h1>
-      {vin ? <p>ID: {vin}</p> : <p>No ID provided</p>}
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableBody>
+            {Object.entries(vehicle).map(([key, value]) => (
+              <TableRow
+                key={key}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {key}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {String(value)}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }
