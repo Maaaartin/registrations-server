@@ -2,7 +2,23 @@ import { GetServerSideProps } from 'next';
 import { prisma } from '../../prisma';
 import { registrations } from '@prisma/client';
 
-type Props = { vehicle: registrations | null };
+type ConvertDatesToString<T> = {
+  [K in keyof T]: T[K] extends Date | null ? string | null : T[K];
+};
+
+type SerializableRegistration = ConvertDatesToString<registrations>;
+
+function serializeRegistration(
+  vehicle: registrations
+): SerializableRegistration {
+  return Object.fromEntries(
+    Object.entries(vehicle).map(([key, value]) => {
+      return [key, value instanceof Date ? value.toISOString() : value];
+    })
+  ) as SerializableRegistration;
+}
+
+type Props = { vehicle: SerializableRegistration | null };
 
 export default function Page({ vehicle }: Props) {
   if (!vehicle) return 'not found';
@@ -23,5 +39,5 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     where: { vin },
   });
 
-  return { props: { vehicle: JSON.parse(JSON.stringify(result)) } };
+  return { props: { vehicle: result ? serializeRegistration(result) : null } };
 };
