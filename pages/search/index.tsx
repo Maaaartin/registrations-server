@@ -5,17 +5,25 @@ import { GetServerSideProps } from 'next';
 import useDebounce from '../../hooks/useDebounce';
 import { prisma } from '../../prisma';
 import { DatePicker } from '@mui/x-date-pickers';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import BrandAutocomplete from '../../internals/components/BrandAutocomplete';
 import { useForm } from 'react-hook-form';
 import useRequest from '../../hooks/useRequest';
+import { registrations } from '@prisma/client';
+import {
+  SerializableRegistration,
+  serializeRegistration,
+} from '../../util/registrations';
 
-export default function Search() {
+type Props = {
+  vehicles: SerializableRegistration[] | null;
+  currentPage: number | null;
+};
+
+export default function Search({ vehicles, currentPage }: Props) {
   const router = useRouter();
   const [vin, setVin] = useState('');
   const formState = useForm({ defaultValues: { brand: '' } });
-  const request = useRequest({ url: '/api/find-vehicles' });
-
   return (
     <div>
       <form
@@ -34,7 +42,14 @@ export default function Search() {
       <form
         onSubmit={(event) => {
           formState.handleSubmit(({ brand }) => {
-            request.run({ query: new URLSearchParams({ brand, page: '1' }) });
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { brand, page: 1 },
+              },
+              undefined,
+              { scroll: false }
+            );
           })(event);
         }}
       >
@@ -47,3 +62,32 @@ export default function Search() {
     </div>
   );
 }
+
+const pageSize = 10;
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
+  const { page, brand } = context.query;
+  if (!page || !brand) {
+    return {
+      props: { vehicles: null, currentPage: null },
+    };
+  }
+
+  // Convert query params to numbers (with defaults)
+  const currentPage = parseInt(page as string, 10) || 1;
+  const brandStr = [brand].flat()[0] || '';
+
+  const vehicles = await prisma.registrations.findMany({
+    skip: (currentPage - 1) * pageSize,
+    take: pageSize,
+    where: { tovarni_znacka: brandStr },
+  });
+
+  return {
+    props: {
+      vehicles: vehicles.map(serializeRegistration),
+      currentPage,
+    },
+  };
+};

@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import { prisma } from '../../prisma';
-import { registrations } from '@prisma/client';
 import {
   Paper,
   Table,
@@ -9,29 +8,10 @@ import {
   TableContainer,
   TableRow,
 } from '@mui/material';
-
-type ConvertDatesToString<T> = {
-  [K in keyof T]: T[K] extends Date | null
-    ? { type: 'Date'; value: string } | null
-    : T[K];
-};
-
-type SerializableRegistration = ConvertDatesToString<registrations>;
-
-function serializeRegistration(
-  vehicle: registrations
-): SerializableRegistration {
-  return Object.fromEntries(
-    Object.entries(vehicle).map(([key, value]) => {
-      return [
-        key,
-        value instanceof Date
-          ? { type: 'Date', value: value.toISOString() }
-          : value,
-      ];
-    })
-  ) as SerializableRegistration;
-}
+import {
+  SerializableRegistration,
+  serializeRegistration,
+} from '../../util/registrations';
 
 type Props = { vehicle: SerializableRegistration | null };
 
