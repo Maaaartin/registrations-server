@@ -8,11 +8,7 @@ import useRequest, { UseRequestHook } from '../hooks/useRequest';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import zod from 'zod';
 import SessionsChart from '../internals/components/SessionChart';
-
-type UseStatsCartRenderingProps<T, D> = {
-  request: UseRequestHook<T, D>;
-  contextValue: T | void;
-};
+import { useCacheContext } from '../context/cache';
 
 const CountCard = () => {
   const request = useRequest({
@@ -51,14 +47,22 @@ function CardList<T>({
 }
 
 const BrandsCard = () => {
+  const [topBrands, setTopBrands] = useCacheContext().topBrands;
   const request = useRequest({
     url: '/api/top-brands',
     decoder: zod.string().array(),
   });
   useEffect(() => {
-    request.run();
-  }, []);
-  const renderValue = request.value;
+    if (!topBrands.length) {
+      request.run();
+    }
+  }, [topBrands, request.run]);
+  useEffect(() => {
+    if (request.value) {
+      setTopBrands(request.value);
+    }
+  }, [request.value, setTopBrands]);
+  const renderValue = topBrands;
   const renderPrimary = (value: string) => value;
   return (
     <StatCard

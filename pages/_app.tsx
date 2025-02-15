@@ -17,6 +17,7 @@ import {
 } from '../theme/customizations';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { CacheContextProvider } from '../context/cache';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -60,7 +61,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
                 }}
               >
                 <Header />
-                <Component {...pageProps}></Component>
+                <CacheContextProvider>
+                  <Component {...pageProps}></Component>
+                </CacheContextProvider>
               </Stack>
             </Box>
           </Box>

@@ -3,11 +3,16 @@ import zod, { ZodError } from 'zod';
 import React, { useEffect, useState } from 'react';
 import useRequest from '../../hooks/useRequest';
 import axios from 'axios';
+import { useCacheContext } from '../../context/cache';
+import useDebounce from '../../hooks/useDebounce';
 
 export default function BrandAutocomplete() {
+  const cache = useCacheContext();
+  const [topBrands, setTopBrands] = cache.topBrands;
+  const [brandSearch, setBrandSearch] = cache.brandSearch;
   const [brands, setBrands] = useState<string[]>([]);
   const [searchBrand, setSearchBrand] = useState('');
-  const [topBrands, setTopBrands] = useState<string[]>([]);
+  const searchBrandDebounced = useDebounce(searchBrand, 300);
 
   const request = useRequest({
     url: '/api/search-brands',
@@ -19,20 +24,20 @@ export default function BrandAutocomplete() {
         const result = zod.string().array().parse(res.data);
         setTopBrands(result);
       });
-  }, []);
+  }, [topBrands]);
   useEffect(() => {
     if (request.value) {
       setBrands(request.value);
     }
   }, request.value);
   useEffect(() => {
-    if (searchBrand) {
-      const query = new URLSearchParams({ brand: searchBrand });
+    if (searchBrandDebounced) {
+      const query = new URLSearchParams({ brand: searchBrandDebounced });
       request.run({ query });
     } else {
       setBrands(topBrands);
     }
-  }, [searchBrand]);
+  }, [searchBrandDebounced]);
   return (
     <Autocomplete
       disablePortal
