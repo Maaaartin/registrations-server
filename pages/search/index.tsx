@@ -7,25 +7,32 @@ import { prisma } from '../../prisma';
 import { DatePicker } from '@mui/x-date-pickers';
 import { useRouter } from 'next/navigation';
 import BrandAutocomplete from '../../internals/components/BrandAutocomplete';
+import { useForm } from 'react-hook-form';
 
-export default function Search({ error, registration }: any) {
+export default function Search() {
   const router = useRouter();
   const [vin, setVin] = useState('');
+  const formState = useForm({ defaultValues: { brand: '' } });
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        router.push(`/search/${vin}`);
-      }}
-    >
-      <TextField
-        value={vin}
-        onChange={(e) => {
-          setVin(e.target.value);
+    <div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          router.push(`/search/${vin}`);
         }}
-      ></TextField>
-      <BrandAutocomplete />
-    </form>
+      >
+        <TextField
+          value={vin}
+          onChange={(e) => {
+            setVin(e.target.value);
+          }}
+        ></TextField>
+      </form>
+      <BrandAutocomplete
+        value={formState.getValues('brand')}
+        onSelect={(value) => formState.setValue('brand', value)}
+      />
+    </div>
   );
 }

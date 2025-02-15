@@ -5,8 +5,15 @@ import useRequest from '../../hooks/useRequest';
 import axios from 'axios';
 import { useCacheContext } from '../../context/cache';
 import useDebounce from '../../hooks/useDebounce';
+import { Control, useController } from 'react-hook-form';
 
-export default function BrandAutocomplete() {
+export default function BrandAutocomplete({
+  value,
+  onSelect,
+}: {
+  value: string;
+  onSelect: (brand: string) => void;
+}) {
   const cache = useCacheContext();
   const [topBrands, setTopBrands] = cache.topBrands;
   const [brandSearch, setBrandSearch] = cache.brandSearch;
@@ -52,6 +59,10 @@ export default function BrandAutocomplete() {
       inputValue={searchBrand}
       onInputChange={(event, newInputValue) => {
         setSearchBrand(newInputValue);
+      }}
+      value={value}
+      onChange={(event, value) => {
+        onSelect(value || '');
       }}
     />
   );
