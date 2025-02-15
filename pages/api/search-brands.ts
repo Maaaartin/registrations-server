@@ -6,7 +6,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<string[]>
 ) {
-  console.log(req.query);
   const brand = req.query.brand;
   if (!brand) return res.send([]);
   const result = await prisma.$queryRawTyped(
