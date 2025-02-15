@@ -1,5 +1,5 @@
 import { Autocomplete, TextField } from '@mui/material';
-import zod, { ZodError } from 'zod';
+import zod from 'zod';
 import React, { useEffect, useState } from 'react';
 import useRequest from '../../hooks/useRequest';
 import axios from 'axios';
@@ -24,20 +24,25 @@ export default function BrandAutocomplete() {
         const result = zod.string().array().parse(res.data);
         setTopBrands(result);
       });
-  }, [topBrands]);
+  }, [topBrands, setTopBrands]);
   useEffect(() => {
-    if (request.value) {
+    if (request.value && searchBrandDebounced) {
       setBrands(request.value);
+      setBrandSearch({ ...brandSearch, [searchBrandDebounced]: request.value });
     }
-  }, request.value);
+  }, [request.value, searchBrandDebounced, setBrands, setBrandSearch]);
   useEffect(() => {
     if (searchBrandDebounced) {
-      const query = new URLSearchParams({ brand: searchBrandDebounced });
-      request.run({ query });
+      if (brandSearch[searchBrandDebounced]) {
+        setBrands(brandSearch[searchBrandDebounced]);
+      } else {
+        const query = new URLSearchParams({ brand: searchBrandDebounced });
+        request.run({ query });
+      }
     } else {
       setBrands(topBrands);
     }
-  }, [searchBrandDebounced]);
+  }, [searchBrandDebounced, brandSearch, topBrands]);
   return (
     <Autocomplete
       disablePortal
