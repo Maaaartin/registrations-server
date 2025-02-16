@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { prisma } from '../../prisma';
+import { prisma } from '../prisma';
 import {
   Paper,
   Table,
@@ -11,7 +11,8 @@ import {
 import {
   SerializableRegistration,
   serializeRegistration,
-} from '../../util/registrations';
+} from '../util/registrations';
+import { registrations } from '@prisma/client';
 
 type Props = { vehicle: SerializableRegistration | null };
 
@@ -44,12 +45,21 @@ export default function Page({ vehicle }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({
-  params,
+  query,
 }) => {
-  const vin = params?.vin ? String(params.vin) : null;
-  const result = await prisma.registrations.findFirst({
-    where: { vin },
-  });
+  const vin = [query.vin].flat()[0];
+  const id = parseInt([query.id].flat()[0] || '');
+  let result: registrations | null = null;
+  if (vin) {
+    result = await prisma.registrations.findFirst({
+      where: { vin },
+    });
+  }
+  if (id) {
+    result = await prisma.registrations.findFirst({
+      where: { id },
+    });
+  }
 
   return { props: { vehicle: result ? serializeRegistration(result) : null } };
 };

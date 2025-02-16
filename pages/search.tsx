@@ -10,15 +10,16 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { prisma } from '../../prisma';
+import { prisma } from '../prisma';
 import { useRouter } from 'next/router';
-import BrandAutocomplete from '../../internals/components/BrandAutocomplete';
+import BrandAutocomplete from '../internals/components/BrandAutocomplete';
 import { useForm } from 'react-hook-form';
 import {
   SerializableRegistration,
   serializeRegistration,
-} from '../../util/registrations';
-import VehiclePagination from '../../internals/components/VehiclePagination';
+} from '../util/registrations';
+import VehiclePagination from '../internals/components/VehiclePagination';
+import Link from 'next/link';
 
 type Props = {
   vehicles: SerializableRegistration[] | null;
@@ -48,7 +49,7 @@ export default function Search({ vehicles, currentPage }: Props) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          router.push(`/search/${vin}`);
+          router.push(`/vehicle`, { query: { vin } });
         }}
       >
         <TextField
@@ -70,17 +71,23 @@ export default function Search({ vehicles, currentPage }: Props) {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableBody>
               {vehicles.map((vehicle) => (
-                <TableRow
+                <Link
                   key={vehicle.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  href={`/vehicle?${new URLSearchParams({
+                    id: String(vehicle.id),
+                  })}`}
                 >
-                  <TableCell component="th" scope="row">
-                    {vehicle.tovarni_znacka}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {vehicle.typ}
-                  </TableCell>
-                </TableRow>
+                  <TableRow
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {vehicle.tovarni_znacka}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {vehicle.typ}
+                    </TableCell>
+                  </TableRow>
+                </Link>
               ))}
             </TableBody>
           </Table>
