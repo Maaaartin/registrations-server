@@ -1,19 +1,15 @@
-import { Autocomplete, Button, TextField } from '@mui/material';
-import axios, { AxiosError } from 'axios';
-import { useEffect, useState } from 'react';
+import { Button, TextField } from '@mui/material';
+import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import useDebounce from '../../hooks/useDebounce';
 import { prisma } from '../../prisma';
-import { DatePicker } from '@mui/x-date-pickers';
 import { useRouter } from 'next/router';
 import BrandAutocomplete from '../../internals/components/BrandAutocomplete';
 import { useForm } from 'react-hook-form';
-import useRequest from '../../hooks/useRequest';
-import { registrations } from '@prisma/client';
 import {
   SerializableRegistration,
   serializeRegistration,
 } from '../../util/registrations';
+import VehiclePagination from '../../internals/components/VehiclePagination';
 
 type Props = {
   vehicles: SerializableRegistration[] | null;
@@ -23,7 +19,9 @@ type Props = {
 export default function Search({ vehicles, currentPage }: Props) {
   const router = useRouter();
   const [vin, setVin] = useState('');
-  const formState = useForm({ defaultValues: { brand: '' } });
+  const formState = useForm({
+    defaultValues: { brand: '', page: currentPage },
+  });
   return (
     <div>
       <form
@@ -59,6 +57,12 @@ export default function Search({ vehicles, currentPage }: Props) {
         />
         <Button type="submit">Hledat</Button>
       </form>
+      {currentPage !== null && (
+        <VehiclePagination
+          currentPage={currentPage}
+          setPage={(page) => formState.setValue('page', page)}
+        />
+      )}
     </div>
   );
 }
