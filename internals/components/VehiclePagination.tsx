@@ -1,21 +1,28 @@
-import { Pagination } from '@mui/material';
+import { Pagination, PaginationItem } from '@mui/material';
+import Link from 'next/link';
 import React from 'react';
 
 type Props = {
   currentPage: number;
-  setPage: (page: number) => void;
+  getPageLink: (page: number) => string;
 };
 
-export default function VehiclePagination({ currentPage, setPage }: Props) {
+export default function VehiclePagination({ currentPage, getPageLink }: Props) {
   return (
     <Pagination
       showFirstButton
       showLastButton
       page={currentPage}
       count={currentPage + 1}
-      onChange={(event, page) => {
-        setPage(page);
-      }}
+      siblingCount={1}
+      boundaryCount={2}
+      renderItem={(item) => (
+        <PaginationItem
+          component={Link}
+          href={getPageLink(item.page || 1)}
+          {...item}
+        />
+      )}
     ></Pagination>
   );
 }

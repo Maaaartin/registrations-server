@@ -20,8 +20,20 @@ export default function Search({ vehicles, currentPage }: Props) {
   const router = useRouter();
   const [vin, setVin] = useState('');
   const formState = useForm({
-    defaultValues: { brand: '', page: currentPage },
+    defaultValues: { brand: '' },
   });
+  const onSubmit = (event?: React.BaseSyntheticEvent) => {
+    formState.handleSubmit(({ brand }) => {
+      router.push(
+        {
+          pathname: router.pathname,
+          query: { brand, page: currentPage || 1 },
+        },
+        undefined,
+        { scroll: false }
+      );
+    })(event);
+  };
   return (
     <div>
       <form
@@ -37,30 +49,27 @@ export default function Search({ vehicles, currentPage }: Props) {
           }}
         ></TextField>
       </form>
-      <form
-        onSubmit={(event) => {
-          formState.handleSubmit(({ brand }) => {
-            router.push(
-              {
-                pathname: router.pathname,
-                query: { brand, page: 1 },
-              },
-              undefined,
-              { scroll: false }
-            );
-          })(event);
-        }}
-      >
+      <form onSubmit={onSubmit}>
         <BrandAutocomplete
           value={formState.getValues('brand')}
           onSelect={(value) => formState.setValue('brand', value)}
         />
         <Button type="submit">Hledat</Button>
       </form>
+      {vehicles?.map((vehicle, index) => {
+        return <div key={vehicle.id}>{vehicle.id}</div>;
+      })}
       {currentPage !== null && (
         <VehiclePagination
           currentPage={currentPage}
-          setPage={(page) => formState.setValue('page', page)}
+          getPageLink={(page) => {
+            const { brand } = formState.getValues();
+            const urlParams = new URLSearchParams({
+              page: String(page),
+              brand,
+            });
+            return router.pathname + '?' + urlParams.toString();
+          }}
         />
       )}
     </div>
@@ -78,7 +87,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     };
   }
 
-  // Convert query params to numbers (with defaults)
   const currentPage = parseInt(page as string, 10) || 1;
   const brandStr = [brand].flat()[0] || '';
 
