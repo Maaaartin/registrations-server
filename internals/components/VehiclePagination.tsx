@@ -10,7 +10,6 @@ type Props = {
 export default function VehiclePagination({ currentPage, getPageLink }: Props) {
   return (
     <Pagination
-      showFirstButton
       showLastButton
       page={currentPage}
       count={currentPage + 1}
@@ -20,6 +19,7 @@ export default function VehiclePagination({ currentPage, getPageLink }: Props) {
         <PaginationItem
           component={Link}
           href={getPageLink(item.page || 1)}
+          scroll={false}
           {...item}
         />
       )}

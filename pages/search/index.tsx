@@ -1,4 +1,13 @@
-import { Button, TextField } from '@mui/material';
+import {
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  TextField,
+} from '@mui/material';
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { prisma } from '../../prisma';
@@ -56,9 +65,28 @@ export default function Search({ vehicles, currentPage }: Props) {
         />
         <Button type="submit">Hledat</Button>
       </form>
-      {vehicles?.map((vehicle, index) => {
-        return <div key={vehicle.id}>{vehicle.id}</div>;
-      })}
+      {vehicles && (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableBody>
+              {vehicles.map((vehicle) => (
+                <TableRow
+                  key={vehicle.id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {vehicle.tovarni_znacka}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {vehicle.typ}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+
       {currentPage !== null && (
         <VehiclePagination
           currentPage={currentPage}
