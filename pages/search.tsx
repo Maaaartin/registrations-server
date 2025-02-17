@@ -8,6 +8,7 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
+import { Prisma } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { prisma } from '../prisma';
@@ -25,13 +26,15 @@ import ModelAutocomplete from '../internals/components/ModelAutocomplete';
 type Props = {
   vehicles: SerializableRegistration[] | null;
   currentPage: number | null;
+  brand: string;
+  model: string;
 };
 
-export default function Search({ vehicles, currentPage }: Props) {
+export default function Search({ vehicles, currentPage, brand, model }: Props) {
   const router = useRouter();
   const [vin, setVin] = useState('');
   const formState = useForm({
-    defaultValues: { brand: '', model: '' },
+    defaultValues: { brand, model },
   });
   const brandWatch = formState.watch('brand');
   useEffect(() => {
@@ -40,11 +43,11 @@ export default function Search({ vehicles, currentPage }: Props) {
     }
   }, [brandWatch, formState.resetField]);
   const onSubmit = (event?: React.BaseSyntheticEvent) => {
-    formState.handleSubmit(({ brand }) => {
+    formState.handleSubmit(({ brand, model }) => {
       router.push(
         {
           pathname: router.pathname,
-          query: { brand, page: currentPage || 1 },
+          query: { brand, model, page: currentPage || 1 },
         },
         undefined,
         { scroll: false }
@@ -113,10 +116,11 @@ export default function Search({ vehicles, currentPage }: Props) {
         <VehiclePagination
           currentPage={currentPage}
           getPageLink={(page) => {
-            const { brand } = formState.getValues();
+            const { brand, model } = formState.getValues();
             const urlParams = new URLSearchParams({
               page: String(page),
               brand,
+              model,
             });
             return router.pathname + '?' + urlParams.toString();
           }}
@@ -130,26 +134,29 @@ const pageSize = 10;
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { page, brand } = context.query;
-  if (!page || !brand) {
+  const { page, brand, model } = context.query;
+  if (!page) {
     return {
-      props: { vehicles: null, currentPage: null },
+      props: { vehicles: null, currentPage: null, brand: '', model: '' },
     };
   }
 
   const currentPage = parseInt(page as string, 10) || 1;
   const brandStr = [brand].flat()[0] || '';
+  const typStr = [model].flat()[0] || '';
 
   const vehicles = await prisma.registrations.findMany({
     skip: (currentPage - 1) * pageSize,
     take: pageSize,
-    where: { tovarni_znacka: brandStr },
+    where: { tovarni_znacka: brandStr, typ: typStr || undefined },
   });
 
   return {
     props: {
       vehicles: vehicles.map(serializeRegistration),
       currentPage,
+      brand: brandStr,
+      model: typStr,
     },
   };
 };
