@@ -17,15 +17,54 @@ import registrationColumnMap from '../registrationColumnMap.json';
 
 type Props = { vehicle: SerializableRegistration | null };
 
+function mapVehicle(
+  vehicle: SerializableRegistration
+): [string, string | Date][] {
+  const excludeFields: (keyof registrations)[] = [
+    'id',
+    'max_vykon',
+    'max_vykon_otacky',
+    'kola_a_pneumatiky_naprava_1',
+    'kola_a_pneumatiky_naprava_2',
+    'kola_a_pneumatiky_naprava_3',
+    'kola_a_pneumatiky_naprava_4',
+  ];
+
+  const filteredEntries = Object.fromEntries(
+    Object.entries(vehicle).filter(([key]) => {
+      return !excludeFields.includes(key as keyof registrations);
+    })
+  );
+  (
+    filteredEntries as Record<string, any>
+  ).max_vykon = `${vehicle.max_vykon} / ${vehicle.max_vykon_otacky}`;
+  (
+    filteredEntries as Record<string, any>
+  ).pocet_naprav = `${vehicle.pocet_naprav} / ${vehicle.naprav_pohanenych}`;
+  (filteredEntries as Record<string, any>).kola_a_pneumatiky = [
+    vehicle.kola_a_pneumatiky_naprava_1,
+    vehicle.kola_a_pneumatiky_naprava_2,
+    vehicle.kola_a_pneumatiky_naprava_3,
+    vehicle.kola_a_pneumatiky_naprava_4,
+  ].join('; ');
+  return Object.entries(filteredEntries).map(([key, value]) => [
+    key,
+    typeof value === 'object' && value?.type === 'Date'
+      ? new Date(value.value)
+      : String(value),
+  ]);
+}
+
 export default function Page({ vehicle }: Props) {
   if (!vehicle) return 'not found';
+  const mapped = mapVehicle(vehicle);
   return (
     <div>
       <h1>VIN {vehicle.vin}</h1>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableBody>
-            {Object.entries(vehicle).map(([key, value]) => (
+            {mapped.map(([key, value]) => (
               <TableRow
                 key={key}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
