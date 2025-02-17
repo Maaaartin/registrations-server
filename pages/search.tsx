@@ -89,23 +89,27 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableBody>
               {vehicles.map((vehicle) => (
-                <Link
+                <TableRow
                   key={vehicle.id}
-                  href={`/vehicle?${new URLSearchParams({
-                    id: String(vehicle.id),
-                  })}`}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableRow
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      {vehicle.tovarni_znacka}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {vehicle.typ}
-                    </TableCell>
-                  </TableRow>
-                </Link>
+                  <TableCell component="th" scope="row">
+                    {vehicle.tovarni_znacka}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {vehicle.typ}
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      key={vehicle.id}
+                      href={`/vehicle?${new URLSearchParams({
+                        id: String(vehicle.id),
+                      })}`}
+                    >
+                      Podrobnosti
+                    </Link>
+                  </TableCell>
+                </TableRow>
               ))}
             </TableBody>
           </Table>
