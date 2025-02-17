@@ -148,7 +148,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const vehicles = await prisma.registrations.findMany({
     skip: (currentPage - 1) * pageSize,
     take: pageSize,
-    where: { tovarni_znacka: brandStr, typ: typStr || undefined },
+    where: { tovarni_znacka: brandStr || undefined, typ: typStr || undefined },
   });
 
   return {
