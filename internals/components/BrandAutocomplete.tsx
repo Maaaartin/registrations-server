@@ -10,9 +10,11 @@ import { Control, useController } from 'react-hook-form';
 export default function BrandAutocomplete({
   value,
   onSelect,
+  disabled,
 }: {
   value: string;
   onSelect: (brand: string) => void;
+  disabled?: boolean;
 }) {
   const cache = useCacheContext();
   const [topBrands, setTopBrands] = cache.topBrands;
@@ -52,6 +54,7 @@ export default function BrandAutocomplete({
   }, [searchBrandDebounced, brandSearch, topBrands]);
   return (
     <Autocomplete
+      disabled={disabled}
       disablePortal
       options={brands}
       sx={{ width: 300 }}

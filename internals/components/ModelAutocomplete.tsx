@@ -10,10 +10,12 @@ export default function ModelAutocomplete({
   brand,
   model,
   onSelect,
+  disabled,
 }: {
   brand: string;
   model: string;
   onSelect: (brand: string) => void;
+  disabled?: boolean;
 }) {
   const cache = useCacheContext();
   const [topModelsPerBrand, setTopModelsPerBrand] = cache.topModelsPerBrand;
@@ -69,6 +71,7 @@ export default function ModelAutocomplete({
   }, [brand, searchModelDebounced, modelSearch, topModelsPerBrand]);
   return (
     <Autocomplete
+      disabled={disabled}
       disablePortal
       options={models}
       sx={{ width: 300 }}

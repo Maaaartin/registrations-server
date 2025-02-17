@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -33,18 +34,18 @@ type Props = {
 export default function Search({ vehicles, currentPage, brand, model }: Props) {
   const router = useRouter();
   const [vin, setVin] = useState('');
-  const formState = useForm({
+  const form = useForm({
     defaultValues: { brand, model },
   });
-  const brandWatch = formState.watch('brand');
+  const brandWatch = form.watch('brand');
   useEffect(() => {
     if (!brandWatch) {
-      formState.resetField('model');
+      form.resetField('model');
     }
-  }, [brandWatch, formState.resetField]);
+  }, [brandWatch, form.resetField]);
   const onSubmit = (event?: React.BaseSyntheticEvent) => {
-    formState.handleSubmit(({ brand, model }) => {
-      router.push(
+    return form.handleSubmit(({ brand, model }) => {
+      return router.push(
         {
           pathname: router.pathname,
           query: { brand, model, page: currentPage || 1 },
@@ -72,19 +73,24 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
       </form>
       <form onSubmit={onSubmit}>
         <BrandAutocomplete
-          value={formState.getValues('brand')}
-          onSelect={(value) => formState.setValue('brand', value)}
+          value={form.getValues('brand')}
+          onSelect={(value) => form.setValue('brand', value)}
+          disabled={form.formState.isSubmitting}
         />
         <ModelAutocomplete
-          brand={formState.getValues('brand')}
-          model={formState.getValues('model')}
+          brand={form.getValues('brand')}
+          model={form.getValues('model')}
           onSelect={(value) => {
-            return formState.setValue('model', value);
+            return form.setValue('model', value);
           }}
+          disabled={form.formState.isSubmitting}
         />
-        <Button type="submit">Hledat</Button>
+        <Button disabled={form.formState.isSubmitting} type="submit">
+          Hledat
+        </Button>
       </form>
-      {vehicles && (
+      {form.formState.isSubmitting && <CircularProgress />}
+      {vehicles && !form.formState.isSubmitting && (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableBody>
@@ -120,7 +126,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
         <VehiclePagination
           currentPage={currentPage}
           getPageLink={(page) => {
-            const { brand, model } = formState.getValues();
+            const { brand, model } = form.getValues();
             const urlParams = new URLSearchParams({
               page: String(page),
               brand,
