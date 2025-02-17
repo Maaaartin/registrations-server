@@ -12,16 +12,22 @@ type StateAction<T> = [T, Dispatch<SetStateAction<T>>];
 const CacheContext = createContext<{
   topBrands: StateAction<string[]>;
   brandSearch: StateAction<Record<string, string[]>>;
+  topModelsPerBrand: StateAction<Record<string, string[]>>;
+  modelSearch: StateAction<Record<string, Record<string, string[]>>>;
 }>(null!);
 
 export const CacheContextProvider = ({ children }: PropsWithChildren) => {
   const topBrands = useState<string[]>([]);
   const brandSearch = useState<Record<string, string[]>>({});
+  const topModelsPerBrand = useState<Record<string, string[]>>({});
+  const modelSearch = useState<Record<string, Record<string, string[]>>>({});
   return (
     <CacheContext.Provider
       value={{
         topBrands,
         brandSearch,
+        topModelsPerBrand,
+        modelSearch,
       }}
     >
       {children}

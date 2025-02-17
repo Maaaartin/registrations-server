@@ -8,7 +8,7 @@ import {
   TableRow,
   TextField,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { prisma } from '../prisma';
 import { useRouter } from 'next/router';
@@ -20,6 +20,7 @@ import {
 } from '../util/registrations';
 import VehiclePagination from '../internals/components/VehiclePagination';
 import Link from 'next/link';
+import ModelAutocomplete from '../internals/components/ModelAutocomplete';
 
 type Props = {
   vehicles: SerializableRegistration[] | null;
@@ -30,8 +31,14 @@ export default function Search({ vehicles, currentPage }: Props) {
   const router = useRouter();
   const [vin, setVin] = useState('');
   const formState = useForm({
-    defaultValues: { brand: '' },
+    defaultValues: { brand: '', model: '' },
   });
+  const brandWatch = formState.watch('brand');
+  useEffect(() => {
+    if (!brandWatch) {
+      formState.resetField('model');
+    }
+  }, [brandWatch, formState.resetField]);
   const onSubmit = (event?: React.BaseSyntheticEvent) => {
     formState.handleSubmit(({ brand }) => {
       router.push(
@@ -44,6 +51,7 @@ export default function Search({ vehicles, currentPage }: Props) {
       );
     })(event);
   };
+
   return (
     <div>
       <form
@@ -63,6 +71,13 @@ export default function Search({ vehicles, currentPage }: Props) {
         <BrandAutocomplete
           value={formState.getValues('brand')}
           onSelect={(value) => formState.setValue('brand', value)}
+        />
+        <ModelAutocomplete
+          brand={formState.getValues('brand')}
+          model={formState.getValues('model')}
+          onSelect={(value) => {
+            return formState.setValue('model', value);
+          }}
         />
         <Button type="submit">Hledat</Button>
       </form>
