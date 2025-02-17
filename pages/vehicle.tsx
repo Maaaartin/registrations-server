@@ -13,6 +13,7 @@ import {
   serializeRegistration,
 } from '../util/registrations';
 import { registrations } from '@prisma/client';
+import registrationColumnMap from '../registrationColumnMap.json';
 
 type Props = { vehicle: SerializableRegistration | null };
 
@@ -30,7 +31,8 @@ export default function Page({ vehicle }: Props) {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell component="th" scope="row">
-                  {key}
+                  {(registrationColumnMap as Record<string, string>)[key] ||
+                    key}
                 </TableCell>
                 <TableCell component="th" scope="row">
                   {String(value)}
