@@ -63,7 +63,7 @@ export default function ModelAutocomplete({
         });
         request.run({ query });
       }
-    } else {
+    } else if (topModelsPerBrand[brand]) {
       setModels(topModelsPerBrand[brand]);
     }
   }, [brand, searchModelDebounced, modelSearch, topModelsPerBrand]);
