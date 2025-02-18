@@ -54,6 +54,7 @@ export default function BrandAutocomplete({
   }, [searchBrandDebounced, brandSearch, topBrands]);
   return (
     <Autocomplete
+      freeSolo
       disabled={disabled}
       disablePortal
       options={brands}

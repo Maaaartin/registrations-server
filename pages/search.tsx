@@ -10,10 +10,10 @@ import {
   serializeRegistration,
 } from '../util/registrations';
 import ModelAutocomplete from '../internals/components/ModelAutocomplete';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridFilterInputValueProps } from '@mui/x-data-grid';
 
 type Props = {
-  vehicles: SerializableRegistration[] | null;
+  vehicles: SerializableRegistration[];
   currentPage: number | null;
   brand: string;
   model: string;
@@ -65,11 +65,11 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
         ></TextField>
       </form>
       <form onSubmit={onSubmit(currentPage || 0)}>
-        <BrandAutocomplete
+        {/* <BrandAutocomplete
           value={form.getValues('brand')}
           onSelect={(value) => form.setValue('brand', value)}
           disabled={form.formState.isSubmitting}
-        />
+        /> */}
         <ModelAutocomplete
           brand={form.getValues('brand')}
           model={form.getValues('model')}
@@ -82,64 +82,86 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
           Hledat
         </Button>
       </form>
-      {vehicles && !form.formState.isSubmitting && (
-        <DataGrid
-          rows={vehicles}
-          columns={[
-            {
-              field: 'brand',
-              headerName: 'Tovární značka',
-              flex: 0.5,
-              minWidth: 80,
-              renderCell: (params) => params.row.id,
-            },
-          ]}
-          getRowClassName={(params) =>
-            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
-          }
-          initialState={{
-            pagination: {
-              paginationModel: { page: currentPage || 0, pageSize },
-              meta: { hasNextPage: true },
-            },
-          }}
-          paginationMode="server"
-          pageSizeOptions={[pageSize]}
-          onPaginationModelChange={(params) => {
-            return onSubmit(params.page)();
-          }}
-          rowCount={-1}
-          loading={form.formState.isSubmitting}
-          disableColumnResize
-          density="compact"
-          slotProps={{
-            filterPanel: {
-              filterFormProps: {
-                logicOperatorInputProps: {
+      (
+      <DataGrid
+        rows={vehicles}
+        columns={[
+          {
+            field: 'brand',
+            headerName: 'Tovární značka',
+            flex: 0.5,
+            minWidth: 80,
+            renderCell: (params) => params.row.id,
+            filterOperators: [
+              {
+                label: 'Contains',
+                value: 'contains',
+                getApplyFilterFn: (filterItem) => {
+                  return null;
+                },
+                InputComponent: ({
+                  item,
+                  applyValue,
+                }: GridFilterInputValueProps) => (
+                  <BrandAutocomplete
+                    value={form.getValues('brand')}
+                    onSelect={(value) => {
+                      form.setValue('brand', value);
+                      applyValue({ ...item, value });
+                      onSubmit(currentPage || 0)();
+                    }}
+                    disabled={form.formState.isSubmitting}
+                  />
+                ),
+              },
+            ],
+          },
+        ]}
+        getRowClassName={(params) =>
+          params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+        }
+        initialState={{
+          pagination: {
+            paginationModel: { page: currentPage || 0, pageSize },
+            meta: { hasNextPage: true },
+          },
+        }}
+        paginationMode="server"
+        pageSizeOptions={[pageSize]}
+        onPaginationModelChange={(params) => {
+          return onSubmit(params.page)();
+        }}
+        rowCount={-1}
+        loading={form.formState.isSubmitting}
+        disableColumnResize
+        density="compact"
+        slotProps={{
+          filterPanel: {
+            filterFormProps: {
+              logicOperatorInputProps: {
+                variant: 'outlined',
+                size: 'small',
+              },
+              columnInputProps: {
+                variant: 'outlined',
+                size: 'small',
+                sx: { mt: 'auto' },
+              },
+              operatorInputProps: {
+                variant: 'outlined',
+                size: 'small',
+                sx: { mt: 'auto' },
+              },
+              valueInputProps: {
+                InputComponentProps: {
                   variant: 'outlined',
                   size: 'small',
-                },
-                columnInputProps: {
-                  variant: 'outlined',
-                  size: 'small',
-                  sx: { mt: 'auto' },
-                },
-                operatorInputProps: {
-                  variant: 'outlined',
-                  size: 'small',
-                  sx: { mt: 'auto' },
-                },
-                valueInputProps: {
-                  InputComponentProps: {
-                    variant: 'outlined',
-                    size: 'small',
-                  },
                 },
               },
             },
-          }}
-        />
-      )}
+          },
+        }}
+      />
     </div>
   );
 }
@@ -148,11 +170,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
   const { page, brand, model } = context.query;
-  if (!page) {
-    return {
-      props: { vehicles: null, currentPage: null, brand: '', model: '' },
-    };
-  }
 
   const currentPage = parseInt(page as string, 10) || 0;
   const brandStr = [brand].flat()[0] || '';
