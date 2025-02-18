@@ -23,6 +23,7 @@ import {
 import VehiclePagination from '../internals/components/VehiclePagination';
 import Link from 'next/link';
 import ModelAutocomplete from '../internals/components/ModelAutocomplete';
+import { DataGrid } from '@mui/x-data-grid';
 
 type Props = {
   vehicles: SerializableRegistration[] | null;
@@ -91,35 +92,87 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
       </form>
       {form.formState.isSubmitting && <CircularProgress />}
       {vehicles && !form.formState.isSubmitting && (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableBody>
-              {vehicles.map((vehicle) => (
-                <TableRow
-                  key={vehicle.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {vehicle.tovarni_znacka}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {vehicle.typ}
-                  </TableCell>
-                  <TableCell>
-                    <Link
-                      key={vehicle.id}
-                      href={`/vehicle?${new URLSearchParams({
-                        id: String(vehicle.id),
-                      })}`}
-                    >
-                      Podrobnosti
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <DataGrid
+          checkboxSelection
+          rows={vehicles}
+          columns={[
+            {
+              field: 'brand',
+              headerName: 'Tovární značka',
+              flex: 0.5,
+              minWidth: 80,
+              renderCell: (params) => params.row.tovarni_znacka,
+            },
+          ]}
+          getRowClassName={(params) =>
+            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+          }
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 10 },
+              meta: { hasNextPage: true },
+            },
+          }}
+          pageSizeOptions={[10]}
+          rowCount={-1}
+          disableColumnResize
+          density="compact"
+          slotProps={{
+            filterPanel: {
+              filterFormProps: {
+                logicOperatorInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                },
+                columnInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                  sx: { mt: 'auto' },
+                },
+                operatorInputProps: {
+                  variant: 'outlined',
+                  size: 'small',
+                  sx: { mt: 'auto' },
+                },
+                valueInputProps: {
+                  InputComponentProps: {
+                    variant: 'outlined',
+                    size: 'small',
+                  },
+                },
+              },
+            },
+          }}
+        />
+        // <TableContainer component={Paper}>
+        //   <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        //     <TableBody>
+        //       {vehicles.map((vehicle) => (
+        //         <TableRow
+        //           key={vehicle.id}
+        //           sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        //         >
+        //           <TableCell component="th" scope="row">
+        //             {vehicle.tovarni_znacka}
+        //           </TableCell>
+        //           <TableCell component="th" scope="row">
+        //             {vehicle.typ}
+        //           </TableCell>
+        //           <TableCell>
+        //             <Link
+        //               key={vehicle.id}
+        //               href={`/vehicle?${new URLSearchParams({
+        //                 id: String(vehicle.id),
+        //               })}`}
+        //             >
+        //               Podrobnosti
+        //             </Link>
+        //           </TableCell>
+        //         </TableRow>
+        //       ))}
+        //     </TableBody>
+        //   </Table>
+        // </TableContainer>
       )}
 
       {currentPage !== null && (
