@@ -64,26 +64,11 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
           }}
         ></TextField>
       </form>
-      <form onSubmit={onSubmit(currentPage || 0)}>
-        {/* <BrandAutocomplete
-          value={form.getValues('brand')}
-          onSelect={(value) => form.setValue('brand', value)}
-          disabled={form.formState.isSubmitting}
-        /> */}
-        <ModelAutocomplete
-          brand={form.getValues('brand')}
-          model={form.getValues('model')}
-          onSelect={(value) => {
-            return form.setValue('model', value);
-          }}
-          disabled={form.formState.isSubmitting}
-        />
-        <Button disabled={form.formState.isSubmitting} type="submit">
-          Hledat
-        </Button>
-      </form>
-      (
+      <form onSubmit={onSubmit(currentPage || 0)}></form>
       <DataGrid
+        onRowClick={(params) => {
+          router.push({ pathname: '/vehicle', query: { id: params.row.id } }); // Navigate to vehicle details page
+        }}
         rows={vehicles}
         columns={[
           {
@@ -91,7 +76,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             headerName: 'Tovární značka',
             flex: 0.5,
             minWidth: 80,
-            renderCell: (params) => params.row.id,
+            renderCell: (params) => params.row.tovarni_znacka,
             filterOperators: [
               {
                 label: 'Contains',
@@ -107,6 +92,37 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
                     value={form.getValues('brand')}
                     onSelect={(value) => {
                       form.setValue('brand', value);
+                      applyValue({ ...item, value });
+                      onSubmit(currentPage || 0)();
+                    }}
+                    disabled={form.formState.isSubmitting}
+                  />
+                ),
+              },
+            ],
+          },
+          {
+            field: 'model',
+            headerName: 'Typ',
+            flex: 0.5,
+            minWidth: 80,
+            renderCell: (params) => params.row.typ,
+            filterOperators: [
+              {
+                label: 'Contains',
+                value: 'contains',
+                getApplyFilterFn: (filterItem) => {
+                  return null;
+                },
+                InputComponent: ({
+                  item,
+                  applyValue,
+                }: GridFilterInputValueProps) => (
+                  <ModelAutocomplete
+                    brand={form.getValues('brand')}
+                    model={form.getValues('model')}
+                    onSelect={(value) => {
+                      form.setValue('model', value);
                       applyValue({ ...item, value });
                       onSubmit(currentPage || 0)();
                     }}
