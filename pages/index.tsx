@@ -1,3 +1,10 @@
+import CustomizedDataGrid from '../internals/components/DataGrid';
+
 export default function HomePage() {
-  return 'Welcome';
+  return (
+    <div>
+      asdf
+      <CustomizedDataGrid />
+    </div>
+  );
 }
