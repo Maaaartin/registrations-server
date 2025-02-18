@@ -34,11 +34,14 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
     }
   }, [brandWatch, form.resetField]);
   const onSubmit = (page: number) => (event?: React.BaseSyntheticEvent) => {
-    return form.handleSubmit(({ brand, model }) => {
+    return form.handleSubmit((params) => {
       return router.push(
         {
           pathname: router.pathname,
-          query: { brand, model, page },
+          query: {
+            ...params,
+            page: params.brand !== brand || params.model !== model ? 0 : page,
+          },
         },
         undefined,
         { scroll: false }
