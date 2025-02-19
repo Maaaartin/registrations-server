@@ -33,8 +33,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
       <Head>
         <title>Technická data vozidel</title>
         <meta
+          lang="cs"
           name="description"
-          content="A fully server-rendered page using Material UI"
+          content="Portál pro vyhledávání v registru vozidel Ministerstva dopravy"
         />
       </Head>
       <AppTheme themeComponents={xThemeComponents}>
