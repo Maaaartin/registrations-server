@@ -65,12 +65,12 @@ export default function SessionsChart() {
   }
   const years = request.value.map(({ year }) => year);
   const values = request.value.map(({ count }) => count);
-
+  const sum = values.reduce((sum, curr) => (sum += curr), 0);
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Sessions
+          Počet registrací
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -82,13 +82,9 @@ export default function SessionsChart() {
             }}
           >
             <Typography variant="h4" component="p">
-              13,277
+              {sum}
             </Typography>
-            <Chip size="small" color="success" label="+35%" />
           </Stack>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Sessions per day for the last 30 days
-          </Typography>
         </Stack>
         <LineChart
           colors={colorPalette}
@@ -114,6 +110,7 @@ export default function SessionsChart() {
           height={250}
           margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
           grid={{ horizontal: true }}
+          loading={request.loading}
           sx={{
             '& .MuiAreaElement-series-organic': {
               fill: "url('#organic')",
