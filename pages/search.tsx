@@ -18,7 +18,7 @@ type Props = {
   model: string;
 };
 
-const pageSize = 10;
+const pageSize = 20;
 
 export default function Search({ vehicles, currentPage, brand, model }: Props) {
   const router = useRouter();
@@ -68,6 +68,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
           '& .MuiDataGrid-row': {
             cursor: 'pointer',
           },
+          width: '100%',
         }}
         rows={vehicles}
         columns={[
@@ -75,7 +76,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             field: 'brand',
             headerName: 'Tovární značka',
             flex: 0.5,
-            minWidth: 80,
+            minWidth: 200,
             renderCell: (params) => params.row.tovarni_znacka,
             sortable: false,
             filterOperators: [
@@ -105,7 +106,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             field: 'model',
             headerName: 'Typ',
             flex: 0.5,
-            minWidth: 80,
+            minWidth: 300,
             renderCell: (params) => params.row.typ,
             sortable: false,
             filterOperators: [
@@ -132,6 +133,24 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
               },
             ],
           },
+          {
+            field: 'vin',
+            headerName: 'VIN',
+            flex: 0.5,
+            minWidth: 150,
+            renderCell: (params) => params.row.vin,
+            sortable: false,
+            filterable: false,
+          },
+          {
+            field: 'cislo_tp',
+            headerName: 'Číslo TP',
+            flex: 0.5,
+            minWidth: 80,
+            renderCell: (params) => params.row.cislo_tp,
+            sortable: false,
+            filterable: false,
+          },
         ]}
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
@@ -143,6 +162,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
           },
         }}
         paginationMode="server"
+        filterMode="server"
         pageSizeOptions={[pageSize]}
         onPaginationModelChange={(params) => {
           return onSubmit(params.page)({ brand, model });
