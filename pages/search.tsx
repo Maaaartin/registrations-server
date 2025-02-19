@@ -10,6 +10,7 @@ import {
 } from '../util/registrations';
 import ModelAutocomplete from '../internals/components/ModelAutocomplete';
 import { DataGrid, GridFilterInputValueProps } from '@mui/x-data-grid';
+import { unstable_cache } from 'next/cache';
 
 type Props = {
   vehicles: SerializableRegistration[];
@@ -204,6 +205,17 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
   );
 }
 
+const searchVehicles = unstable_cache(
+  (page: number, brand: string, type: string) =>
+    prisma.registrations.findMany({
+      skip: page * pageSize,
+      take: pageSize,
+      where: { tovarni_znacka: brand || undefined, typ: type || undefined },
+    }),
+  ['search'],
+  { revalidate: 3600, tags: ['search'] }
+);
+
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
@@ -213,11 +225,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   const brandStr = [brand].flat()[0] || '';
   const typStr = [model].flat()[0] || '';
 
-  const vehicles = await prisma.registrations.findMany({
-    skip: currentPage * pageSize,
-    take: pageSize,
-    where: { tovarni_znacka: brandStr || undefined, typ: typStr || undefined },
-  });
+  const vehicles = await searchVehicles(currentPage, brandStr, typStr);
 
   return {
     props: {
