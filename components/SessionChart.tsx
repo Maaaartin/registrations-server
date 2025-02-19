@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
 import zod from 'zod';
-import useRequest from '../../hooks/useRequest';
+import useRequest from '../hooks/useRequest';
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
   return (

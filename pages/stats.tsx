@@ -2,12 +2,12 @@ import { ReactNode, useEffect } from 'react';
 import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Copyright from '../internals/components/Copyright';
+import Copyright from '../components/Copyright';
 import StatCard from '../components/StatCard';
 import useRequest from '../hooks/useRequest';
 import { List, ListItem, ListItemText } from '@mui/material';
 import zod from 'zod';
-import SessionsChart from '../internals/components/SessionChart';
+import SessionsChart from '../components/SessionChart';
 import { useCacheContext } from '../context/cache';
 
 const CountCard = () => {

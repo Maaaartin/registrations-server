@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { prisma } from '../prisma';
 import { useRouter } from 'next/router';
-import BrandAutocomplete from '../internals/components/BrandAutocomplete';
+import BrandAutocomplete from '../components/BrandAutocomplete';
 import {
   SerializableRegistration,
   serializeRegistration,
 } from '../util/registrations';
-import ModelAutocomplete from '../internals/components/ModelAutocomplete';
+import ModelAutocomplete from '../components/ModelAutocomplete';
 import { DataGrid, GridFilterInputValueProps } from '@mui/x-data-grid';
 import { unstable_cache } from 'next/cache';
 

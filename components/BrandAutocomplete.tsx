@@ -1,10 +1,10 @@
 import { Autocomplete, TextField } from '@mui/material';
 import zod from 'zod';
 import React, { useEffect, useState } from 'react';
-import useRequest from '../../hooks/useRequest';
+import useRequest from '../hooks/useRequest';
 import axios from 'axios';
-import { useCacheContext } from '../../context/cache';
-import useDebounce from '../../hooks/useDebounce';
+import { useCacheContext } from '../context/cache';
+import useDebounce from '../hooks/useDebounce';
 
 export default function BrandAutocomplete({
   value,
