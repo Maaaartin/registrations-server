@@ -1,10 +1,9 @@
-import { Button, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { TextField } from '@mui/material';
+import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { prisma } from '../prisma';
 import { useRouter } from 'next/router';
 import BrandAutocomplete from '../internals/components/BrandAutocomplete';
-import { useForm } from 'react-hook-form';
 import {
   SerializableRegistration,
   serializeRegistration,
@@ -24,30 +23,27 @@ const pageSize = 10;
 export default function Search({ vehicles, currentPage, brand, model }: Props) {
   const router = useRouter();
   const [vin, setVin] = useState('');
-  const form = useForm({
-    defaultValues: { brand, model },
-  });
-  const brandWatch = form.watch('brand');
-  useEffect(() => {
-    if (!brandWatch) {
-      form.resetField('model');
-    }
-  }, [brandWatch, form.resetField]);
-  const onSubmit = (page: number) => (event?: React.BaseSyntheticEvent) => {
-    return form.handleSubmit((params) => {
-      return router.push(
-        {
-          pathname: router.pathname,
-          query: {
-            ...params,
-            page: params.brand !== brand || params.model !== model ? 0 : page,
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit =
+    (page: number) => (params: Partial<{ brand: string; model: string }>) => {
+      setLoading(true);
+      return router
+        .push(
+          {
+            pathname: router.pathname,
+            query: {
+              ...params,
+              page: params.brand !== brand || params.model !== model ? 0 : page,
+            },
           },
-        },
-        undefined,
-        { scroll: false }
-      );
-    })(event);
-  };
+          undefined,
+          { scroll: false }
+        )
+        .finally(() => {
+          setLoading(false);
+        });
+    };
 
   return (
     <div>
@@ -94,13 +90,12 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
                   applyValue,
                 }: GridFilterInputValueProps) => (
                   <BrandAutocomplete
-                    value={form.getValues('brand')}
+                    value={brand}
                     onSelect={(value) => {
-                      form.setValue('brand', value);
                       applyValue({ ...item, value });
-                      onSubmit(currentPage || 0)();
+                      onSubmit(currentPage || 0)({ brand: value, model });
                     }}
-                    disabled={form.formState.isSubmitting}
+                    disabled={loading}
                   />
                 ),
               },
@@ -125,14 +120,13 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
                   applyValue,
                 }: GridFilterInputValueProps) => (
                   <ModelAutocomplete
-                    brand={form.getValues('brand')}
-                    model={form.getValues('model')}
+                    brand={brand}
+                    model={model}
                     onSelect={(value) => {
-                      form.setValue('model', value);
                       applyValue({ ...item, value });
-                      onSubmit(currentPage || 0)();
+                      onSubmit(currentPage || 0)({ brand, model: value });
                     }}
-                    disabled={form.formState.isSubmitting}
+                    disabled={loading}
                   />
                 ),
               },
@@ -151,10 +145,10 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
         paginationMode="server"
         pageSizeOptions={[pageSize]}
         onPaginationModelChange={(params) => {
-          return onSubmit(params.page)();
+          return onSubmit(params.page)({ brand, model });
         }}
         rowCount={-1}
-        loading={form.formState.isSubmitting}
+        loading={loading}
         disableColumnResize
         density="compact"
         slotProps={{

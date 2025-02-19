@@ -5,7 +5,6 @@ import useRequest from '../../hooks/useRequest';
 import axios from 'axios';
 import { useCacheContext } from '../../context/cache';
 import useDebounce from '../../hooks/useDebounce';
-import { Control, useController } from 'react-hook-form';
 
 export default function BrandAutocomplete({
   value,
