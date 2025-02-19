@@ -1,4 +1,4 @@
-import { TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { prisma } from '../prisma';
@@ -21,9 +21,31 @@ type Props = {
 
 const pageSize = 20;
 
-export default function Search({ vehicles, currentPage, brand, model }: Props) {
+function VinForm() {
   const router = useRouter();
   const [vin, setVin] = useState('');
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!vin) return;
+        router.push(`/vehicle`, { query: { vin } });
+      }}
+    >
+      <TextField
+        label="Hledat VIN"
+        value={vin}
+        onChange={(e) => {
+          setVin(e.target.value);
+        }}
+      ></TextField>
+      <Button type="submit">Hledat</Button>
+    </form>
+  );
+}
+
+export default function Search({ vehicles, currentPage, brand, model }: Props) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const onSubmit =
@@ -48,19 +70,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
 
   return (
     <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          router.push(`/vehicle`, { query: { vin } });
-        }}
-      >
-        <TextField
-          value={vin}
-          onChange={(e) => {
-            setVin(e.target.value);
-          }}
-        ></TextField>
-      </form>
+      <VinForm />
       <DataGrid
         onRowClick={(params) => {
           router.push({ pathname: '/vehicle', query: { id: params.row.id } }); // Navigate to vehicle details page
