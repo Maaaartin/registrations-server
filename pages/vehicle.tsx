@@ -36,12 +36,12 @@ function mapVehicle(
     })
   );
   (
-    filteredEntries as Record<string, any>
+    filteredEntries as Record<string, string>
   ).max_vykon = `${vehicle.max_vykon} / ${vehicle.max_vykon_otacky}`;
   (
-    filteredEntries as Record<string, any>
+    filteredEntries as Record<string, string>
   ).pocet_naprav = `${vehicle.pocet_naprav} / ${vehicle.naprav_pohanenych}`;
-  (filteredEntries as Record<string, any>).kola_a_pneumatiky = [
+  (filteredEntries as Record<string, string>).kola_a_pneumatiky = [
     vehicle.kola_a_pneumatiky_naprava_1,
     vehicle.kola_a_pneumatiky_naprava_2,
     vehicle.kola_a_pneumatiky_naprava_3,

@@ -1,11 +1,7 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-
-import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
 
 interface SideMenuMobileProps {

@@ -94,7 +94,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
               {
                 label: 'Contains',
                 value: 'contains',
-                getApplyFilterFn: (filterItem) => {
+                getApplyFilterFn: () => {
                   return null;
                 },
                 InputComponent: ({
@@ -124,7 +124,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
               {
                 label: 'Contains',
                 value: 'contains',
-                getApplyFilterFn: (filterItem) => {
+                getApplyFilterFn: () => {
                   return null;
                 },
                 InputComponent: ({
