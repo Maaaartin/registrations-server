@@ -64,10 +64,14 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
           }}
         ></TextField>
       </form>
-      <form onSubmit={onSubmit(currentPage || 0)}></form>
       <DataGrid
         onRowClick={(params) => {
           router.push({ pathname: '/vehicle', query: { id: params.row.id } }); // Navigate to vehicle details page
+        }}
+        sx={{
+          '& .MuiDataGrid-row': {
+            cursor: 'pointer',
+          },
         }}
         rows={vehicles}
         columns={[
@@ -77,6 +81,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             flex: 0.5,
             minWidth: 80,
             renderCell: (params) => params.row.tovarni_znacka,
+            sortable: false,
             filterOperators: [
               {
                 label: 'Contains',
@@ -107,6 +112,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             flex: 0.5,
             minWidth: 80,
             renderCell: (params) => params.row.typ,
+            sortable: false,
             filterOperators: [
               {
                 label: 'Contains',
@@ -153,6 +159,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
         density="compact"
         slotProps={{
           filterPanel: {
+            sx: { height: '100vh' },
             filterFormProps: {
               logicOperatorInputProps: {
                 variant: 'outlined',
@@ -172,6 +179,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
                 InputComponentProps: {
                   variant: 'outlined',
                   size: 'small',
+                  sx: { width: '100vh' },
                 },
               },
             },
