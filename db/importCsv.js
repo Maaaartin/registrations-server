@@ -6,10 +6,10 @@ const schema = require('./schema.json');
 const headerMap = require('./headerMap.json');
 
 const client = new Client({
-  user: process.env.DATABASE_USER,
+  user: process.env.POSTGRES_USER,
   host: 'localhost',
   database: 'registrations_cz',
-  password: process.env.DATABASE_PASSWORD,
+  password: process.env.PGADMIN_DEFAULT_PASSWORD,
   port: 5432,
 });
 const createTableFromHeaders = async () => {
@@ -90,9 +90,7 @@ async function importCSV() {
         return header.trim();
       },
     });
-    fs.createReadStream(
-      '/Users/martin/Downloads/RSV_vypis_vozidel_20250101.csv'
-    ).pipe(stream);
+    fs.createReadStream(process.argv[2]).pipe(stream);
     const columns = Object.keys(schema);
     const query = `INSERT INTO registrations (${columns.map(
       (column) => `"${column}"`
