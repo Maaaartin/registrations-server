@@ -29,8 +29,7 @@ export default function ModelAutocomplete({
     decoder: zod.string().array(),
   });
   useEffect(() => {
-    brand &&
-      !topModelsPerBrand[brand]?.length &&
+    if (brand && !topModelsPerBrand[brand]?.length) {
       axios
         .get('/api/top-models?' + new URLSearchParams({ brand }))
         .then((res) => {
@@ -40,6 +39,7 @@ export default function ModelAutocomplete({
             [brand]: result,
           });
         });
+    }
   }, [brand, topModelsPerBrand, setTopModelsPerBrand]);
   useEffect(() => {
     if (request.value && searchModelDebounced) {

@@ -27,11 +27,12 @@ export default function BrandAutocomplete({
     decoder: zod.string().array(),
   });
   useEffect(() => {
-    !topBrands.length &&
+    if (!topBrands.length) {
       axios.get('/api/top-brands').then((res) => {
         const result = zod.string().array().parse(res.data);
         setTopBrands(result);
       });
+    }
   }, [topBrands, setTopBrands]);
   useEffect(() => {
     if (request.value && searchBrandDebounced) {
