@@ -14,7 +14,7 @@ import { unstable_cache } from 'next/cache';
 
 type Props = {
   vehicles: SerializableRegistration[];
-  currentPage: number | null;
+  currentPage: number;
   brand: string;
   model: string;
 };
@@ -67,6 +67,8 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
           setLoading(false);
         });
     };
+  const rowCount =
+    vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1;
 
   return (
     <div>
@@ -105,7 +107,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
                     value={brand}
                     onSelect={(value) => {
                       applyValue({ ...item, value });
-                      onSubmit(currentPage || 0)({ brand: value, model });
+                      onSubmit(currentPage)({ brand: value, model });
                     }}
                     disabled={loading}
                   />
@@ -136,7 +138,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
                     model={model}
                     onSelect={(value) => {
                       applyValue({ ...item, value });
-                      onSubmit(currentPage || 0)({ brand, model: value });
+                      onSubmit(currentPage)({ brand, model: value });
                     }}
                     disabled={loading}
                   />
@@ -168,7 +170,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
         }
         initialState={{
           pagination: {
-            paginationModel: { page: currentPage || 0, pageSize },
+            paginationModel: { page: currentPage, pageSize },
             meta: { hasNextPage: true },
           },
         }}
@@ -178,7 +180,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
         onPaginationModelChange={(params) => {
           return onSubmit(params.page)({ brand, model });
         }}
-        rowCount={-1}
+        rowCount={rowCount}
         loading={loading}
         disableColumnResize
         density="compact"
