@@ -29,11 +29,7 @@ $SSH_CMD  << 'EOF'
   yarn
   APP_NAME="nextjs-app"
   yarn build
-  if pm2 list | grep -q "$APP_NAME"; then
-    pm2 reload $APP_NAME --update-env --name "$APP_NAME"
-  else
-    pm2 start yarn --name "$APP_NAME" -- start -- --port 80
-  fi
+  pm2 reload $APP_NAME --update-env --name "$APP_NAME" || pm2 start "yarn start" --name "$APP_NAME"
   pm2 save
 EOF
 
