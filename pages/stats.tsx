@@ -11,14 +11,22 @@ import SessionsChart from '../components/SessionChart';
 import { useCacheContext } from '../context/cache';
 
 const CountCard = () => {
+  const [count, setCount] = useCacheContext().count;
   const request = useRequest({
     url: '/api/count',
     decoder: zod.number(),
   });
   useEffect(() => {
-    request.run();
-  }, []);
-  const renderValue = request.value;
+    if (isNaN(count)) {
+      request.run();
+    }
+  }, [count, request.run]);
+  useEffect(() => {
+    if (request.value) {
+      setCount(request.value);
+    }
+  }, [request.value, setCount]);
+  const renderValue = count;
 
   return <StatCard title="Vozidel v databázi" value={renderValue} />;
 };
