@@ -14,6 +14,7 @@ const CacheContext = createContext<{
   brandSearch: StateAction<Record<string, string[]>>;
   topModelsPerBrand: StateAction<Record<string, string[]>>;
   modelSearch: StateAction<Record<string, Record<string, string[]>>>;
+  count: StateAction<number>;
 }>(null!);
 
 export const CacheContextProvider = ({ children }: PropsWithChildren) => {
@@ -21,6 +22,7 @@ export const CacheContextProvider = ({ children }: PropsWithChildren) => {
   const brandSearch = useState<Record<string, string[]>>({});
   const topModelsPerBrand = useState<Record<string, string[]>>({});
   const modelSearch = useState<Record<string, Record<string, string[]>>>({});
+  const count = useState(NaN);
   return (
     <CacheContext.Provider
       value={{
@@ -28,6 +30,7 @@ export const CacheContextProvider = ({ children }: PropsWithChildren) => {
         brandSearch,
         topModelsPerBrand,
         modelSearch,
+        count,
       }}
     >
       {children}
