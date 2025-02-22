@@ -4,6 +4,7 @@ import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import MenuContent from './MenuContent';
+import Title from './Title';
 
 const drawerWidth = 240;
 
@@ -35,7 +36,9 @@ export default function SideMenu() {
           mt: 'calc(var(--template-frame-height, 0px) + 4px)',
           p: 1.5,
         }}
-      ></Box>
+      >
+        <Title />
+      </Box>
       <Divider />
       <MenuContent />
     </Drawer>
