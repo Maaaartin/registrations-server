@@ -25,7 +25,7 @@ export default function StatCard({ title, value }: StatCardProps) {
               direction="row"
               sx={{ justifyContent: 'space-between', alignItems: 'center' }}
             >
-              <Typography variant="h4" component="p">
+              <Typography variant="h4" component="div">
                 {value}
               </Typography>
             </Stack>
