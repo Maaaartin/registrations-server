@@ -29,7 +29,7 @@ function VinForm() {
       onSubmit={(e) => {
         e.preventDefault();
         if (!vin) return;
-        router.push(`/vehicle`, { query: { vin } });
+        router.push({ pathname: `/vehicle`, query: { vin } });
       }}
     >
       <TextField
