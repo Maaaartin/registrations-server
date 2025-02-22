@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { Home } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 
-const mainListItems = [
+export const mainListItems = [
   { text: 'Domů', icon: <Home />, route: '/' },
   { text: 'Statistiky', icon: <SettingsRoundedIcon />, route: '/stats' },
   { text: 'Hledat', icon: <Search />, route: '/search' },

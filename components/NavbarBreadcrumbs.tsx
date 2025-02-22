@@ -3,6 +3,8 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs, { breadcrumbsClasses } from '@mui/material/Breadcrumbs';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
+import { useRouter } from 'next/router';
+import { mainListItems } from './MenuContent';
 
 const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   margin: theme.spacing(1, 0),
@@ -16,17 +18,18 @@ const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
 }));
 
 export default function NavbarBreadcrumbs() {
+  const router = useRouter();
+  const viewName = mainListItems.find((item) => item.route === router.pathname);
   return (
     <StyledBreadcrumbs
       aria-label="breadcrumb"
       separator={<NavigateNextRoundedIcon fontSize="small" />}
     >
-      <Typography variant="body1">Dashboard</Typography>
       <Typography
         variant="body1"
         sx={{ color: 'text.primary', fontWeight: 600 }}
       >
-        Home
+        {viewName?.text}
       </Typography>
     </StyledBreadcrumbs>
   );
