@@ -59,7 +59,7 @@ export default function Page({ vehicle }: Props) {
   if (!vehicle) return 'not found';
   const mapped = mapVehicle(vehicle);
   return (
-    <div>
+    <>
       <h1>VIN {vehicle.vin}</h1>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -81,7 +81,7 @@ export default function Page({ vehicle }: Props) {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </>
   );
 }
 

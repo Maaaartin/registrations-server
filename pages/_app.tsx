@@ -63,7 +63,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
               >
                 <Header />
                 <CacheContextProvider>
-                  <Component {...pageProps}></Component>
+                <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
+                  <Component {...pageProps}/>
+                  </Box>
                 </CacheContextProvider>
               </Stack>
             </Box>

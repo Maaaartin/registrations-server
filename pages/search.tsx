@@ -71,7 +71,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
     vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1;
 
   return (
-    <div>
+    <>
       <VinForm />
       <DataGrid
         onRowClick={(params) => {
@@ -213,7 +213,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
           },
         }}
       />
-    </div>
+    </>
   );
 }
 
