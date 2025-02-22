@@ -4,16 +4,12 @@ import { GetServerSideProps } from 'next';
 import { prisma } from '../prisma';
 import { useRouter } from 'next/router';
 import BrandAutocomplete from '../components/BrandAutocomplete';
-import {
-  SerializableRegistration,
-  serializeRegistration,
-} from '../util/registrations';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { DataGrid, GridFilterInputValueProps } from '@mui/x-data-grid';
 import { unstable_cache } from 'next/cache';
 
 type Props = {
-  vehicles: SerializableRegistration[];
+  vehicles: Awaited<ReturnType<typeof searchVehicles>>;
   currentPage: number;
   brand: string;
   model: string;
@@ -223,7 +219,15 @@ const searchVehicles = unstable_cache(
       skip: page * pageSize,
       take: pageSize,
       where: { tovarni_znacka: brand || undefined, typ: type || undefined },
+      select: {
+        id: true,
+        tovarni_znacka: true,
+        typ: true,
+        vin: true,
+        cislo_tp: true,
+      },
     }),
+
   ['search'],
   { revalidate: 3600, tags: ['search'] }
 );
@@ -241,7 +245,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 
   return {
     props: {
-      vehicles: vehicles.map(serializeRegistration),
+      vehicles,
       currentPage,
       brand: brandStr,
       model: typStr,
