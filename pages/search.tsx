@@ -71,9 +71,13 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
     <>
       <VinForm />
       <DataGrid
-        onRowClick={(params) => {
-          router.push({ pathname: '/vehicle', query: { id: params.row.id } }); // Navigate to vehicle details page
-        }}
+        rowSelection={false}
+        onRowClick={(params) =>
+          router.push({
+            pathname: '/vehicle',
+            query: { id: params.row.id },
+          })
+        }
         sx={{
           '& .MuiDataGrid-row': {
             cursor: 'pointer',
