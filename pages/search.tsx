@@ -7,6 +7,7 @@ import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { DataGrid, GridFilterInputValueProps } from '@mui/x-data-grid';
 import { unstable_cache } from 'next/cache';
+import zod from 'zod';
 
 type Props = {
   vehicles: Awaited<ReturnType<typeof searchVehicles>>;
@@ -232,23 +233,28 @@ const searchVehicles = unstable_cache(
   { revalidate: 3600, tags: ['search'] }
 );
 
+const queryDecoder = zod.object({
+  page: zod
+    .string()
+    .default('0')
+    .transform((val) => Number(val) || 0),
+  brand: zod.string().default(''),
+  model: zod.string().default(''),
+});
+
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { page, brand, model } = context.query;
+  const { page, brand, model } = queryDecoder.parse(context.query);
 
-  const currentPage = parseInt(page as string, 10) || 0;
-  const brandStr = [brand].flat()[0] || '';
-  const typStr = [model].flat()[0] || '';
-
-  const vehicles = await searchVehicles(currentPage, brandStr, typStr);
+  const vehicles = await searchVehicles(page, brand, model);
 
   return {
     props: {
       vehicles,
-      currentPage,
-      brand: brandStr,
-      model: typStr,
+      currentPage: page,
+      brand,
+      model,
     },
   };
 };
