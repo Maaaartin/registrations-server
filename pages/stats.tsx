@@ -6,7 +6,7 @@ import StatCard from '../components/StatCard';
 import useRequest from '../hooks/useRequest';
 import { List, ListItem, ListItemText } from '@mui/material';
 import zod from 'zod';
-import SessionsChart from '../components/SessionChart';
+import RegistrationsChart from '../components/RegistrationsChart';
 import { useCacheContext } from '../context/cache';
 
 const CountCard = () => {
@@ -86,6 +86,7 @@ const BrandsCard = () => {
 };
 
 const ColorsCard = () => {
+  const [topColors, setTopColors] = useCacheContext().topColors;
   const request = useRequest({
     url: '/api/top-colors',
     decoder: zod
@@ -96,9 +97,16 @@ const ColorsCard = () => {
       .array(),
   });
   useEffect(() => {
-    request.run();
-  }, []);
-  const renderValue = request.value;
+    if (!topColors.length) {
+      request.run();
+    }
+  }, [topColors, request.run]);
+  useEffect(() => {
+    if (request.value) {
+      setTopColors(request.value);
+    }
+  }, [request.value, setTopColors]);
+  const renderValue = topColors;
   const renderPrimary = (value: { value: string; count: number }) =>
     value.value;
   const renderSecondary = (value: { value: string; count: number }) =>
@@ -107,15 +115,11 @@ const ColorsCard = () => {
     <StatCard
       title="Top barvy"
       value={
-        Array.isArray(renderValue) ? (
-          <CardList
-            data={renderValue}
-            renderPrimary={renderPrimary}
-            renderSecondary={renderSecondary}
-          ></CardList>
-        ) : (
-          renderValue
-        )
+        <CardList
+          data={renderValue}
+          renderPrimary={renderPrimary}
+          renderSecondary={renderSecondary}
+        ></CardList>
       }
     />
   );
@@ -144,7 +148,7 @@ export default function Stats() {
         </Grid>
       </Grid>
       <Grid size={{ xs: 12, md: 6 }}>
-        <SessionsChart />
+        <RegistrationsChart />
       </Grid>
       <Copyright sx={{ my: 4 }} />
     </>

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
 import zod from 'zod';
 import useRequest from '../hooks/useRequest';
+import { useCacheContext } from '../context/cache';
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
   return (
@@ -26,30 +27,32 @@ const decoder = zod.array(
   })
 );
 
-export default function SessionsChart() {
+export default function RegistrationsChart() {
   const theme = useTheme();
+  const [registrationsPerYear, setRegistrationsPerYear] =
+    useCacheContext().registrationsPerYear;
   const request = useRequest({
     url: '/api/registrations-per-year',
     decoder,
   });
-
-  React.useEffect(() => {
-    request.run();
-  }, []);
+  useEffect(() => {
+    if (!registrationsPerYear.length) {
+      request.run();
+    }
+  }, [registrationsPerYear, request.run]);
+  useEffect(() => {
+    if (request.value) {
+      setRegistrationsPerYear(request.value);
+    }
+  }, [request.value, setRegistrationsPerYear]);
 
   const colorPalette = [
     theme.palette.primary.light,
     theme.palette.primary.main,
     theme.palette.primary.dark,
   ];
-  if (request.loading) {
-    return 'loading';
-  }
-  if (request.error) {
-    return 'error';
-  }
-  const years = request.value.map(({ year }) => year);
-  const values = request.value.map(({ count }) => count);
+  const years = registrationsPerYear.map(({ year }) => year);
+  const values = registrationsPerYear.map(({ count }) => count);
   const sum = values.reduce((sum, curr) => (sum += curr), 0);
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
