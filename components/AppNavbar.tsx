@@ -7,7 +7,6 @@ import { tabsClasses } from '@mui/material/Tabs';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import SideMenuMobile from './SideMenuMobile';
 import MenuButton from './MenuButton';
-import ColorModeIconDropdown from '../theme/ColorModeIconDropdown';
 import Title from './Title';
 
 const Toolbar = styled(MuiToolbar)({
@@ -57,7 +56,6 @@ export default function AppNavbar() {
           }}
         >
           <Title />
-          <ColorModeIconDropdown />
           <MenuButton aria-label="menu" onClick={toggleDrawer(true)}>
             <MenuRoundedIcon />
           </MenuButton>
