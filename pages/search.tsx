@@ -11,10 +11,11 @@ import zod from 'zod';
 import { GridBaseColDef } from '@mui/x-data-grid/internals';
 import Link from 'next/link';
 
-type Vehicle = Awaited<ReturnType<typeof searchVehicles>>;
+type Vehicles = Awaited<ReturnType<typeof searchVehicles>>;
+type Vehicle = Vehicles[0];
 
 type Props = {
-  vehicles: Vehicle;
+  vehicles: Vehicles;
   currentPage: number;
   brand: string;
   model: string;
@@ -44,21 +45,30 @@ function VinForm() {
     </form>
   );
 }
-type RenderCellFn = GridBaseColDef<Vehicle[0]>['renderCell'];
+type RenderCellFn = GridBaseColDef<Vehicle>['renderCell'];
 
-const renderCell: (field: keyof Vehicle[0]) => RenderCellFn =
+const LinkComponent = ({
+  id,
+  value,
+}: {
+  id: number;
+  value: Vehicle[keyof Vehicle];
+}) => (
+  <Link
+    href={{
+      pathname: '/vehicle',
+      query: { id },
+    }}
+  >
+    {value}
+  </Link>
+);
+
+const renderCell: (field: keyof Vehicle) => RenderCellFn =
   (field) =>
+  /* eslint-disable react/display-name */
   ({ row }) =>
-    (
-      <Link
-        href={{
-          pathname: '/vehicle',
-          query: { id: row.id },
-        }}
-      >
-        {row[field]}
-      </Link>
-    );
+    <LinkComponent id={row.id} value={row[field]} />;
 
 export default function Search({ vehicles, currentPage, brand, model }: Props) {
   const router = useRouter();
