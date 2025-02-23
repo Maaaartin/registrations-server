@@ -175,6 +175,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             meta: { hasNextPage: true },
           },
         }}
+        paginationModel={{ page: currentPage, pageSize }}
         paginationMode="server"
         filterMode="server"
         pageSizeOptions={[pageSize]}
