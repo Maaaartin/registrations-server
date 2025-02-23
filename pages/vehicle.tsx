@@ -19,7 +19,7 @@ type Props = { vehicle: SerializableRegistration | null };
 
 function mapVehicle(
   vehicle: SerializableRegistration
-): [string, string | Date][] {
+): [string, SerializableRegistration[keyof SerializableRegistration]][] {
   const excludeFields: (keyof registrations)[] = [
     'id',
     'max_vykon',
@@ -47,12 +47,7 @@ function mapVehicle(
     vehicle.kola_a_pneumatiky_naprava_3,
     vehicle.kola_a_pneumatiky_naprava_4,
   ].join('; ');
-  return Object.entries(filteredEntries).map(([key, value]) => [
-    key,
-    typeof value === 'object' && value?.type === 'Date'
-      ? new Date(value.value)
-      : String(value),
-  ]);
+  return Object.entries(filteredEntries);
 }
 
 export default function Page({ vehicle }: Props) {
@@ -74,7 +69,7 @@ export default function Page({ vehicle }: Props) {
                     key}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {String(value)}
+                  {typeof value === 'object' ? value?.value : value}
                 </TableCell>
               </TableRow>
             ))}
