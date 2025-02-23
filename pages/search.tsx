@@ -8,9 +8,13 @@ import ModelAutocomplete from '../components/ModelAutocomplete';
 import { DataGrid, GridFilterInputValueProps } from '@mui/x-data-grid';
 import { unstable_cache } from 'next/cache';
 import zod from 'zod';
+import { GridBaseColDef } from '@mui/x-data-grid/internals';
+import Link from 'next/link';
+
+type Vehicle = Awaited<ReturnType<typeof searchVehicles>>;
 
 type Props = {
-  vehicles: Awaited<ReturnType<typeof searchVehicles>>;
+  vehicles: Vehicle;
   currentPage: number;
   brand: string;
   model: string;
@@ -40,6 +44,21 @@ function VinForm() {
     </form>
   );
 }
+type RenderCellFn = GridBaseColDef<Vehicle[0]>['renderCell'];
+
+const renderCell: (field: keyof Vehicle[0]) => RenderCellFn =
+  (field) =>
+  ({ row }) =>
+    (
+      <Link
+        href={{
+          pathname: '/vehicle',
+          query: { id: row.id },
+        }}
+      >
+        {row[field]}
+      </Link>
+    );
 
 export default function Search({ vehicles, currentPage, brand, model }: Props) {
   const router = useRouter();
@@ -72,12 +91,6 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
       <VinForm />
       <DataGrid
         rowSelection={false}
-        onRowClick={(params) =>
-          router.push({
-            pathname: '/vehicle',
-            query: { id: params.row.id },
-          })
-        }
         sx={{
           '& .MuiDataGrid-row': {
             cursor: 'pointer',
@@ -91,7 +104,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             headerName: 'Tovární značka',
             flex: 0.5,
             minWidth: 200,
-            renderCell: (params) => params.row.tovarni_znacka,
+            renderCell: renderCell('tovarni_znacka'),
             sortable: false,
             filterOperators: [
               {
@@ -121,7 +134,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             headerName: 'Typ',
             flex: 0.5,
             minWidth: 300,
-            renderCell: (params) => params.row.typ,
+            renderCell: renderCell('typ'),
             sortable: false,
             filterOperators: [
               {
@@ -152,7 +165,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             headerName: 'VIN',
             flex: 0.5,
             minWidth: 150,
-            renderCell: (params) => params.row.vin,
+            renderCell: renderCell('vin'),
             sortable: false,
             filterable: false,
           },
@@ -161,7 +174,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             headerName: 'Číslo TP',
             flex: 0.5,
             minWidth: 80,
-            renderCell: (params) => params.row.cislo_tp,
+            renderCell: renderCell('cislo_tp'),
             sortable: false,
             filterable: false,
           },
