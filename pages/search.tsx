@@ -83,6 +83,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             pathname: router.pathname,
             query: {
               ...params,
+              model: params.brand ? params.model : '',
               page: params.brand !== brand || params.model !== model ? 0 : page,
             },
           },
