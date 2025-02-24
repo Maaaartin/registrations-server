@@ -70,17 +70,21 @@ const renderCell: (field: keyof Vehicle) => RenderCellFn =
   ({ row }) =>
     <LinkComponent id={row.id} value={row[field]} />;
 
+type ToolbarProps = GridSlotProps['toolbar'] &
+  Omit<Props, 'vehicles'> & {
+    loading: boolean;
+    onSubmit: (
+      params: Partial<{ brand: string; model: string; page: number }>
+    ) => Promise<boolean>;
+  };
+
 const Toolbar = ({
   brand,
   model,
   currentPage,
+  loading,
   onSubmit,
-}: GridSlotProps['toolbar'] &
-  Omit<Props, 'vehicles'> & {
-    onSubmit: (
-      params: Partial<{ brand: string; model: string; page: number }>
-    ) => Promise<boolean>;
-  }) => {
+}: ToolbarProps) => {
   return (
     <>
       <BrandAutocomplete
@@ -88,7 +92,7 @@ const Toolbar = ({
         onSelect={(value) => {
           onSubmit({ brand: value, model, page: currentPage });
         }}
-        // disabled={loading}
+        disabled={loading}
       />
       <ModelAutocomplete
         brand={brand}
@@ -96,7 +100,7 @@ const Toolbar = ({
         onSelect={(value) => {
           onSubmit({ brand, model: value, page: currentPage });
         }}
-        disabled={!brand}
+        disabled={loading || !brand}
       />
     </>
   );
@@ -214,7 +218,8 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             model,
             currentPage,
             onSubmit,
-          } as GridSlotProps['toolbar'],
+            loading,
+          } as ToolbarProps,
           filterPanel: {
             sx: { height: '100vh' },
             filterFormProps: {
