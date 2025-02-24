@@ -5,7 +5,7 @@ import { prisma } from '../prisma';
 import { useRouter } from 'next/router';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridSlotProps } from '@mui/x-data-grid';
 import { unstable_cache } from 'next/cache';
 import zod from 'zod';
 import { GridBaseColDef } from '@mui/x-data-grid/internals';
@@ -70,30 +70,66 @@ const renderCell: (field: keyof Vehicle) => RenderCellFn =
   ({ row }) =>
     <LinkComponent id={row.id} value={row[field]} />;
 
+const Toolbar = ({
+  brand,
+  model,
+  currentPage,
+  onSubmit,
+}: GridSlotProps['toolbar'] &
+  Omit<Props, 'vehicles'> & {
+    onSubmit: (
+      params: Partial<{ brand: string; model: string; page: number }>
+    ) => Promise<boolean>;
+  }) => {
+  return (
+    <>
+      <BrandAutocomplete
+        value={brand}
+        onSelect={(value) => {
+          onSubmit({ brand: value, model, page: currentPage });
+        }}
+        // disabled={loading}
+      />
+      <ModelAutocomplete
+        brand={brand}
+        model={model}
+        onSelect={(value) => {
+          onSubmit({ brand, model: value, page: currentPage });
+        }}
+        disabled={!brand}
+      />
+    </>
+  );
+};
+
 export default function Search({ vehicles, currentPage, brand, model }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const onSubmit =
-    (page: number) => (params: Partial<{ brand: string; model: string }>) => {
-      setLoading(true);
-      return router
-        .push(
-          {
-            pathname: router.pathname,
-            query: {
-              ...params,
-              model: params.brand ? params.model : '',
-              page: params.brand !== brand || params.model !== model ? 0 : page,
-            },
+  const onSubmit = (
+    params: Partial<{ brand: string; model: string; page: number }>
+  ) => {
+    setLoading(true);
+    return router
+      .push(
+        {
+          pathname: router.pathname,
+          query: {
+            ...params,
+            model: params.brand ? params.model : '',
+            page:
+              params.brand !== brand || params.model !== model
+                ? 0
+                : params.page,
           },
-          undefined,
-          { scroll: false }
-        )
-        .finally(() => {
-          setLoading(false);
-        });
-    };
+        },
+        undefined,
+        { scroll: false }
+      )
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   const rowCount =
     vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1;
 
@@ -117,24 +153,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             minWidth: 200,
             renderCell: renderCell('tovarni_znacka'),
             sortable: false,
-            filterOperators: [
-              {
-                label: 'Contains',
-                value: 'contains',
-                getApplyFilterFn: () => {
-                  return null;
-                },
-                InputComponent: () => (
-                  <BrandAutocomplete
-                    value={brand}
-                    onSelect={(value) => {
-                      onSubmit(currentPage)({ brand: value, model });
-                    }}
-                    disabled={loading}
-                  />
-                ),
-              },
-            ],
+            filterable: false,
           },
           {
             field: 'model',
@@ -143,25 +162,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             minWidth: 300,
             renderCell: renderCell('typ'),
             sortable: false,
-            filterOperators: [
-              {
-                label: 'Contains',
-                value: 'contains',
-                getApplyFilterFn: () => {
-                  return null;
-                },
-                InputComponent: () => (
-                  <ModelAutocomplete
-                    brand={brand}
-                    model={model}
-                    onSelect={(value) => {
-                      onSubmit(currentPage)({ brand, model: value });
-                    }}
-                    disabled={loading || !brand}
-                  />
-                ),
-              },
-            ],
+            filterable: false,
           },
           {
             field: 'vin',
@@ -196,13 +197,24 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
         filterMode="server"
         pageSizeOptions={[pageSize]}
         onPaginationModelChange={(params) => {
-          return onSubmit(params.page)({ brand, model });
+          return onSubmit({ brand, model, page: params.page });
         }}
         rowCount={rowCount}
         loading={loading}
         disableColumnResize
         density="compact"
+        slots={{
+          toolbar: Toolbar as React.JSXElementConstructor<
+            GridSlotProps['toolbar']
+          >,
+        }}
         slotProps={{
+          toolbar: {
+            brand,
+            model,
+            currentPage,
+            onSubmit,
+          } as GridSlotProps['toolbar'],
           filterPanel: {
             sx: { height: '100vh' },
             filterFormProps: {
