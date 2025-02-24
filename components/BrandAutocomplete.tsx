@@ -59,6 +59,7 @@ export default function BrandAutocomplete({
       disablePortal
       options={brands}
       sx={{ width: 300 }}
+      loading={request.loading}
       renderInput={(params) => <TextField {...params} label="Značka" />}
       inputValue={searchBrand}
       onInputChange={(event, newInputValue) => {

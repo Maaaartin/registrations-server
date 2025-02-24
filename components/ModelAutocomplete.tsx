@@ -75,6 +75,7 @@ export default function ModelAutocomplete({
       disablePortal
       options={models}
       sx={{ width: 300 }}
+      loading={request.loading}
       renderInput={(params) => <TextField {...params} label="Model" />}
       inputValue={searchModel}
       onInputChange={(event, newInputValue) => {
