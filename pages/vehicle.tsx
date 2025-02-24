@@ -66,16 +66,8 @@ export default function Page({ vehicle }: Props) {
             flex: 0.5,
             minWidth: 200,
             renderCell: ({ row: { id } }) => id,
-            sortable: false,
-            filterOperators: [
-              {
-                label: 'Contains',
-                value: 'contains',
-                getApplyFilterFn: () => {
-                  return null;
-                },
-              },
-            ],
+            sortable: true,
+            valueGetter: (_, { value }) => value,
           },
           {
             field: 'value',
@@ -85,15 +77,6 @@ export default function Page({ vehicle }: Props) {
             renderCell: ({ row: { value } }) =>
               typeof value === 'object' ? value?.value : String(value),
             sortable: false,
-            filterOperators: [
-              {
-                label: 'Contains',
-                value: 'contains',
-                getApplyFilterFn: () => {
-                  return null;
-                },
-              },
-            ],
           },
         ]}
       />
