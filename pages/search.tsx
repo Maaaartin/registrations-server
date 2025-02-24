@@ -5,7 +5,7 @@ import { prisma } from '../prisma';
 import { useRouter } from 'next/router';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
-import { DataGrid, GridFilterInputValueProps } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { unstable_cache } from 'next/cache';
 import zod from 'zod';
 import { GridBaseColDef } from '@mui/x-data-grid/internals';
@@ -124,14 +124,10 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
                 getApplyFilterFn: () => {
                   return null;
                 },
-                InputComponent: ({
-                  item,
-                  applyValue,
-                }: GridFilterInputValueProps) => (
+                InputComponent: () => (
                   <BrandAutocomplete
                     value={brand}
                     onSelect={(value) => {
-                      applyValue({ ...item, value });
                       onSubmit(currentPage)({ brand: value, model });
                     }}
                     disabled={loading}
@@ -154,18 +150,14 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
                 getApplyFilterFn: () => {
                   return null;
                 },
-                InputComponent: ({
-                  item,
-                  applyValue,
-                }: GridFilterInputValueProps) => (
+                InputComponent: () => (
                   <ModelAutocomplete
                     brand={brand}
                     model={model}
                     onSelect={(value) => {
-                      applyValue({ ...item, value });
                       onSubmit(currentPage)({ brand, model: value });
                     }}
-                    disabled={loading}
+                    disabled={loading || !brand}
                   />
                 ),
               },

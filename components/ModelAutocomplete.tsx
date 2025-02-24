@@ -81,8 +81,13 @@ export default function ModelAutocomplete({
         setSearchModel(newInputValue);
       }}
       value={model}
+      onBlur={() => {
+        if (!searchModel) onSelect('');
+      }}
       onChange={(event, value) => {
-        onSelect(value || '');
+        if (value) {
+          onSelect(value);
+        }
       }}
     />
   );
