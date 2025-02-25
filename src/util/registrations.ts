@@ -1,4 +1,4 @@
-import { registrations } from '@prisma/client';
+import type { registrations } from '../../prisma/client';
 
 type ConvertDatesToString<T> = {
   [K in keyof T]: T[K] extends Date | null

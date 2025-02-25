@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '../../prisma';
-import { registrationCountsByYear } from '@prisma/client/sql';
+import prisma from '../../../prisma/index';
+import { registrationCountsByYear } from '../../../prisma/client/sql';
 
 export default async function handler(
   req: NextApiRequest,

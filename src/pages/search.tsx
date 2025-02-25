@@ -1,7 +1,7 @@
 import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { prisma } from '../prisma';
+import prisma from '../../prisma';
 import { useRouter } from 'next/router';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';

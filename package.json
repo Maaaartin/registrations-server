@@ -8,7 +8,7 @@
     "url": "https://github.com/Maaaartin/registrations-server.git"
   },
   "scripts": {
-    "postinstall": "npx prisma generate --sql",
+    "generate:sql": "npx prisma generate --sql",
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p 3000",

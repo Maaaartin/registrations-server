@@ -1,10 +1,10 @@
 import { GetServerSideProps } from 'next';
-import { prisma } from '../prisma';
+import prisma from '../../prisma';
 import {
   SerializableRegistration,
   serializeRegistration,
 } from '../util/registrations';
-import { registrations } from '@prisma/client';
+import type { registrations } from '../../prisma/client';
 import registrationColumnMap from '../registrationColumnMap.json';
 import { DataGrid } from '@mui/x-data-grid';
 

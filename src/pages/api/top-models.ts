@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { prisma } from '../../prisma';
-import { topTypesForBrand } from '@prisma/client/sql';
+import prisma from '../../../prisma/index';
+import { topTypesForBrand } from '../../../prisma/client/sql';
 
 export default async function handler(
   req: NextApiRequest,
