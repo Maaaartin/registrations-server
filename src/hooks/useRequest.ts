@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import zod, { ZodError } from 'zod';
 
@@ -27,7 +27,7 @@ export type UseRequestHook<T, D> = (
       loading: true;
     }
 ) & { run: (props?: UseRequestRunProps<D>) => void };
-export default function useRequest<T, D = any>({
+export default function useRequest<T, D = Record<string, string>>({
   url,
   decoder,
 }: UseRequestProps<T>): UseRequestHook<T, D> {
