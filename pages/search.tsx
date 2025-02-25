@@ -5,12 +5,17 @@ import { prisma } from '../prisma';
 import { useRouter } from 'next/router';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
-import { DataGrid, GridFilterInputValueProps } from '@mui/x-data-grid';
+import { DataGrid, GridSlotProps } from '@mui/x-data-grid';
 import { unstable_cache } from 'next/cache';
 import zod from 'zod';
+import { GridBaseColDef } from '@mui/x-data-grid/internals';
+import Link from 'next/link';
+
+type Vehicles = Awaited<ReturnType<typeof searchVehicles>>;
+type Vehicle = Vehicles[0];
 
 type Props = {
-  vehicles: Awaited<ReturnType<typeof searchVehicles>>;
+  vehicles: Vehicles;
   currentPage: number;
   brand: string;
   model: string;
@@ -40,30 +45,95 @@ function VinForm() {
     </form>
   );
 }
+type RenderCellFn = GridBaseColDef<Vehicle>['renderCell'];
+
+const LinkComponent = ({
+  id,
+  value,
+}: {
+  id: number;
+  value: Vehicle[keyof Vehicle];
+}) => (
+  <Link
+    href={{
+      pathname: '/vehicle',
+      query: { id },
+    }}
+  >
+    {value}
+  </Link>
+);
+
+const renderCell: (field: keyof Vehicle) => RenderCellFn =
+  (field) =>
+  /* eslint-disable react/display-name */
+  ({ row }) =>
+    <LinkComponent id={row.id} value={row[field]} />;
+
+type ToolbarProps = GridSlotProps['toolbar'] &
+  Omit<Props, 'vehicles'> & {
+    loading: boolean;
+    onSubmit: (
+      params: Partial<{ brand: string; model: string; page: number }>
+    ) => Promise<boolean>;
+  };
+
+const Toolbar = ({
+  brand,
+  model,
+  currentPage,
+  loading,
+  onSubmit,
+}: ToolbarProps) => {
+  return (
+    <>
+      <BrandAutocomplete
+        value={brand}
+        onSelect={(value) => {
+          onSubmit({ brand: value, model, page: currentPage });
+        }}
+        disabled={loading}
+      />
+      <ModelAutocomplete
+        brand={brand}
+        model={model}
+        onSelect={(value) => {
+          onSubmit({ brand, model: value, page: currentPage });
+        }}
+        disabled={loading || !brand}
+      />
+    </>
+  );
+};
 
 export default function Search({ vehicles, currentPage, brand, model }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const onSubmit =
-    (page: number) => (params: Partial<{ brand: string; model: string }>) => {
-      setLoading(true);
-      return router
-        .push(
-          {
-            pathname: router.pathname,
-            query: {
-              ...params,
-              page: params.brand !== brand || params.model !== model ? 0 : page,
-            },
+  const onSubmit = (
+    params: Partial<{ brand: string; model: string; page: number }>
+  ) => {
+    setLoading(true);
+    return router
+      .push(
+        {
+          pathname: router.pathname,
+          query: {
+            ...params,
+            model: params.brand ? params.model : '',
+            page:
+              params.brand !== brand || params.model !== model
+                ? 0
+                : params.page,
           },
-          undefined,
-          { scroll: false }
-        )
-        .finally(() => {
-          setLoading(false);
-        });
-    };
+        },
+        undefined,
+        { scroll: false }
+      )
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   const rowCount =
     vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1;
 
@@ -71,9 +141,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
     <>
       <VinForm />
       <DataGrid
-        onRowClick={(params) => {
-          router.push({ pathname: '/vehicle', query: { id: params.row.id } }); // Navigate to vehicle details page
-        }}
+        rowSelection={false}
         sx={{
           '& .MuiDataGrid-row': {
             cursor: 'pointer',
@@ -87,68 +155,25 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             headerName: 'Tovární značka',
             flex: 0.5,
             minWidth: 200,
-            renderCell: (params) => params.row.tovarni_znacka,
+            renderCell: renderCell('tovarni_znacka'),
             sortable: false,
-            filterOperators: [
-              {
-                label: 'Contains',
-                value: 'contains',
-                getApplyFilterFn: () => {
-                  return null;
-                },
-                InputComponent: ({
-                  item,
-                  applyValue,
-                }: GridFilterInputValueProps) => (
-                  <BrandAutocomplete
-                    value={brand}
-                    onSelect={(value) => {
-                      applyValue({ ...item, value });
-                      onSubmit(currentPage)({ brand: value, model });
-                    }}
-                    disabled={loading}
-                  />
-                ),
-              },
-            ],
+            filterable: false,
           },
           {
             field: 'model',
             headerName: 'Typ',
             flex: 0.5,
             minWidth: 300,
-            renderCell: (params) => params.row.typ,
+            renderCell: renderCell('typ'),
             sortable: false,
-            filterOperators: [
-              {
-                label: 'Contains',
-                value: 'contains',
-                getApplyFilterFn: () => {
-                  return null;
-                },
-                InputComponent: ({
-                  item,
-                  applyValue,
-                }: GridFilterInputValueProps) => (
-                  <ModelAutocomplete
-                    brand={brand}
-                    model={model}
-                    onSelect={(value) => {
-                      applyValue({ ...item, value });
-                      onSubmit(currentPage)({ brand, model: value });
-                    }}
-                    disabled={loading}
-                  />
-                ),
-              },
-            ],
+            filterable: false,
           },
           {
             field: 'vin',
             headerName: 'VIN',
             flex: 0.5,
             minWidth: 150,
-            renderCell: (params) => params.row.vin,
+            renderCell: renderCell('vin'),
             sortable: false,
             filterable: false,
           },
@@ -157,7 +182,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             headerName: 'Číslo TP',
             flex: 0.5,
             minWidth: 80,
-            renderCell: (params) => params.row.cislo_tp,
+            renderCell: renderCell('cislo_tp'),
             sortable: false,
             filterable: false,
           },
@@ -171,17 +196,30 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             meta: { hasNextPage: true },
           },
         }}
+        paginationModel={{ page: currentPage, pageSize }}
         paginationMode="server"
         filterMode="server"
         pageSizeOptions={[pageSize]}
         onPaginationModelChange={(params) => {
-          return onSubmit(params.page)({ brand, model });
+          return onSubmit({ brand, model, page: params.page });
         }}
         rowCount={rowCount}
         loading={loading}
         disableColumnResize
         density="compact"
+        slots={{
+          toolbar: Toolbar as React.JSXElementConstructor<
+            GridSlotProps['toolbar']
+          >,
+        }}
         slotProps={{
+          toolbar: {
+            brand,
+            model,
+            currentPage,
+            onSubmit,
+            loading,
+          } as ToolbarProps,
           filterPanel: {
             sx: { height: '100vh' },
             filterFormProps: {

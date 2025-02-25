@@ -75,14 +75,20 @@ export default function ModelAutocomplete({
       disablePortal
       options={models}
       sx={{ width: 300 }}
+      loading={request.loading}
       renderInput={(params) => <TextField {...params} label="Model" />}
       inputValue={searchModel}
       onInputChange={(event, newInputValue) => {
         setSearchModel(newInputValue);
       }}
       value={model}
+      onBlur={() => {
+        if (!searchModel) onSelect('');
+      }}
       onChange={(event, value) => {
-        onSelect(value || '');
+        if (value) {
+          onSelect(value);
+        }
       }}
     />
   );

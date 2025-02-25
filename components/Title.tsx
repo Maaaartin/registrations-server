@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Stack } from '@mui/system';
 import { Typography, Box } from '@mui/material';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import Link from 'next/link';
 
 function CustomIcon() {
   return (
@@ -37,7 +38,7 @@ export default function Title() {
     >
       <CustomIcon />
       <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
-        Dashboard
+        <Link href="/">Dashboard</Link>
       </Typography>
     </Stack>
   );
