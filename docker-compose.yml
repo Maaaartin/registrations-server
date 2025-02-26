@@ -12,14 +12,51 @@ services:
     networks:
       - app_network
 
-  nextjs:
-    build: .
-    image: my-nextjs-app:latest
-    container_name: nextjs
-    expose:
-      - '3000'
+  # nextjs:
+  #   build: .
+  #   image: my-nextjs-app:latest
+  #   container_name: nextjs
+  #   expose:
+  #     - '3000'
+  #   networks:
+  #     - app_network
+
+  infra:
+    image: infra-image:latest
+    container_name: infra_container
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=registrations_cz
     networks:
       - app_network
+  postgres:
+    image: postgres:15
+    container_name: postgres_container
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=registrations_cz
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - '5050:80'
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
 
 networks:
   app_network:
