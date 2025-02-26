@@ -3,31 +3,24 @@ version: '3.8'
 services:
   nginx:
     image: nginx:latest
+    container_name: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs:ro
     ports:
       - '80:80'
       - '443:443'
+    networks:
+      - app_network
 
   nextjs:
     build: .
     image: my-nextjs-app:latest
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.nextjs.rule=Host(`localhost`)'
-      - 'traefik.http.routers.nextjs.entrypoints=websecure'
-      - 'traefik.http.routers.nextjs.tls=true'
-      - 'traefik.http.routers.nextjs.tls.certresolver=selfsigned'
+    container_name: nextjs
+    expose:
+      - '3000'
+    networks:
+      - app_network
 
-  pgadmin:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: 'admin@example.com'
-      PGADMIN_DEFAULT_PASSWORD: 'securepassword'
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.pgadmin.rule=Host(`localhost`)'
-      - 'traefik.http.routers.pgadmin.entrypoints=websecure'
-      - 'traefik.http.routers.pgadmin.tls=true'
-      - 'traefik.http.routers.pgadmin.tls.certresolver=selfsigned'
+networks:
+  app_network:
+    driver: bridge
