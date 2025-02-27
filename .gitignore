@@ -132,4 +132,6 @@ dist
 next-env.d.ts
 temp
 *.env
-prisma/client/*.node
+prisma/client/*
+!prisma/client/sql/
+!prisma/client/sql/**
