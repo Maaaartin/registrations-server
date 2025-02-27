@@ -6,8 +6,7 @@ WORKDIR /app
 
 COPY temp ./
 
-RUN yarn
-RUN cp -r ./node_modules/@prisma/engines ./prisma/client
+RUN yarn --frozen-lockfile
 RUN yarn build
 
 EXPOSE 3000
