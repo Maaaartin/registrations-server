@@ -16,21 +16,7 @@ rm -rf "$TMP_PATH"
 mkdir -p "$TMP_PATH"
 
 git clone "$REPO_URL" "$TMP_PATH"
+cd "$TMP_PATH"
+git checkout docker
+cd ../
 rm -rf "$TMP_PATH/.git"
-cp .prod.env "$TMP_PATH/.env"
-
-$SSH_CMD  << 'EOF'
-  rm -rf app
-EOF
-scp -i $HOME/.ssh/digital_ocean -r $TMP_PATH root@$REMOTE_ADDRESS:/root/app
-
-$SSH_CMD  << 'EOF'
-  cd app
-  yarn
-  APP_NAME="nextjs-app"
-  yarn build
-  pm2 reload $APP_NAME --update-env --name "$APP_NAME" || pm2 start "yarn start" --name "$APP_NAME"
-  pm2 save
-EOF
-
-
