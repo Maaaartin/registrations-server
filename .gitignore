@@ -135,3 +135,6 @@ temp
 prisma/client/*
 !prisma/client/sql/
 !prisma/client/sql/**
+
+nginx/certs/*
+!nginx/certs/.gitkeep
