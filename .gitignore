@@ -132,4 +132,4 @@ dist
 next-env.d.ts
 temp
 *.env
-prisma/client
+prisma/client/*.node
