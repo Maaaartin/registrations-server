@@ -2,16 +2,10 @@ require('dotenv').config();
 const { Client } = require('pg');
 const fs = require('fs');
 const csv = require('csv-parser');
+const client = require('./client');
 const schema = require('./schema.json');
 const headerMap = require('./headerMap.json');
 
-const client = new Client({
-  user: process.env.POSTGRES_USER,
-  host: 'localhost',
-  database: 'registrations_cz',
-  password: process.env.PGADMIN_DEFAULT_PASSWORD,
-  port: 5432,
-});
 const createTableFromHeaders = async () => {
   await client.connect();
   await client.query(`DROP TABLE IF EXISTS registrations;`);
