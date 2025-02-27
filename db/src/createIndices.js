@@ -1,12 +1,13 @@
 const fs = require('fs');
+const path = require('path');
 const client = require('./client');
 
-const dirPath = './db/sql';
+const dirPath = path.resolve(__dirname, './sql');
 async function run() {
   const dir = await fs.promises.readdir(dirPath);
   const queries = await Promise.all(
     dir.map((fileName) =>
-      fs.promises.readFile(`${dirPath}/${fileName}`, 'ascii')
+      fs.promises.readFile(path.join(dirPath, fileName), 'ascii')
     )
   );
   await client.connect();
