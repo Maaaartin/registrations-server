@@ -16,7 +16,4 @@ rm -rf "$TMP_PATH"
 mkdir -p "$TMP_PATH"
 
 git clone "$REPO_URL" "$TMP_PATH"
-cd "$TMP_PATH"
-git checkout docker
-cd ../
 rm -rf "$TMP_PATH/.git"
