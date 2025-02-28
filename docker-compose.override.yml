@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  nginx:
+    volumes:
+      - ./nginx/certs/selfsigned.crt:/etc/nginx/certs/fullchain.pem:ro
+      - ./nginx/certs/selfsigned.key:/etc/nginx/certs/privkey.pem:ro
