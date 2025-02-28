@@ -1,5 +1,3 @@
-require('dotenv').config();
-const { Client } = require('pg');
 const fs = require('fs');
 const csv = require('csv-parser');
 const client = require('./client');
