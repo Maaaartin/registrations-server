@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Stack } from '@mui/system';
 import { Typography, Box } from '@mui/material';
-import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
 import Link from 'next/link';
 
 function CustomIcon() {
@@ -24,7 +24,7 @@ function CustomIcon() {
         boxShadow: 'inset 0 2px 5px rgba(255, 255, 255, 0.3)',
       }}
     >
-      <DashboardRoundedIcon color="inherit" sx={{ fontSize: '1rem' }} />
+      <DirectionsCarFilledIcon color="inherit" sx={{ fontSize: '1rem' }} />
     </Box>
   );
 }
