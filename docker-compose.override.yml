@@ -5,3 +5,6 @@ services:
     volumes:
       - ./nginx/certs/selfsigned.crt:/etc/nginx/certs/fullchain.pem:ro
       - ./nginx/certs/selfsigned.key:/etc/nginx/certs/privkey.pem:ro
+  postgres:
+    ports:
+      - '5432:5432'
