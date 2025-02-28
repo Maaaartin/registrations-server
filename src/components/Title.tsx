@@ -38,7 +38,7 @@ export default function Title() {
     >
       <CustomIcon />
       <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
-        <Link href="/">Dashboard</Link>
+        <Link href="/">Info o vozidlech</Link>
       </Typography>
     </Stack>
   );
