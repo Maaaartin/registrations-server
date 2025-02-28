@@ -28,7 +28,7 @@ services:
 
   infra:
     image: infra-image:latest
-    container_name: infra_container
+    container_name: infra
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -39,7 +39,7 @@ services:
       - ~/Downloads/RSV_vypis_vozidel_20250101.csv:/app/data.csv:ro
   postgres:
     image: postgres:15
-    container_name: postgres_container
+    container_name: postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -48,17 +48,6 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app_network
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin_container
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-    ports:
-      - '5050:80'
     networks:
       - app_network
 
