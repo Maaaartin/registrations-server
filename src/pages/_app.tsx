@@ -40,7 +40,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
       </Head>
       <AppTheme themeComponents={xThemeComponents}>
         <LocalizationProvider dateAdapter={AdapterLuxon}>
-          <CssBaseline enableColorScheme />
+          <CssBaseline />
           <Box sx={{ display: 'flex' }}>
             <SideMenu />
             <AppNavbar />
@@ -63,8 +63,13 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
               >
                 <Header />
                 <CacheContextProvider>
-                <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-                  <Component {...pageProps}/>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      maxWidth: { sm: '100%', md: '1700px' },
+                    }}
+                  >
+                    <Component {...pageProps} />
                   </Box>
                 </CacheContextProvider>
               </Stack>
