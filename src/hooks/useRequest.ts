@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import zod, { ZodError } from 'zod';
+import type zod from 'zod';
+import { ZodError } from 'zod';
 
 type UseRequestProps<T> = {
   url: string;
@@ -61,7 +62,7 @@ export default function useRequest<T, D = Record<string, string>>({
         })
         .finally(() => setLoading(false));
     },
-    [url, abortController.current, decoder]
+    [url, decoder]
   );
   useEffect(() => {
     if (loading) {
@@ -70,8 +71,9 @@ export default function useRequest<T, D = Record<string, string>>({
     }
   }, [loading]);
   useEffect(() => {
-    return () => abortController.current.abort();
-  }, [run, abortController.current]);
+    const controller = abortController.current;
+    return () => controller.abort();
+  }, [run]);
   const hook = useMemo(
     () => ({ value, error, loading, run }) as UseRequestHook<T, D>,
     [value, error, loading, run]
