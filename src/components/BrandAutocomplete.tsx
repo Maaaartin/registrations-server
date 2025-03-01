@@ -39,7 +39,13 @@ export default function BrandAutocomplete({
       setBrands(request.value);
       setBrandSearch({ ...brandSearch, [searchBrandDebounced]: request.value });
     }
-  }, [request.value, searchBrandDebounced, setBrands, setBrandSearch]);
+  }, [
+    brandSearch,
+    request.value,
+    searchBrandDebounced,
+    setBrands,
+    setBrandSearch
+  ]);
   useEffect(() => {
     if (searchBrandDebounced) {
       if (brandSearch[searchBrandDebounced]) {
@@ -51,7 +57,7 @@ export default function BrandAutocomplete({
     } else {
       setBrands(topBrands);
     }
-  }, [searchBrandDebounced, brandSearch, topBrands]);
+  }, [request, searchBrandDebounced, brandSearch, topBrands]);
   return (
     <Autocomplete
       freeSolo

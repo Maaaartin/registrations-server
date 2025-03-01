@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import zod, { ZodError } from 'zod';
 
 type UseRequestProps<T> = {
@@ -72,6 +72,10 @@ export default function useRequest<T, D = Record<string, string>>({
   useEffect(() => {
     return () => abortController.abort();
   }, [run]);
+  const hook = useMemo(
+    () => ({ value, error, loading, run }) as UseRequestHook<T, D>,
+    [value, error, loading, run]
+  );
 
-  return { value, error, loading, run } as UseRequestHook<T, D>;
+  return hook;
 }

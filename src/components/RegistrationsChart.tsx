@@ -36,15 +36,12 @@ export default function RegistrationsChart() {
     decoder
   });
   useEffect(() => {
-    if (!registrationsPerYear.length) {
+    if (!registrationsPerYear.length && !request.value) {
       request.run();
-    }
-  }, [registrationsPerYear, request.run]);
-  useEffect(() => {
-    if (request.value) {
+    } else if (request.value) {
       setRegistrationsPerYear(request.value);
     }
-  }, [request.value, setRegistrationsPerYear]);
+  }, [registrationsPerYear, request, setRegistrationsPerYear]);
 
   const colorPalette = [
     theme.palette.primary.light,

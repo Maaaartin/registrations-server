@@ -16,15 +16,12 @@ const CountCard = () => {
     decoder: zod.number()
   });
   useEffect(() => {
-    if (isNaN(count)) {
+    if (isNaN(count) && !request.value) {
       request.run();
-    }
-  }, [count, request.run]);
-  useEffect(() => {
-    if (request.value) {
+    } else if (request.value) {
       setCount(request.value);
     }
-  }, [request.value, setCount]);
+  }, [count, request, setCount]);
   const renderValue = count;
 
   return <StatCard title="Vozidel v databázi" value={renderValue} />;
@@ -60,15 +57,12 @@ const BrandsCard = () => {
     decoder: zod.string().array()
   });
   useEffect(() => {
-    if (!topBrands.length) {
+    if (!topBrands.length && !request.value) {
       request.run();
-    }
-  }, [topBrands, request.run]);
-  useEffect(() => {
-    if (request.value) {
+    } else if (request.value) {
       setTopBrands(request.value);
     }
-  }, [request.value, setTopBrands]);
+  }, [topBrands, request, setTopBrands]);
   const renderValue = topBrands;
   const renderPrimary = (value: string) => value;
   return (
@@ -97,15 +91,12 @@ const ColorsCard = () => {
       .array()
   });
   useEffect(() => {
-    if (!topColors.length) {
+    if (!topColors.length && !request.value) {
       request.run();
-    }
-  }, [topColors, request.run]);
-  useEffect(() => {
-    if (request.value) {
+    } else if (request.value) {
       setTopColors(request.value);
     }
-  }, [request.value, setTopColors]);
+  }, [topColors, request, setTopColors]);
   const renderValue = topColors;
   const renderPrimary = (value: { value: string; count: number }) =>
     value.value;
