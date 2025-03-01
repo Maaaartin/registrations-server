@@ -1,7 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["typedSql"]
   output          = "./client"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
@@ -9,13 +9,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model registrations {
   id                                                              Int       @id @default(autoincrement())
   datum_1_registrace                                              DateTime? @db.Date
   datum_1_registrace_v_cr                                         DateTime? @db.Date
   ztp                                                             String?
-  es_eu                                                           String?   @map("es/eu")
+  es_eu                                                           String?
   druh_vozidla                                                    String?
   druh_vozidla_2_radek                                            String?
   kategorie_vozidla                                               String?
@@ -36,7 +35,7 @@ model registrations {
   hybridni_vozidlo                                                Boolean?
   trida_hybridniho_vozidla                                        String?
   emisni_limit                                                    String?
-  stupe__plneni_emisni_urovne                                     String?   @map("stupeň_plneni_emisni_urovne")
+  stupen_plneni_emisni_urovne                                     String?
   korigovany_soucinitel_absorpce                                  Float?    @db.Real
   co2                                                             Float?    @db.Real
   co2_mesto                                                       Float?    @db.Real
@@ -90,7 +89,7 @@ model registrations {
   nejvyssi_rychlost                                               Float?    @db.Real
   pomer_vykon_hmotnost                                            Float?    @db.Real
   inovativni_technologie                                          String?
-  stupe__dokonceni                                                String?   @map("stupeň_dokonceni")
+  stupen_dokonceni                                                String?
   faktor_odchylky_de                                              Float?    @db.Real
   faktor_verifikace_vf                                            Int?
   ucel_vozidla                                                    String?
@@ -109,7 +108,7 @@ model registrations {
   brzdy_odlehcovaci                                               Boolean?
   brzdy_parkovaci                                                 Boolean?
   brzdy_provozni                                                  Boolean?
-  dopl_kovy_text_na_tp                                            String?   @map("doplňkovy_text_na_tp")
+  doplnkovy_text_na_tp                                            String?
   hmotnosti_provozni_do                                           Int?
   hmotnosti_zatizeni_sz                                           Int?
   hmotnosti_zatizeni_sz_typ                                       String?
@@ -129,8 +128,5 @@ model registrations {
   typ_kod                                                         String?
   rm_zaniku                                                       String?
 
-  @@index([datum_1_registrace], map: "idx_registrations_year")
-  @@index([barva])
-  @@index([id])
-  @@index([tovarni_znacka])
+  @@index([vin])
 }

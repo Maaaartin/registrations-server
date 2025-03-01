@@ -1,10 +1,10 @@
 {
-  "Datum 1. registrace": "datum_1_registrace",
-  "Datum 1. registrace v ČR": "datum_1_registrace_v_cr",
+  "Datum 1  registrace": "datum_1_registrace",
+  "Datum 1  registrace v ČR": "datum_1_registrace_v_cr",
   "ZTP": "ztp",
-  "ES/EU": "es/eu",
+  "ES EU": "es_eu",
   "Druh vozidla": "druh_vozidla",
-  "Druh vozidla 2. ř.": "druh_vozidla_2_radek",
+  "Druh vozidla 2  ř": "druh_vozidla_2_radek",
   "Kategorie vozidla": "kategorie_vozidla",
   "Tovární značka": "tovarni_znacka",
   "Typ": "typ",
@@ -15,16 +15,16 @@
   "Výrobce vozidla": "vyrobce_vozidla",
   "Výrobce motoru": "vyrobce_motoru",
   "Typ motoru": "typ_motoru",
-  "Max. výkon [kW] / [min⁻¹]": ["max_vykon", "max_vykon_otacky"],
+  "Max  výkon  kW     min?1": ["max_vykon", "max_vykon_otacky"],
   "Palivo": "palivo",
-  "Zdvihový objem [cm³]": "zdvihovy_objem",
+  "Zdvihový objem  cm3": "zdvihovy_objem",
   "Plně elektrické vozidlo": "plne_elektricke_vozidlo",
   "Hybridní vozidlo": "hybridni_vozidlo",
   "Třída hybridního vozidla": "trida_hybridniho_vozidla",
-  "Emisní limit [EHKOSN/EHSES]": "emisni_limit",
-  "Stupeň plnění emisní úrovně": "stupeň_plneni_emisni_urovne",
-  "Korigovaný součinitel absorbce [m⁻¹]": "korigovany_soucinitel_absorpce",
-  "CO2 město /mimo město/kombinované [g.km-1]": [
+  "Emisní limit  EHKOSN EHSES": "emisni_limit",
+  "Stupeň plnění emisní úrovně": "stupen_plneni_emisni_urovne",
+  "Korigovaný součinitel absorbce  m?1": "korigovany_soucinitel_absorpce",
+  "CO2 město  mimo město kombinované  g km-1": [
     "co2_mesto",
     "co2_mimo_mesto",
     "co2_kombi"
@@ -33,45 +33,45 @@
   "Snížení emisí – NEDC": "snizeni_emisi_nedc",
   "Snížení emisí – WLTP": "snizeni_emisi_wltp",
   "Spotřeba předpis": "predpis_spotreba_paliva",
-  "Spotřeba město /mimo město/kombinovaná [l.100km⁻¹]": [
+  "Spotřeba město  mimo město kombinovaná  l 100km?1": [
     "spotreba_mesto",
     "spotreba__mimo_mesto",
     "spotreba_kombinovana"
   ],
-  "Spotřeba při rychlosti [l.100 km⁻¹]": "spotreba_pri_rychlosti",
-  "Spotřeba el. mobil [Wh/km] – Z": "spotreba_el_mobil",
-  "Dojezd ZR [km]": "dojezd_zr",
+  "Spotřeba při rychlosti  l 100 km?1": "spotreba_pri_rychlosti",
+  "Spotřeba el  mobil  Wh km  – Z": "spotreba_el_mobil",
+  "Dojezd ZR  km": "dojezd_zr",
   "Výrobce karoserie": "vyrobce_karoserie",
   "Druh (typ)": "druh_karoserie",
   "Výrobní číslo karoserie": "vyrobni_cislo_karoserie",
   "Barva": "barva",
   "Barva doplňková": "barva_doplnkova",
-  "Počet míst celkem / k sezení / k stání": [
+  "Počet míst celkem   k sezení   k stání": [
     "pocet_mist_celkem",
     "pocet_mist_sezeni",
     "pocet_mist_k_stani"
   ],
-  "Celková délka/šířka/výška [mm]": ["delka", "sirka", "vyska"],
-  "Rozvor [mm]": "rozvor",
-  "Rozchod [mm]": "rozchod",
+  "Celková délka šířka výška  mm": ["delka", "sirka", "vyska"],
+  "Rozvor  mm": "rozvor",
+  "Rozchod  mm": "rozchod",
   "Provozní hmotnost": "provozni_hmotnost",
-  "Největší technicky přípustná/povolená hmotnost [kg]": [
+  "Největší technicky přípustná povolená hmotnost  kg": [
     "nejvetsi_technicky_pripustna_hmotnost",
     "nejvetsi_povolena_hmotnost"
   ],
-  "Největší technicky přípustná/povolená hmotnost na nápravu [kg]": [
+  "Největší technicky přípustná povolená hmotnost na nápravu  kg": [
     "nejvetsi_technicky_pripustna_hmotnost_na_napravu",
     "nejvetsi_povolena_hmotnost_na_napravu"
   ],
-  "Největší technicky přípustná/povolená hmotnost přípojného vozidla [kg] brzděného": [
+  "Největší technicky přípustná povolená hmotnost přípojného vozidla  kg  brzděného": [
     "nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_brzdeneho",
     "nejvetsi_povolena_hmotnost_pripojneho_vozidla_brzdeneho"
   ],
-  "Největší technicky přípustná/povolená hmotnost přípojného vozidla [kg] nebrzděného": [
+  "Největší technicky přípustná povolená hmotnost přípojného vozidla  kg  nebrzděného": [
     "nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_ne_brzdeneho",
     "nejvetsi_povolena_hmotnost_pripojneho_vozidla_ne_brzdeneho"
   ],
-  "Největší technicky přípustná/povolená hmotnost jízdní soupravy [kg]": [
+  "Největší technicky přípustná povolená hmotnost jízdní soupravy  kg": [
     "nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy",
     "nejvetsi_povolena_hmotnost_jizdni_soupravy"
   ],
@@ -79,7 +79,7 @@
   "Průměrná hodnota užitečného zatížení": "prumerna_hodnota_uzitecneho_zatizeni",
   "Spojovací zařízení - druh": "spojovaci_zarizeni",
   "Počet náprav - z toho poháněných": ["pocet_naprav", "naprav_pohanenych"],
-  "Kola a pneumatiky na nápravě - rozměry/montáž [N.1; N.2; N.3; N.4]": {
+  "Kola a pneumatiky na nápravě - rozměry montáž  N 1; N 2; N 3; N 4": {
     "delimiter": "|",
     "fields": [
       "kola_a_pneumatiky_naprava_1",
@@ -88,15 +88,15 @@
       "kola_a_pneumatiky_naprava_4"
     ]
   },
-  "Vnější hluk vozidla [dB(A)] - stojícího při ot. [min⁻¹]": [
+  "Vnější hluk vozidla  dB(A)  - stojícího při ot   min?1": [
     "vnejsi_hluk_vozidla_stojici",
     "vnejsi_hluk_vozidla_otacky"
   ],
   "Za jízdy": "vnejsi_hluk_vozidla_jizda",
-  "Nejvyšší rychlost [km.h⁻¹]": "nejvyssi_rychlost",
-  "Poměr Výkon/Hmotnost [kW.kg⁻¹]": "pomer_vykon_hmotnost",
+  "Nejvyšší rychlost  km h?1": "nejvyssi_rychlost",
+  "Poměr Výkon Hmotnost  kW kg?1": "pomer_vykon_hmotnost",
   "Inovativní technologie": "inovativni_technologie",
-  "Stupeň dokončení": "stupeň_dokonceni",
+  "Stupeň dokončení": "stupen_dokonceni",
   "Faktor odchylky - DE": "faktor_odchylky_de",
   "Faktor verifikace - Vf": "faktor_verifikace_vf",
   "Účel vozidla": "ucel_vozidla",
@@ -115,7 +115,7 @@
   "Brzdy odlehčovací": "brzdy_odlehcovaci",
   "Brzdy parkovací": "brzdy_parkovaci",
   "Brzdy provozní": "brzdy_provozni",
-  "Doplňkový text na TP": "doplňkovy_text_na_tp",
+  "Doplňkový text na TP": "doplnkovy_text_na_tp",
   "Hmotnosti provozní Do": "hmotnosti_provozni_do",
   "Hmotnosti zatížení SZ": "hmotnosti_zatizeni_sz",
   "Hmotnosti zatížení SZ typ": "hmotnosti_zatizeni_sz_typ",
