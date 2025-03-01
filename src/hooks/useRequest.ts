@@ -29,7 +29,7 @@ export type UseRequestHook<T, D> = (
 ) & { run: (props?: UseRequestRunProps<D>) => void };
 export default function useRequest<T, D = Record<string, string>>({
   url,
-  decoder,
+  decoder
 }: UseRequestProps<T>): UseRequestHook<T, D> {
   const [value, setValue] = useState<T>();
   const [error, setError] = useState<AxiosError<T, D> | ZodError<T>>();
@@ -44,7 +44,7 @@ export default function useRequest<T, D = Record<string, string>>({
       axios
         .get(`${url}${props?.query ? `?${props.query}` : ''}`, {
           ...props?.config,
-          signal: abortController.signal,
+          signal: abortController.signal
         })
         .then((res) => {
           if (decoder) {

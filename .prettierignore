@@ -1,0 +1,4 @@
+node_modules
+.next
+temp
+prisma/client/sql

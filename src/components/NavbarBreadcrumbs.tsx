@@ -10,11 +10,11 @@ const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   margin: theme.spacing(1, 0),
   [`& .${breadcrumbsClasses.separator}`]: {
     color: theme.palette.action.disabled,
-    margin: 1,
+    margin: 1
   },
   [`& .${breadcrumbsClasses.ol}`]: {
-    alignItems: 'center',
-  },
+    alignItems: 'center'
+  }
 }));
 
 export default function NavbarBreadcrumbs() {

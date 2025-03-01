@@ -23,7 +23,7 @@ function AreaGradient({ color, id }: { color: string; id: string }) {
 const decoder = zod.array(
   zod.object({
     year: zod.number(),
-    count: zod.number(),
+    count: zod.number()
   })
 );
 
@@ -33,7 +33,7 @@ export default function RegistrationsChart() {
     useCacheContext().registrationsPerYear;
   const request = useRequest({
     url: '/api/registrations-per-year',
-    decoder,
+    decoder
   });
   useEffect(() => {
     if (!registrationsPerYear.length) {
@@ -49,7 +49,7 @@ export default function RegistrationsChart() {
   const colorPalette = [
     theme.palette.primary.light,
     theme.palette.primary.main,
-    theme.palette.primary.dark,
+    theme.palette.primary.dark
   ];
   const years = registrationsPerYear.map(({ year }) => year);
   const values = registrationsPerYear.map(({ count }) => count);
@@ -66,7 +66,7 @@ export default function RegistrationsChart() {
             sx={{
               alignContent: { xs: 'center', sm: 'flex-start' },
               alignItems: 'center',
-              gap: 1,
+              gap: 1
             }}
           >
             <Typography variant="h4" component="p">
@@ -80,8 +80,8 @@ export default function RegistrationsChart() {
             {
               scaleType: 'point',
               data: years,
-              tickInterval: (index, i) => (i + 1) % 5 === 0,
-            },
+              tickInterval: (index, i) => (i + 1) % 5 === 0
+            }
           ]}
           series={[
             {
@@ -92,8 +92,8 @@ export default function RegistrationsChart() {
               stack: 'total',
               area: true,
               stackOrder: 'ascending',
-              data: values,
-            },
+              data: values
+            }
           ]}
           height={250}
           margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
@@ -101,19 +101,19 @@ export default function RegistrationsChart() {
           loading={request.loading}
           sx={{
             '& .MuiAreaElement-series-organic': {
-              fill: "url('#organic')",
+              fill: "url('#organic')"
             },
             '& .MuiAreaElement-series-referral': {
-              fill: "url('#referral')",
+              fill: "url('#referral')"
             },
             '& .MuiAreaElement-series-direct': {
-              fill: "url('#direct')",
-            },
+              fill: "url('#direct')"
+            }
           }}
           slotProps={{
             legend: {
-              hidden: true,
-            },
+              hidden: true
+            }
           }}
         >
           <AreaGradient color={theme.palette.primary.dark} id="organic" />

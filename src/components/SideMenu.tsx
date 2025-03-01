@@ -15,8 +15,8 @@ const Drawer = styled(MuiDrawer)({
   mt: 10,
   [`& .${drawerClasses.paper}`]: {
     width: drawerWidth,
-    boxSizing: 'border-box',
-  },
+    boxSizing: 'border-box'
+  }
 });
 
 export default function SideMenu() {
@@ -26,15 +26,15 @@ export default function SideMenu() {
       sx={{
         display: { xs: 'none', md: 'block' },
         [`& .${drawerClasses.paper}`]: {
-          backgroundColor: 'background.paper',
-        },
+          backgroundColor: 'background.paper'
+        }
       }}
     >
       <Box
         sx={{
           display: 'flex',
           mt: 'calc(var(--template-frame-height, 0px) + 4px)',
-          p: 1.5,
+          p: 1.5
         }}
       >
         <Title />

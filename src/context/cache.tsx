@@ -4,7 +4,7 @@ import React, {
   PropsWithChildren,
   SetStateAction,
   useContext,
-  useState,
+  useState
 } from 'react';
 
 type StateAction<T> = [T, Dispatch<SetStateAction<T>>];
@@ -35,7 +35,7 @@ export const CacheContextProvider = ({ children }: PropsWithChildren) => {
         modelSearch,
         count,
         topColors,
-        registrationsPerYear,
+        registrationsPerYear
       }}
     >
       {children}

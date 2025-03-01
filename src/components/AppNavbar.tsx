@@ -21,8 +21,8 @@ const Toolbar = styled(MuiToolbar)({
   [`& ${tabsClasses.flexContainer}`]: {
     gap: '8px',
     p: '8px',
-    pb: 0,
-  },
+    pb: 0
+  }
 });
 
 export default function AppNavbar() {
@@ -42,7 +42,7 @@ export default function AppNavbar() {
         backgroundImage: 'none',
         borderBottom: '1px solid',
         borderColor: 'divider',
-        top: 'var(--template-frame-height, 0px)',
+        top: 'var(--template-frame-height, 0px)'
       }}
     >
       <Toolbar variant="regular">
@@ -52,7 +52,7 @@ export default function AppNavbar() {
             alignItems: 'center',
             flexGrow: 1,
             width: '100%',
-            gap: 1,
+            gap: 1
           }}
         >
           <Title />

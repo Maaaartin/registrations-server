@@ -9,7 +9,7 @@ export default async function handler(
   const data = await prisma.$queryRawTyped(topColors());
   const colors = data.map((value) => ({
     value: value.barva as string,
-    count: Number(value.count),
+    count: Number(value.count)
   }));
   res.send(colors);
 }

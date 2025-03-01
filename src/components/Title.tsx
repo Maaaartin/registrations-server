@@ -21,7 +21,7 @@ function CustomIcon() {
         color: 'hsla(210, 100%, 95%, 0.9)',
         border: '1px solid',
         borderColor: 'hsl(210, 100%, 55%)',
-        boxShadow: 'inset 0 2px 5px rgba(255, 255, 255, 0.3)',
+        boxShadow: 'inset 0 2px 5px rgba(255, 255, 255, 0.3)'
       }}
     >
       <DirectionsCarFilledIcon color="inherit" sx={{ fontSize: '1rem' }} />

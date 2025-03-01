@@ -9,51 +9,51 @@ export const chartsCustomizations: ChartsComponents<Theme> = {
     styleOverrides: {
       root: ({ theme }) => ({
         [`& .${axisClasses.line}`]: {
-          stroke: gray[300],
+          stroke: gray[300]
         },
         [`& .${axisClasses.tick}`]: { stroke: gray[300] },
         [`& .${axisClasses.tickLabel}`]: {
           fill: gray[500],
-          fontWeight: 500,
+          fontWeight: 500
         },
         ...theme.applyStyles('dark', {
           [`& .${axisClasses.line}`]: {
-            stroke: gray[700],
+            stroke: gray[700]
           },
           [`& .${axisClasses.tick}`]: { stroke: gray[700] },
           [`& .${axisClasses.tickLabel}`]: {
             fill: gray[300],
-            fontWeight: 500,
-          },
-        }),
-      }),
-    },
+            fontWeight: 500
+          }
+        })
+      })
+    }
   },
   MuiChartsTooltip: {
     styleOverrides: {
       mark: ({ theme }) => ({
         ry: 6,
         boxShadow: 'none',
-        border: `1px solid ${theme.palette.divider}`,
+        border: `1px solid ${theme.palette.divider}`
       }),
       table: ({ theme }) => ({
         border: `1px solid ${theme.palette.divider}`,
         borderRadius: theme.shape.borderRadius,
         background: 'hsl(0, 0%, 100%)',
         ...theme.applyStyles('dark', {
-          background: gray[900],
-        }),
-      }),
-    },
+          background: gray[900]
+        })
+      })
+    }
   },
   MuiChartsLegend: {
     styleOverrides: {
       root: {
         [`& .${legendClasses.mark}`]: {
-          ry: 6,
-        },
-      },
-    },
+          ry: 6
+        }
+      }
+    }
   },
   MuiChartsGrid: {
     styleOverrides: {
@@ -61,16 +61,16 @@ export const chartsCustomizations: ChartsComponents<Theme> = {
         [`& .${chartsGridClasses.line}`]: {
           stroke: gray[200],
           strokeDasharray: '4 2',
-          strokeWidth: 0.8,
+          strokeWidth: 0.8
         },
         ...theme.applyStyles('dark', {
           [`& .${chartsGridClasses.line}`]: {
             stroke: gray[700],
             strokeDasharray: '4 2',
-            strokeWidth: 0.8,
-          },
-        }),
-      }),
-    },
-  },
+            strokeWidth: 0.8
+          }
+        })
+      })
+    }
+  }
 };

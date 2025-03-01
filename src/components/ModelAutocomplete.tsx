@@ -10,7 +10,7 @@ export default function ModelAutocomplete({
   brand,
   model,
   onSelect,
-  disabled,
+  disabled
 }: {
   brand: string;
   model: string;
@@ -26,7 +26,7 @@ export default function ModelAutocomplete({
 
   const request = useRequest({
     url: '/api/search-models',
-    decoder: zod.string().array(),
+    decoder: zod.string().array()
   });
   useEffect(() => {
     if (brand && !topModelsPerBrand[brand]?.length) {
@@ -36,7 +36,7 @@ export default function ModelAutocomplete({
           const result = zod.string().array().parse(res.data);
           setTopModelsPerBrand({
             ...topModelsPerBrand,
-            [brand]: result,
+            [brand]: result
           });
         });
     }
@@ -48,8 +48,8 @@ export default function ModelAutocomplete({
         ...modelSearch,
         [brand]: {
           ...modelSearch[brand],
-          [searchModelDebounced]: request.value,
-        },
+          [searchModelDebounced]: request.value
+        }
       });
     }
   }, [request.value, searchModelDebounced, setModels, setModelSearch]);
@@ -61,7 +61,7 @@ export default function ModelAutocomplete({
       } else {
         const query = new URLSearchParams({
           brand,
-          model: searchModelDebounced,
+          model: searchModelDebounced
         });
         request.run({ query });
       }

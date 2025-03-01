@@ -11,7 +11,7 @@ interface SideMenuMobileProps {
 
 export default function SideMenuMobile({
   open,
-  toggleDrawer,
+  toggleDrawer
 }: SideMenuMobileProps) {
   return (
     <Drawer
@@ -22,14 +22,14 @@ export default function SideMenuMobile({
         zIndex: (theme) => theme.zIndex.drawer + 1,
         [`& .${drawerClasses.paper}`]: {
           backgroundImage: 'none',
-          backgroundColor: 'background.paper',
-        },
+          backgroundColor: 'background.paper'
+        }
       }}
     >
       <Stack
         sx={{
           maxWidth: '70dvw',
-          height: '100%',
+          height: '100%'
         }}
       >
         <Stack sx={{ flexGrow: 1 }}>

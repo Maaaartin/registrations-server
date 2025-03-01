@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from 'react';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
-import Copyright from '../components/Copyright';
+// import Copyright from '../components/Copyright';
 import StatCard from '../components/StatCard';
 import useRequest from '../hooks/useRequest';
 import { List, ListItem, ListItemText } from '@mui/material';
@@ -13,7 +13,7 @@ const CountCard = () => {
   const [count, setCount] = useCacheContext().count;
   const request = useRequest({
     url: '/api/count',
-    decoder: zod.number(),
+    decoder: zod.number()
   });
   useEffect(() => {
     if (isNaN(count)) {
@@ -33,7 +33,7 @@ const CountCard = () => {
 function CardList<T>({
   data,
   renderPrimary,
-  renderSecondary,
+  renderSecondary
 }: {
   data: T[];
   renderPrimary: (value: T) => ReactNode;
@@ -57,7 +57,7 @@ const BrandsCard = () => {
   const [topBrands, setTopBrands] = useCacheContext().topBrands;
   const request = useRequest({
     url: '/api/top-brands',
-    decoder: zod.string().array(),
+    decoder: zod.string().array()
   });
   useEffect(() => {
     if (!topBrands.length) {
@@ -92,9 +92,9 @@ const ColorsCard = () => {
     decoder: zod
       .object({
         value: zod.string(),
-        count: zod.number(),
+        count: zod.number()
       })
-      .array(),
+      .array()
   });
   useEffect(() => {
     if (!topColors.length) {
@@ -150,7 +150,7 @@ export default function Stats() {
       <Grid size={{ xs: 12, md: 6 }}>
         <RegistrationsChart />
       </Grid>
-      <Copyright sx={{ my: 4 }} />
+      {/* <Copyright sx={{ my: 4 }} /> */}
     </>
   );
 }

@@ -49,7 +49,7 @@ type RenderCellFn = GridBaseColDef<Vehicle>['renderCell'];
 
 const LinkComponent = ({
   id,
-  value,
+  value
 }: {
   id: number;
   value: Vehicle[keyof Vehicle];
@@ -57,7 +57,7 @@ const LinkComponent = ({
   <Link
     href={{
       pathname: '/vehicle',
-      query: { id },
+      query: { id }
     }}
   >
     {value}
@@ -67,8 +67,7 @@ const LinkComponent = ({
 const renderCell: (field: keyof Vehicle) => RenderCellFn =
   (field) =>
   /* eslint-disable react/display-name */
-  ({ row }) =>
-    <LinkComponent id={row.id} value={row[field]} />;
+  ({ row }) => <LinkComponent id={row.id} value={row[field]} />;
 
 type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<Props, 'vehicles'> & {
@@ -83,7 +82,7 @@ const Toolbar = ({
   model,
   currentPage,
   loading,
-  onSubmit,
+  onSubmit
 }: ToolbarProps) => {
   return (
     <>
@@ -122,10 +121,8 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             ...params,
             model: params.brand ? params.model : '',
             page:
-              params.brand !== brand || params.model !== model
-                ? 0
-                : params.page,
-          },
+              params.brand !== brand || params.model !== model ? 0 : params.page
+          }
         },
         undefined,
         { scroll: false }
@@ -144,9 +141,9 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
         rowSelection={false}
         sx={{
           '& .MuiDataGrid-row': {
-            cursor: 'pointer',
+            cursor: 'pointer'
           },
-          width: '100%',
+          width: '100%'
         }}
         rows={vehicles}
         columns={[
@@ -157,7 +154,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             minWidth: 200,
             renderCell: renderCell('tovarni_znacka'),
             sortable: false,
-            filterable: false,
+            filterable: false
           },
           {
             field: 'model',
@@ -166,7 +163,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             minWidth: 300,
             renderCell: renderCell('typ'),
             sortable: false,
-            filterable: false,
+            filterable: false
           },
           {
             field: 'vin',
@@ -175,7 +172,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             minWidth: 150,
             renderCell: renderCell('vin'),
             sortable: false,
-            filterable: false,
+            filterable: false
           },
           {
             field: 'cislo_tp',
@@ -184,8 +181,8 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             minWidth: 80,
             renderCell: renderCell('cislo_tp'),
             sortable: false,
-            filterable: false,
-          },
+            filterable: false
+          }
         ]}
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
@@ -193,8 +190,8 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
         initialState={{
           pagination: {
             paginationModel: { page: currentPage, pageSize },
-            meta: { hasNextPage: true },
-          },
+            meta: { hasNextPage: true }
+          }
         }}
         paginationModel={{ page: currentPage, pageSize }}
         paginationMode="server"
@@ -210,7 +207,7 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
         slots={{
           toolbar: Toolbar as React.JSXElementConstructor<
             GridSlotProps['toolbar']
-          >,
+          >
         }}
         slotProps={{
           toolbar: {
@@ -218,34 +215,34 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             model,
             currentPage,
             onSubmit,
-            loading,
+            loading
           } as ToolbarProps,
           filterPanel: {
             sx: { height: '100vh' },
             filterFormProps: {
               logicOperatorInputProps: {
                 variant: 'outlined',
-                size: 'small',
+                size: 'small'
               },
               columnInputProps: {
                 variant: 'outlined',
                 size: 'small',
-                sx: { mt: 'auto' },
+                sx: { mt: 'auto' }
               },
               operatorInputProps: {
                 variant: 'outlined',
                 size: 'small',
-                sx: { mt: 'auto' },
+                sx: { mt: 'auto' }
               },
               valueInputProps: {
                 InputComponentProps: {
                   variant: 'outlined',
                   size: 'small',
-                  sx: { width: '100vh' },
-                },
-              },
-            },
-          },
+                  sx: { width: '100vh' }
+                }
+              }
+            }
+          }
         }}
       />
     </>
@@ -263,8 +260,8 @@ const searchVehicles = unstable_cache(
         tovarni_znacka: true,
         typ: true,
         vin: true,
-        cislo_tp: true,
-      },
+        cislo_tp: true
+      }
     }),
 
   ['search'],
@@ -277,7 +274,7 @@ const queryDecoder = zod.object({
     .default('0')
     .transform((val) => Number(val) || 0),
   brand: zod.string().default(''),
-  model: zod.string().default(''),
+  model: zod.string().default('')
 });
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
@@ -292,7 +289,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       vehicles,
       currentPage: page,
       brand,
-      model,
-    },
+      model
+    }
   };
 };

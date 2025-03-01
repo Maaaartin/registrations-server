@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 export const mainListItems = [
   { text: 'Domů', icon: <Home />, route: '/' },
   { text: 'Statistiky', icon: <SettingsRoundedIcon />, route: '/stats' },
-  { text: 'Hledat', icon: <Search />, route: '/search' },
+  { text: 'Hledat', icon: <Search />, route: '/search' }
 ];
 
 export default function MenuContent() {

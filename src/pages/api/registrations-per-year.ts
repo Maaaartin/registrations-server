@@ -10,7 +10,7 @@ export default async function handler(
   res.send(
     result.map((row) => ({
       year: Number(row.year),
-      count: Number(row.count),
+      count: Number(row.count)
     }))
   );
 }

@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next';
 import prisma from '../../prisma';
 import {
   SerializableRegistration,
-  serializeRegistration,
+  serializeRegistration
 } from '../util/registrations';
 import type { registrations } from '../../prisma/client';
 import registrationColumnMap from '../registrationColumnMap.json';
@@ -21,7 +21,7 @@ function mapVehicle(vehicle: SerializableRegistration): {
     'kola_a_pneumatiky_naprava_1',
     'kola_a_pneumatiky_naprava_2',
     'kola_a_pneumatiky_naprava_3',
-    'kola_a_pneumatiky_naprava_4',
+    'kola_a_pneumatiky_naprava_4'
   ];
 
   const filteredEntries = Object.fromEntries(
@@ -29,22 +29,20 @@ function mapVehicle(vehicle: SerializableRegistration): {
       return !excludeFields.includes(key as keyof registrations);
     })
   );
-  (
-    filteredEntries as Record<string, string>
-  ).max_vykon = `${vehicle.max_vykon} / ${vehicle.max_vykon_otacky}`;
-  (
-    filteredEntries as Record<string, string>
-  ).pocet_naprav = `${vehicle.pocet_naprav} / ${vehicle.naprav_pohanenych}`;
+  (filteredEntries as Record<string, string>).max_vykon =
+    `${vehicle.max_vykon} / ${vehicle.max_vykon_otacky}`;
+  (filteredEntries as Record<string, string>).pocet_naprav =
+    `${vehicle.pocet_naprav} / ${vehicle.naprav_pohanenych}`;
   (filteredEntries as Record<string, string>).kola_a_pneumatiky = [
     vehicle.kola_a_pneumatiky_naprava_1,
     vehicle.kola_a_pneumatiky_naprava_2,
     vehicle.kola_a_pneumatiky_naprava_3,
-    vehicle.kola_a_pneumatiky_naprava_4,
+    vehicle.kola_a_pneumatiky_naprava_4
   ].join('; ');
   return Object.entries(filteredEntries).map(([key, value]) => {
     return {
       id: (registrationColumnMap as Record<string, string>)[key] || key,
-      value,
+      value
     };
   });
 }
@@ -67,7 +65,7 @@ export default function Page({ vehicle }: Props) {
             minWidth: 200,
             renderCell: ({ row: { id } }) => id,
             sortable: true,
-            valueGetter: (_, { value }) => value,
+            valueGetter: (_, { value }) => value
           },
           {
             field: 'value',
@@ -76,8 +74,8 @@ export default function Page({ vehicle }: Props) {
             minWidth: 300,
             renderCell: ({ row: { value } }) =>
               typeof value === 'object' ? value?.value : String(value),
-            sortable: false,
-          },
+            sortable: false
+          }
         ]}
       />
     </>
@@ -85,19 +83,19 @@ export default function Page({ vehicle }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({
-  query,
+  query
 }) => {
   const vin = [query.vin].flat()[0];
   const id = parseInt([query.id].flat()[0] || '');
   let result: registrations | null = null;
   if (vin) {
     result = await prisma.registrations.findFirst({
-      where: { vin },
+      where: { vin }
     });
   }
   if (id) {
     result = await prisma.registrations.findFirst({
-      where: { id },
+      where: { id }
     });
   }
 

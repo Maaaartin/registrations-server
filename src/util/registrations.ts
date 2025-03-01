@@ -17,7 +17,7 @@ export function serializeRegistration(
         key,
         value instanceof Date
           ? { type: 'Date', value: value.toISOString() }
-          : value,
+          : value
       ];
     })
   ) as SerializableRegistration;

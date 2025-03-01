@@ -13,7 +13,7 @@ import {
   chartsCustomizations,
   dataGridCustomizations,
   datePickersCustomizations,
-  treeViewCustomizations,
+  treeViewCustomizations
 } from '../theme/customizations';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
@@ -23,7 +23,7 @@ const xThemeComponents = {
   ...chartsCustomizations,
   ...dataGridCustomizations,
   ...datePickersCustomizations,
-  ...treeViewCustomizations,
+  ...treeViewCustomizations
 };
 
 // Layout component with common structure
@@ -49,7 +49,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
               sx={(theme) => ({
                 flexGrow: 1,
                 backgroundColor: alpha(theme.palette.background.default, 1),
-                overflow: 'auto',
+                overflow: 'auto'
               })}
             >
               <Stack
@@ -58,7 +58,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
                   alignItems: 'center',
                   mx: 3,
                   pb: 5,
-                  mt: { xs: 8, md: 0 },
+                  mt: { xs: 8, md: 0 }
                 }}
               >
                 <Header />
@@ -66,7 +66,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
                   <Box
                     sx={{
                       width: '100%',
-                      maxWidth: { sm: '100%', md: '1700px' },
+                      maxWidth: { sm: '100%', md: '1700px' }
                     }}
                   >
                     <Component {...pageProps} />

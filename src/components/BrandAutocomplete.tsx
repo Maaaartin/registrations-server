@@ -9,7 +9,7 @@ import useDebounce from '../hooks/useDebounce';
 export default function BrandAutocomplete({
   value,
   onSelect,
-  disabled,
+  disabled
 }: {
   value: string;
   onSelect: (brand: string) => void;
@@ -24,7 +24,7 @@ export default function BrandAutocomplete({
 
   const request = useRequest({
     url: '/api/search-brands',
-    decoder: zod.string().array(),
+    decoder: zod.string().array()
   });
   useEffect(() => {
     if (!topBrands.length) {

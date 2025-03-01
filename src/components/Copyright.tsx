@@ -11,9 +11,9 @@ export default function Copyright(props: { sx: SxProps<Theme> }) {
       {...props}
       sx={[
         {
-          color: 'text.secondary',
+          color: 'text.secondary'
         },
-        ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        ...(Array.isArray(props.sx) ? props.sx : [props.sx])
       ]}
     >
       {'Copyright © '}
