@@ -1,3 +1,5 @@
+-- @param {String} $1:brand
+-- @param {Int} $2:limit
 SELECT
     *
 FROM

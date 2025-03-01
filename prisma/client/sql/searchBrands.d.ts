@@ -1,13 +1,13 @@
 import * as $runtime from "../runtime/library"
 
 /**
- * @param text
- * @param int8
+ * @param brand
+ * @param limit
  */
-export const searchBrands: (text: string, int8: number | bigint) => $runtime.TypedSql<searchBrands.Parameters, searchBrands.Result>
+export const searchBrands: (brand: string, limit: number) => $runtime.TypedSql<searchBrands.Parameters, searchBrands.Result>
 
 export namespace searchBrands {
-  export type Parameters = [text: string, int8: number | bigint]
+  export type Parameters = [brand: string, limit: number]
   export type Result = {
     tovarni_znacka: string | null
     count: bigint | null

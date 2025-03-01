@@ -1,3 +1,6 @@
+-- @param {String} $1:brand
+-- @param {String} $2:model
+-- @param {Int} $3:limit
 SELECT
     typ,
     count

@@ -1,13 +1,13 @@
 import * as $runtime from "../runtime/library"
 
 /**
- * @param text
- * @param int8
+ * @param brand
+ * @param limit
  */
-export const topTypesForBrand: (text: string, int8: number | bigint) => $runtime.TypedSql<topTypesForBrand.Parameters, topTypesForBrand.Result>
+export const topTypesForBrand: (brand: string, limit: number) => $runtime.TypedSql<topTypesForBrand.Parameters, topTypesForBrand.Result>
 
 export namespace topTypesForBrand {
-  export type Parameters = [text: string, int8: number | bigint]
+  export type Parameters = [brand: string, limit: number]
   export type Result = {
     typ: string | null
     count: bigint | null
