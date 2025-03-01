@@ -5,15 +5,15 @@ import Typography from '@mui/material/Typography';
 import StatCard from '../components/StatCard';
 import useRequest from '../hooks/useRequest';
 import { List, ListItem, ListItemText } from '@mui/material';
-import zod from 'zod';
 import RegistrationsChart from '../components/RegistrationsChart';
 import { useCacheContext } from '../context/cache';
+import { DNumber, DStringArray, DTopColors } from '../util/decoders';
 
 const CountCard = () => {
   const [count, setCount] = useCacheContext().count;
   const request = useRequest({
     url: '/api/count',
-    decoder: zod.number()
+    decoder: DNumber
   });
   useEffect(() => {
     if (isNaN(count) && !request.value) {
@@ -54,7 +54,7 @@ const BrandsCard = () => {
   const [topBrands, setTopBrands] = useCacheContext().topBrands;
   const request = useRequest({
     url: '/api/top-brands',
-    decoder: zod.string().array()
+    decoder: DStringArray
   });
   useEffect(() => {
     if (!topBrands.length && !request.value) {
@@ -83,12 +83,7 @@ const ColorsCard = () => {
   const [topColors, setTopColors] = useCacheContext().topColors;
   const request = useRequest({
     url: '/api/top-colors',
-    decoder: zod
-      .object({
-        value: zod.string(),
-        count: zod.number()
-      })
-      .array()
+    decoder: DTopColors
   });
   useEffect(() => {
     if (!topColors.length && !request.value) {

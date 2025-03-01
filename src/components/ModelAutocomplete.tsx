@@ -1,10 +1,10 @@
 import { Autocomplete, TextField } from '@mui/material';
-import zod from 'zod';
 import React, { useEffect, useState } from 'react';
 import useRequest from '../hooks/useRequest';
 import axios from 'axios';
 import { useCacheContext } from '../context/cache';
 import useDebounce from '../hooks/useDebounce';
+import { DStringArray } from '../util/decoders';
 
 export default function ModelAutocomplete({
   brand,
@@ -26,14 +26,14 @@ export default function ModelAutocomplete({
 
   const request = useRequest({
     url: '/api/search-models',
-    decoder: zod.string().array()
+    decoder: DStringArray
   });
   useEffect(() => {
     if (brand && !topModelsPerBrand[brand]?.length) {
       axios
         .get('/api/top-models?' + new URLSearchParams({ brand }))
         .then((res) => {
-          const result = zod.string().array().parse(res.data);
+          const result = DStringArray.parse(res.data);
           setTopModelsPerBrand({
             ...topModelsPerBrand,
             [brand]: result

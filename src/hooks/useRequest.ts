@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import zod, { ZodError } from 'zod';
 
 type UseRequestProps<T> = {
@@ -37,14 +37,14 @@ export default function useRequest<T, D = Record<string, string>>({
   useEffect(() => {
     setLoading(false);
   }, []);
-  const abortController = new AbortController();
+  const abortController = useRef(new AbortController());
   const run = useCallback(
     (props?: UseRequestRunProps<D>) => {
       setLoading(true);
       axios
         .get(`${url}${props?.query ? `?${props.query}` : ''}`, {
           ...props?.config,
-          signal: abortController.signal
+          signal: abortController.current.signal
         })
         .then((res) => {
           if (decoder) {
@@ -61,7 +61,7 @@ export default function useRequest<T, D = Record<string, string>>({
         })
         .finally(() => setLoading(false));
     },
-    [url]
+    [url, abortController.current, decoder]
   );
   useEffect(() => {
     if (loading) {
@@ -70,8 +70,8 @@ export default function useRequest<T, D = Record<string, string>>({
     }
   }, [loading]);
   useEffect(() => {
-    return () => abortController.abort();
-  }, [run]);
+    return () => abortController.current.abort();
+  }, [run, abortController.current]);
   const hook = useMemo(
     () => ({ value, error, loading, run }) as UseRequestHook<T, D>,
     [value, error, loading, run]

@@ -5,9 +5,9 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
-import zod from 'zod';
 import useRequest from '../hooks/useRequest';
 import { useCacheContext } from '../context/cache';
+import { DRegistrationStats } from '../util/decoders';
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
   return (
@@ -20,20 +20,13 @@ function AreaGradient({ color, id }: { color: string; id: string }) {
   );
 }
 
-const decoder = zod.array(
-  zod.object({
-    year: zod.number(),
-    count: zod.number()
-  })
-);
-
 export default function RegistrationsChart() {
   const theme = useTheme();
   const [registrationsPerYear, setRegistrationsPerYear] =
     useCacheContext().registrationsPerYear;
   const request = useRequest({
     url: '/api/registrations-per-year',
-    decoder
+    decoder: DRegistrationStats
   });
   useEffect(() => {
     if (!registrationsPerYear.length && !request.value) {
