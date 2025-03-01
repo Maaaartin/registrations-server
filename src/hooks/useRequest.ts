@@ -8,6 +8,7 @@ type UseRequestProps<T> = {
   decoder?: zod.ZodType<T>;
 };
 type UseRequestRunProps<D> = {
+  query?: URLSearchParams;
   config?: AxiosRequestConfig<D>;
 };
 export type UseRequestHook<T, D> = (
@@ -42,7 +43,7 @@ export default function useRequest<T, D = Record<string, string>>({
     (props?: UseRequestRunProps<D>) => {
       setLoading(true);
       axios
-        .get(url, {
+        .get(`${url}${props?.query ? `?${props.query}` : ''}`, {
           ...props?.config,
           signal: abortController.current.signal
         })
