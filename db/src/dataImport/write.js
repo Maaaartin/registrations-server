@@ -1,13 +1,34 @@
-const net = require('net');
 const readline = require('readline');
+const { parse } = require('csv-parse/sync');
 const client = require('../client');
 const schema = require('../schema.json');
-const { logError } = require('./helpers');
+const headerMap = require('../headerMap.json');
+const { logError, processRecord } = require('./helpers');
+const { PassThrough, Readable } = require('stream');
 
-async function startWrite(socket) {
-  await client.connect();
+const parseOptions = {
+  columns: Object.keys(headerMap),
+  relaxColumnCountMore: true,
+  quote: String.fromCodePoint(0x0022),
+  relaxQuotes: true
+};
+function parseAndProcess(line) {
+  try {
+    const [record] = parse(line, parseOptions);
+    const values = processRecord(record);
+    return values;
+  } catch (error) {
+    logError('./errors_csv.csv', error.message, JSON.stringify(line));
+    return null;
+  }
+}
+
+async function startWrite() {
+  const res = await fetch('http://localhost:5000');
+  const fetchStream = Readable.from(res.body);
+
   const rl = readline.createInterface({
-    input: socket,
+    input: fetchStream,
     crlfDelay: Infinity
   });
   const columns = Object.keys(schema);
@@ -17,29 +38,29 @@ async function startWrite(socket) {
       VALUES (${columns.map((_, index) => `$${index + 1}`)})`;
 
   for await (const line of rl) {
-    const { lineNr, values } = JSON.parse(line);
+    const { lineNr, data } = JSON.parse(line);
     if (lineNr % 1000 === 0) {
       console.log('Write', lineNr);
     }
+    const values = parseAndProcess(data);
+    if (!values) continue;
     try {
       await client.query(query, values);
     } catch (error) {
-      await logError(
-        './errors_write.csv',
+      logError(
+        './errors_db.csv',
         error.message,
         JSON.stringify(values),
         lineNr
       );
     }
   }
+  startWrite();
 }
-
-const socket = net.createConnection({ host: 'localhost', port: 5000 });
-socket.on('connect', async () => {
-  startWrite(socket);
-});
-
-socket.on('end', () => {
-  console.log('Write ended');
-  client.end();
-});
+client
+  .connect()
+  .then(startWrite)
+  .catch(() => {
+    console.log('exited');
+    return client.end();
+  });

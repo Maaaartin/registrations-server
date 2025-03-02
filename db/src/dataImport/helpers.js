@@ -1,6 +1,7 @@
 const fs = require('fs');
 const client = require('../client');
 const schema = require('../schema.json');
+const headerMap = require('../headerMap.json');
 
 function escapeCSVValue(value) {
   if (typeof value !== 'string') {
@@ -39,4 +40,81 @@ exports.createTableFromHeaders = async () => {
   await client.query(createTableQuery);
   console.log("Table 'registrations' created successfully.");
   await client.end();
+};
+
+const columns = Object.keys(schema);
+function parseDate(value) {
+  const date = new Date(value);
+  if (!isNaN(date.getMilliseconds())) {
+    return date.toISOString();
+  }
+  const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
+  if (dateRegex.test(value)) {
+    const [day, month, year] = value.split('.').map(Number);
+    const date2 = new Date(year, month - 1, day);
+    if (
+      date2.getFullYear() === year &&
+      date2.getMonth() === month - 1 &&
+      date2.getDate() === day
+    ) {
+      return date2.toISOString();
+    }
+  }
+  // console.info(`no date value,${value}`);
+  return null;
+}
+function parseNumber(value = '') {
+  return value.replaceAll(',', '.').replaceAll(' ', '');
+}
+function parseBoolean(value = '') {
+  if (!value) {
+    return null;
+  }
+  const valueLower = value.toLowerCase().trim();
+  if (['false', 'ne'].includes(valueLower)) {
+    return false;
+  }
+  return true;
+}
+
+function parseValue(value, type) {
+  switch (type) {
+    case 'DATE':
+      return parseDate(value);
+    case 'INTEGER':
+      const parsedInt = parseNumber(value);
+      const int = parseInt(parsedInt, 10);
+      return isNaN(int) ? null : int;
+    case 'REAL':
+      const parsedFloat = parseNumber(value);
+      const float = parseInt(parsedFloat, 10);
+      return isNaN(float) ? null : float;
+    case 'BOOLEAN':
+      return parseBoolean(value);
+    default:
+      return value || null;
+  }
+}
+
+exports.processRecord = function (record) {
+  const mappedRecord = Object.entries(headerMap).reduce(
+    (acc, [key, mapping]) => {
+      const delimiter =
+        typeof mapping === 'object' && 'delimiter' in mapping
+          ? mapping.delimiter
+          : '/';
+      const fields =
+        typeof mapping === 'object' && 'fields' in mapping
+          ? mapping.fields
+          : [mapping].flat();
+      const values = (record[key] || '').split(delimiter).map((v) => v.trim());
+      fields.forEach((column, index) => {
+        acc[column] = parseValue(values[index], schema[column]);
+      });
+      return acc;
+    },
+    {}
+  );
+  const values = columns.map((c) => mappedRecord[c]);
+  return values;
 };
