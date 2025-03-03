@@ -1,4 +1,4 @@
-const createIndices = require('./createIndices');
+const createIndices = require('./indices/createIndices');
 const runImport = require('./dataImport/index');
 
 const [command] = process.argv;
