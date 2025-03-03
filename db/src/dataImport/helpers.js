@@ -4,6 +4,9 @@ const client = require('../client');
 const schema = require('../schema.json');
 const headerMap = require('../headerMap.json');
 
+const BATCH_SIZE = 500;
+exports.BATCH_SIZE = BATCH_SIZE;
+
 function escapeCSVValue(value) {
   if (typeof value !== 'string') {
     value = String(value); // Convert non-strings (numbers, booleans) to string
@@ -81,6 +84,7 @@ function parseValue(value, type) {
     case 'DATE':
       return parseDate(value);
     case 'INTEGER':
+    case 'BIGINT':
       const parsedInt = parseNumber(value);
       const int = parseInt(parsedInt, 10);
       return isNaN(int) ? null : int;
@@ -144,7 +148,7 @@ const lineIterator = (async function* () {
 exports.getBatch = async function () {
   let count = 0;
   const lines = [];
-  while (lines.length < 50) {
+  while (lines.length < BATCH_SIZE) {
     const { value } = await lineIterator.next();
     if (!value) break;
     lines.push(value);

@@ -1,9 +1,5 @@
-const http = require('http');
-const fs = require('fs');
-const readline = require('readline');
+const PQueue = require('p-queue').default;
 const client = require('../client');
-const schema = require('../schema.json');
-const headerMap = require('../headerMap.json');
 const {
   getBatch,
   processRecord,
@@ -12,11 +8,16 @@ const {
 const { parseLines } = require('./parser');
 const { insertValues } = require('./db');
 
+const queue = new PQueue({ concurrency: 3 });
 async function run() {
   const lines = await getBatch();
   const records = parseLines(lines);
   const valueBatch = records.map(processRecord);
-  await insertValues(valueBatch);
+  if (queue.size >= 50) {
+    console.log('holding queue');
+    await queue.onIdle();
+  }
+  queue.add(() => insertValues(valueBatch));
   await run();
 }
 client

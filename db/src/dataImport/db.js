@@ -1,12 +1,11 @@
 const client = require('../client');
 const schema = require('../schema.json');
-const { logError } = require('./helpers');
+const { logError, BATCH_SIZE } = require('./helpers');
 
-function getBulkQuery(rowCount) {
-  const columns = Object.keys(schema);
-  const query = `
+const columns = Object.keys(schema);
+const bulkQuery = `
     INSERT INTO registrations (${columns.map((column) => `"${column}"`)})
-    VALUES ${new Array(rowCount)
+    VALUES ${new Array(BATCH_SIZE)
       .fill(null)
       .map(
         (_, rowIndex) =>
@@ -19,18 +18,15 @@ function getBulkQuery(rowCount) {
       )
       .join(', ')}
   `;
-  return query;
-}
 
+const query = `INSERT INTO registrations (${columns.map(
+  (column) => `"${column}"`
+)})
+          VALUES (${columns.map((_, index) => `$${index + 1}`)})`;
 exports.insertValues = async function (valueBatch) {
   try {
-    await client.query(getBulkQuery(valueBatch.length), valueBatch.flat());
+    await client.query(bulkQuery, valueBatch.flat());
   } catch (error) {
-    const columns = Object.keys(schema);
-    const query = `INSERT INTO registrations (${columns.map(
-      (column) => `"${column}"`
-    )})
-            VALUES (${columns.map((_, index) => `$${index + 1}`)})`;
     for (const values of valueBatch) {
       try {
         await client.query(query, values);
