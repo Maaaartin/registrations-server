@@ -18,4 +18,4 @@ async function run() {
   await client.end();
 }
 
-run();
+module.exports = run;

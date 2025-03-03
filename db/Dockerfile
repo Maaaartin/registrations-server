@@ -7,4 +7,4 @@ COPY src ./src
 
 RUN yarn install --frozen-lockfile
 
-CMD ["sh", "-c", "while true; do sleep 30; done"]
+CMD ["sh", "-c", "yarn start"]

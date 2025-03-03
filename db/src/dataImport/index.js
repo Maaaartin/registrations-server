@@ -25,14 +25,17 @@ async function run() {
   } while (true);
   await queue.onIdle();
 }
-client
-  .connect()
-  .then(createTableFromHeaders)
-  .then(run)
-  .catch((error) => {
-    console.log('error', error);
-  })
-  .finally(() => {
-    console.log('Finished');
-    return client.end();
-  });
+
+module.exports = function () {
+  client
+    .connect()
+    .then(createTableFromHeaders)
+    .then(run)
+    .catch((error) => {
+      console.log('error', error);
+    })
+    .finally(() => {
+      console.log('Finished');
+      return client.end();
+    });
+};
