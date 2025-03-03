@@ -1,7 +1,5 @@
-DROP MATERIALIZED VIEW IF EXISTS registration_top_types;
-
 CREATE MATERIALIZED VIEW
-    registration_top_types AS
+    top_types_per_brand AS
 SELECT
     typ,
     tovarni_znacka,

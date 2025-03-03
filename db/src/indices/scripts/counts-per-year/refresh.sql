@@ -1,0 +1,1 @@
+REFRESH MATERIALIZED VIEW counts_by_year;

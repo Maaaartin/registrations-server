@@ -1,6 +1,5 @@
-DROP MATERIALIZED VIEW IF EXISTS registration_top_brands;
-
-CREATE MATERIALIZED VIEW registration_top_brands AS
+CREATE MATERIALIZED VIEW
+    top_brands AS
 SELECT
     tovarni_znacka,
     COUNT(tovarni_znacka)

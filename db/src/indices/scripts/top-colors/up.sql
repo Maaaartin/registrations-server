@@ -1,6 +1,5 @@
-DROP MATERIALIZED VIEW IF EXISTS registration_top_colors;
-
-CREATE MATERIALIZED VIEW registration_top_colors AS
+CREATE MATERIALIZED VIEW
+    top_colors AS
 SELECT
     barva,
     COUNT(barva)

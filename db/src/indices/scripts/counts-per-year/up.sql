@@ -1,6 +1,5 @@
-DROP MATERIALIZED VIEW IF EXISTS registration_counts_by_year;
-
-CREATE MATERIALIZED VIEW registration_counts_by_year AS
+CREATE MATERIALIZED VIEW
+    counts_by_year AS
 SELECT
     EXTRACT(
         YEAR

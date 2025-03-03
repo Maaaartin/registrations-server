@@ -1,0 +1,1 @@
+DROP MATERIALIZED VIEW IF EXISTS top_types_per_brand;
