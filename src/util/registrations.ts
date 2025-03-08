@@ -17,7 +17,9 @@ export function serializeRegistration(
         key,
         value instanceof Date
           ? { type: 'Date', value: value.toISOString() }
-          : value
+          : typeof value === 'bigint'
+            ? Number(value)
+            : value
       ];
     })
   ) as SerializableRegistration;
