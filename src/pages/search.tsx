@@ -19,32 +19,11 @@ type Props = {
   currentPage: number;
   brand: string;
   model: string;
+  vin: string;
 };
 
 const pageSize = 20;
 
-function VinForm() {
-  const router = useRouter();
-  const [vin, setVin] = useState('');
-  return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (!vin) return;
-        router.push({ pathname: `/vehicle`, query: { vin } });
-      }}
-    >
-      <TextField
-        label="Hledat VIN"
-        value={vin}
-        onChange={(e) => {
-          setVin(e.target.value);
-        }}
-      ></TextField>
-      <Button type="submit">Hledat</Button>
-    </form>
-  );
-}
 type RenderCellFn = GridBaseColDef<Vehicle>['renderCell'];
 
 const LinkComponent = ({
@@ -73,19 +52,37 @@ type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<Props, 'vehicles'> & {
     loading: boolean;
     onSubmit: (
-      params: Partial<{ brand: string; model: string; page: number }>
+      params: Partial<{
+        brand: string;
+        model: string;
+        vin: string;
+        page: number;
+      }>
     ) => Promise<boolean>;
   };
 
 const Toolbar = ({
   brand,
   model,
+  vin,
   currentPage,
   loading,
   onSubmit
 }: ToolbarProps) => {
   return (
     <>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const data = new FormData(e.target as HTMLFormElement);
+          const vinValue = String(data.get('vin'));
+          if (!vinValue) return;
+          onSubmit({ brand, model, vin: vinValue, page: currentPage });
+        }}
+      >
+        <TextField defaultValue={vin} name="vin" label="Hledat VIN"></TextField>
+        <Button type="submit">Hledat</Button>
+      </form>
       <BrandAutocomplete
         value={brand}
         onSelect={(value) => {
@@ -105,12 +102,18 @@ const Toolbar = ({
   );
 };
 
-export default function Search({ vehicles, currentPage, brand, model }: Props) {
+export default function Search({
+  vehicles,
+  currentPage,
+  brand,
+  model,
+  vin
+}: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const onSubmit = (
-    params: Partial<{ brand: string; model: string; page: number }>
+    params: Partial<{ brand: string; model: string; vin: string; page: number }>
   ) => {
     setLoading(true);
     return router
@@ -121,7 +124,11 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
             ...params,
             model: params.brand ? params.model : '',
             page:
-              params.brand !== brand || params.model !== model ? 0 : params.page
+              params.brand !== brand ||
+              params.model !== model ||
+              params.vin !== vin
+                ? 0
+                : params.page
           }
         },
         undefined,
@@ -136,7 +143,6 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
 
   return (
     <>
-      <VinForm />
       <DataGrid
         rowSelection={false}
         sx={{
@@ -250,11 +256,13 @@ export default function Search({ vehicles, currentPage, brand, model }: Props) {
 }
 
 const searchVehicles = unstable_cache(
-  (page: number, brand: string, type: string) =>
+  (page: number, brand: string, type: string, vin) =>
     prisma.registrations.findMany({
       skip: page * pageSize,
       take: pageSize,
-      where: { tovarni_znacka: brand || undefined, typ: type || undefined },
+      where: vin
+        ? { vin }
+        : { tovarni_znacka: brand || undefined, typ: type || undefined },
       select: {
         id: true,
         tovarni_znacka: true,
@@ -274,22 +282,24 @@ const queryDecoder = zod.object({
     .default('0')
     .transform((val) => Number(val) || 0),
   brand: zod.string().default(''),
-  model: zod.string().default('')
+  model: zod.string().default(''),
+  vin: zod.string().default('')
 });
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { page, brand, model } = queryDecoder.parse(context.query);
+  const { page, brand, model, vin } = queryDecoder.parse(context.query);
 
-  const vehicles = await searchVehicles(page, brand, model);
+  const vehicles = await searchVehicles(page, brand, model, vin);
 
   return {
     props: {
       vehicles,
       currentPage: page,
       brand,
-      model
+      model,
+      vin
     }
   };
 };
