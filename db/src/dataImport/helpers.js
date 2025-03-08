@@ -8,10 +8,7 @@ const BATCH_SIZE = 500;
 exports.BATCH_SIZE = BATCH_SIZE;
 
 function escapeCSVValue(value) {
-  if (typeof value !== 'string') {
-    value = String(value); // Convert non-strings (numbers, booleans) to string
-  }
-
+  if (typeof value !== 'string') return value;
   if (
     value.includes(',') ||
     value.includes('"') ||
@@ -20,14 +17,14 @@ function escapeCSVValue(value) {
   ) {
     value = `"${value.replace(/"/g, '""')}"`; // Escape double quotes and wrap in quotes
   }
-
   return value;
 }
 
-exports.logError = async function (file, ...data) {
+exports.escapeCSVValue = escapeCSVValue;
+const logError = async function (file, ...data) {
   await fs.promises.appendFile(file, data.map(escapeCSVValue).join(',') + '\n');
 };
-
+exports.logError = logError;
 exports.createTableFromHeaders = async () => {
   await client.query(`DROP TABLE IF EXISTS registrations;`);
 
@@ -45,15 +42,13 @@ exports.createTableFromHeaders = async () => {
 };
 
 const columns = Object.keys(schema);
+const currentYear = new Date().getFullYear();
 function parseDate(value) {
-  const date = new Date(value);
-  if (!isNaN(date.getMilliseconds())) {
-    return date.toISOString();
-  }
   const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
   if (dateRegex.test(value)) {
     const [day, month, year] = value.split('.').map(Number);
     const date2 = new Date(year, month - 1, day);
+    if (currentYear < year) return null;
     if (
       date2.getFullYear() === year &&
       date2.getMonth() === month - 1 &&
@@ -62,7 +57,6 @@ function parseDate(value) {
       return date2.toISOString();
     }
   }
-  // console.info(`no date value,${value}`);
   return null;
 }
 function parseNumber(value = '') {
@@ -85,9 +79,10 @@ function parseValue(value, type) {
       return parseDate(value);
     case 'INTEGER':
     case 'BIGINT':
+      Number.MAX_SAFE_INTEGER;
       const parsedInt = parseNumber(value);
       const int = parseInt(parsedInt, 10);
-      return isNaN(int) ? null : int;
+      return isNaN(int) || int > Number.MAX_SAFE_INTEGER ? null : int;
     case 'REAL':
       const parsedFloat = parseNumber(value);
       const float = parseInt(parsedFloat, 10);
