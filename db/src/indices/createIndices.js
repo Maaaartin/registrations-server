@@ -3,19 +3,22 @@ const path = require('path');
 const client = require('../client');
 
 const dirPath = path.resolve(__dirname, './scripts/');
-async function create(p) {
-  const scriptDirPath = path.join(dirPath, p);
-  const [downCode, upCode] = await Promise.all(
-    ['down.sql', 'up.sql'].map((script) =>
-      fs.promises.readFile(path.join(scriptDirPath, script), 'ascii')
-    )
-  );
-  console.log(`running down for ${p}`);
-  await client.query(downCode);
-  console.log(`ran down for ${p}`);
-  console.log(`running up for ${p}`);
-  await client.query(upCode);
-  console.log(`ran up for ${p}`);
+const readFolders = () => fs.promises.readdir(dirPath);
+async function create() {
+  const dirs = await readFolders();
+  for (const dir of dirs) {
+    const [downCode, upCode] = await Promise.all(
+      ['down.sql', 'up.sql'].map((script) =>
+        fs.promises.readFile(path.join(dirPath, dir, script), 'ascii')
+      )
+    );
+    console.log(`running down for ${dir}`);
+    await client.query(downCode);
+    console.log(`ran down for ${dir}`);
+    console.log(`running up for ${dir}`);
+    await client.query(upCode);
+    console.log(`ran up for ${dir}`);
+  }
 }
 
 async function refresh(p) {
@@ -30,21 +33,14 @@ async function refresh(p) {
 }
 
 async function run() {
-  const [, command, action] = process.argv;
+  const [, , action] = process.argv;
 
-  const dir = await fs.promises.readdir(dirPath);
-
-  const scriptDirName = dir.find((dirName) => dirName === command);
-  if (!scriptDirName) {
-    throw new Error('Unknown command: ' + scriptDirName);
-  }
   try {
     await client.connect();
     if (action === 'create') {
-      await create(scriptDirName);
-    }
-    if (action === 'refresh') {
-      await refresh(scriptDirName);
+      await create();
+    } else if (action === 'refresh') {
+      await refresh();
     } else {
       throw new Error(`Unknown action: ${action}`);
     }
