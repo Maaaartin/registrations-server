@@ -47,37 +47,37 @@ model registrations {
   spotreba_mimo_mesto                                             Float?    @db.Real
   spotreba_kombinovana                                            Float?    @db.Real
   spotreba_pri_rychlosti                                          String?
-  spotreba_el_mobil                                               Int?
-  dojezd_zr                                                       Int?
+  spotreba_el_mobil                                               BigInt?
+  dojezd_zr                                                       BigInt?
   vyrobce_karoserie                                               String?
   druh_karoserie                                                  String?
   vyrobni_cislo_karoserie                                         String?
   barva                                                           String?
   barva_doplnkova                                                 String?
-  pocet_mist_celkem                                               Int?
-  pocet_mist_k_sezeni                                             Int?
-  pocet_mist_k_stani                                              Int?
-  delka                                                           Int?
-  sirka                                                           Int?
-  vyska                                                           Int?
-  rozvor                                                          Int?
-  rozchod                                                         Int?
-  provozni_hmotnost                                               Int?
-  nejvetsi_technicky_pripustna_hmotnost                           Int?
-  nejvetsi_povolena_hmotnost                                      Int?
+  pocet_mist_celkem                                               BigInt?
+  pocet_mist_k_sezeni                                             BigInt?
+  pocet_mist_k_stani                                              BigInt?
+  delka                                                           BigInt?
+  sirka                                                           BigInt?
+  vyska                                                           BigInt?
+  rozvor                                                          BigInt?
+  rozchod                                                         BigInt?
+  provozni_hmotnost                                               BigInt?
+  nejvetsi_technicky_pripustna_hmotnost                           BigInt?
+  nejvetsi_povolena_hmotnost                                      BigInt?
   nejvetsi_technicky_pripustna_hmotnost_na_napravu                String?
   nejvetsi_povolena_hmotnost_na_napravu                           String?
-  nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_brzden Int?
-  nejvetsi_povolena_hmotnost_pripojneho_vozidla_brzdeneho         Int?
-  nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_ne_brz Int?
-  nejvetsi_povolena_hmotnost_pripojneho_vozidla_ne_brzdeneho      Int?
-  nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy           Int?
-  nejvetsi_povolena_hmotnost_jizdni_soupravy                      Int?
+  nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_brzden BigInt?
+  nejvetsi_povolena_hmotnost_pripojneho_vozidla_brzdeneho         BigInt?
+  nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_ne_brz BigInt?
+  nejvetsi_povolena_hmotnost_pripojneho_vozidla_ne_brzdeneho      BigInt?
+  nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy           BigInt?
+  nejvetsi_povolena_hmotnost_jizdni_soupravy                      BigInt?
   hmotnosti_vozidla_pri_testu_wltp                                String?
   predpis_spotreba_paliva                                         String?
   prumerna_hodnota_uzitecneho_zatizeni                            String?
   spojovaci_zarizeni                                              String?
-  pocet_naprav                                                    Int?
+  pocet_naprav                                                    BigInt?
   naprav_pohanenych                                               String?
   kola_a_pneumatiky_naprava_1                                     String?
   kola_a_pneumatiky_naprava_2                                     String?
@@ -91,7 +91,7 @@ model registrations {
   inovativni_technologie                                          String?
   stupen_dokonceni                                                String?
   faktor_odchylky_de                                              Float?    @db.Real
-  faktor_verifikace_vf                                            Int?
+  faktor_verifikace_vf                                            BigInt?
   ucel_vozidla                                                    String?
   dalsi_zaznamy                                                   String?
   alternativni_provedeni                                          String?
@@ -100,7 +100,7 @@ model registrations {
   druh_rz                                                         String?
   zarazeni_vozidla                                                String?
   status                                                          String?
-  pcv                                                             Int?
+  pcv                                                             BigInt?
   abs                                                             Boolean?
   airbag                                                          String?
   asr                                                             Boolean?
@@ -109,22 +109,22 @@ model registrations {
   brzdy_parkovaci                                                 Boolean?
   brzdy_provozni                                                  Boolean?
   doplnkovy_text_na_tp                                            String?
-  hmotnosti_provozni_do                                           Int?
-  hmotnosti_zatizeni_sz                                           Int?
+  hmotnosti_provozni_do                                           BigInt?
+  hmotnosti_zatizeni_sz                                           BigInt?
   hmotnosti_zatizeni_sz_typ                                       String?
   hydropohon                                                      Boolean?
   objem_cisterny                                                  Float?    @db.Real
-  zatizeni_strechy                                                Int?
+  zatizeni_strechy                                                BigInt?
   cislo_motoru                                                    String?
-  nejvyssi_rychlost_omezeni                                       Int?
+  nejvyssi_rychlost_omezeni                                       BigInt?
   ovladani_brzd_sz                                                String?
   ovladani_brzd_sz_druh                                           String?
   retarder                                                        Boolean?
-  rok_vyroby                                                      Int?
-  delka_do                                                        Int?
-  lozna_delka                                                     Int?
-  lozna_sirka                                                     Int?
-  vyska_do                                                        Int?
+  rok_vyroby                                                      BigInt?
+  delka_do                                                        BigInt?
+  lozna_delka                                                     BigInt?
+  lozna_sirka                                                     BigInt?
+  vyska_do                                                        BigInt?
   typ_kod                                                         String?
   rm_zaniku                                                       String?
 

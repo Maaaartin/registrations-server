@@ -1,4 +1,4 @@
 SELECT
     *
 FROM
-    registration_ids;
+    id_count;

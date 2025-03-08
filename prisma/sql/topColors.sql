@@ -1,6 +1,6 @@
 SELECT
     *
 FROM
-    registration_top_colors
+    top_colors
 LIMIT
     10;

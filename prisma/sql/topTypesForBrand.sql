@@ -4,7 +4,7 @@ SELECT
     typ,
     count
 FROM
-    registration_top_types
+    top_types_per_brand
 WHERE
     tovarni_znacka = $1
 ORDER BY

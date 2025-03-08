@@ -1,6 +1,6 @@
 SELECT
     *
 FROM
-    registration_top_brands
+    top_brands
 LIMIT
     10;
