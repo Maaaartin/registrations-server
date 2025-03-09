@@ -10,4 +10,6 @@ export * from "./topBrands"
 
 export * from "./topColors"
 
+export * from "./topKinds"
+
 export * from "./topTypesForBrand"
