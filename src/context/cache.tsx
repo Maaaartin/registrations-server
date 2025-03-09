@@ -23,7 +23,7 @@ export const CacheContextProvider = ({ children }: PropsWithChildren) => {
   const brandSearch = useState<Record<string, string[]>>({});
   const topModelsPerBrand = useState<Record<string, string[]>>({});
   const modelSearch = useState<Record<string, Record<string, string[]>>>({});
-  const count = useState(NaN);
+  const count = useState(0);
   const topColors = useState<{ value: string; count: number }[]>([]);
   const registrationsPerYear = useState<{ year: number; count: number }[]>([]);
   return (

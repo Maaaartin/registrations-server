@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 // import Copyright from '../components/Copyright';
 import StatCard from '../components/StatCard';
 import useRequest from '../hooks/useRequest';
-import { List, ListItem, ListItemText } from '@mui/material';
+import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import RegistrationsChart from '../components/RegistrationsChart';
 import { useCacheContext } from '../context/cache';
 import { DNumber, DStringArray, DTopColors } from '../util/decoders';
@@ -16,36 +16,34 @@ const CountCard = () => {
     decoder: DNumber
   });
   useEffect(() => {
-    if (isNaN(count) && !request.value) {
+    if (!count && !request.value) {
       request.run();
     } else if (request.value) {
       setCount(request.value);
     }
   }, [count, request, setCount]);
-  const renderValue = count;
+  const renderValue = request.loading ? <CircularProgress /> : count;
 
   return <StatCard title="Vozidel v databázi" value={renderValue} />;
 };
 
 function CardList<T>({
   data,
-  renderPrimary,
-  renderSecondary
+  render
 }: {
   data: T[];
-  renderPrimary: (value: T) => ReactNode;
-  renderSecondary?: (value: T) => ReactNode;
+  render: (value: T) => { primary: ReactNode; secondary?: ReactNode };
 }) {
   return (
     <List dense>
-      {data.map((value, index) => (
-        <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-          <ListItemText
-            primary={renderPrimary(value)}
-            secondary={renderSecondary?.(value)}
-          />
-        </ListItem>
-      ))}
+      {data.map((value, index) => {
+        const { primary, secondary } = render(value);
+        return (
+          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+            <ListItemText primary={primary} secondary={secondary} />
+          </ListItem>
+        );
+      })}
     </List>
   );
 }
@@ -63,14 +61,14 @@ const BrandsCard = () => {
       setTopBrands(request.value);
     }
   }, [topBrands, request, setTopBrands]);
-  const renderValue = topBrands;
-  const renderPrimary = (value: string) => value;
+  const renderValue = request.loading ? <CircularProgress /> : topBrands;
+  const render = (value: string) => ({ primary: value });
   return (
     <StatCard
       title="Top značky"
       value={
         Array.isArray(renderValue) ? (
-          <CardList data={renderValue} renderPrimary={renderPrimary}></CardList>
+          <CardList data={renderValue} render={render}></CardList>
         ) : (
           renderValue
         )
@@ -92,21 +90,18 @@ const ColorsCard = () => {
       setTopColors(request.value);
     }
   }, [topColors, request, setTopColors]);
-  const renderValue = topColors;
-  const renderPrimary = (value: { value: string; count: number }) =>
-    value.value;
-  const renderSecondary = (value: { value: string; count: number }) =>
-    value.count;
+  if (request.loading) {
+    return <CircularProgress />;
+  }
+  const render = (value: { value: string; count: number }) => ({
+    primary: value.value,
+    secondary: value.count
+  });
+
   return (
     <StatCard
       title="Top barvy"
-      value={
-        <CardList
-          data={renderValue}
-          renderPrimary={renderPrimary}
-          renderSecondary={renderSecondary}
-        ></CardList>
-      }
+      value={<CardList data={topColors} render={render}></CardList>}
     />
   );
 };
