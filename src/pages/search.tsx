@@ -61,14 +61,7 @@ type ToolbarProps = GridSlotProps['toolbar'] &
     ) => Promise<boolean>;
   };
 
-const Toolbar = ({
-  brand,
-  model,
-  vin,
-  currentPage,
-  loading,
-  onSubmit
-}: ToolbarProps) => {
+const Toolbar = ({ brand, model, vin, loading, onSubmit }: ToolbarProps) => {
   return (
     <>
       <form
@@ -77,7 +70,7 @@ const Toolbar = ({
           const data = new FormData(e.target as HTMLFormElement);
           const vinValue = String(data.get('vin'));
           if (!vinValue) return;
-          onSubmit({ brand, model, vin: vinValue, page: currentPage });
+          onSubmit({ vin: vinValue });
         }}
       >
         <TextField defaultValue={vin} name="vin" label="Hledat VIN"></TextField>
@@ -86,7 +79,7 @@ const Toolbar = ({
       <BrandAutocomplete
         value={brand}
         onSelect={(value) => {
-          onSubmit({ brand: value, model, page: currentPage });
+          onSubmit({ brand: value });
         }}
         disabled={loading}
       />
@@ -94,7 +87,7 @@ const Toolbar = ({
         brand={brand}
         model={model}
         onSelect={(value) => {
-          onSubmit({ brand, model: value, page: currentPage });
+          onSubmit({ model: value });
         }}
         disabled={loading || !brand}
       />
@@ -112,23 +105,24 @@ export default function Search({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = (
-    params: Partial<{ brand: string; model: string; vin: string; page: number }>
-  ) => {
+  const onSubmit = ({
+    brand: brandParam = brand,
+    model: modelParam = model,
+    page,
+    vin: vinParam = vin
+  }: Partial<{ brand: string; model: string; vin: string; page: number }>) => {
     setLoading(true);
     return router
       .push(
         {
           pathname: router.pathname,
           query: {
-            ...params,
-            model: params.brand ? params.model : '',
+            brand: brandParam,
+            model: brandParam ? modelParam : '',
             page:
-              params.brand !== brand ||
-              params.model !== model ||
-              params.vin !== vin
+              brandParam !== brand || modelParam !== model || vinParam !== vin
                 ? 0
-                : params.page
+                : page
           }
         },
         undefined,
@@ -204,7 +198,7 @@ export default function Search({
         filterMode="server"
         pageSizeOptions={[pageSize]}
         onPaginationModelChange={(params) => {
-          return onSubmit({ brand, model, page: params.page });
+          return onSubmit({ page: params.page });
         }}
         rowCount={rowCount}
         loading={loading}
