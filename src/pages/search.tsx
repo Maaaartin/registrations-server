@@ -1,5 +1,5 @@
-import { Button, TextField } from '@mui/material';
-import { useState } from 'react';
+import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import prisma from '../../prisma';
 import { useRouter } from 'next/router';
@@ -10,6 +10,7 @@ import { unstable_cache } from 'next/cache';
 import zod from 'zod';
 import { GridBaseColDef } from '@mui/x-data-grid/internals';
 import Link from 'next/link';
+import CloseIcon from '@mui/icons-material/Close';
 
 type Vehicles = Awaited<ReturnType<typeof searchVehicles>>;
 type Vehicle = Vehicles[0];
@@ -48,34 +49,68 @@ const renderCell: (field: keyof Vehicle) => RenderCellFn =
   /* eslint-disable react/display-name */
   ({ row }) => <LinkComponent id={row.id} value={row[field]} />;
 
+type ToolBarComponentProps = {
+  loading: boolean;
+  onSubmit: (
+    params: Partial<{
+      brand: string;
+      model: string;
+      vin: string;
+      page: number;
+    }>
+  ) => Promise<boolean>;
+};
+
 type ToolbarProps = GridSlotProps['toolbar'] &
-  Omit<Props, 'vehicles'> & {
-    loading: boolean;
-    onSubmit: (
-      params: Partial<{
-        brand: string;
-        model: string;
-        vin: string;
-        page: number;
-      }>
-    ) => Promise<boolean>;
-  };
+  Omit<Props, 'vehicles'> &
+  ToolBarComponentProps;
+
+const VinForm = ({
+  vin = '',
+  loading,
+  onSubmit
+}: { vin: string } & ToolBarComponentProps) => {
+  const [value, setValue] = useState(vin);
+  useEffect(() => {
+    if (vin && !value) {
+      onSubmit({ vin: '' });
+    }
+  }, [vin, value]);
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!value) return;
+        onSubmit({ vin: value });
+      }}
+    >
+      <TextField
+        label="VIN"
+        variant="outlined"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        disabled={loading}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={() => setValue('')} edge="end">
+                <CloseIcon />
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
+      />
+      <Button type="submit" disabled={!value || loading}>
+        Hledat
+      </Button>
+    </form>
+  );
+};
 
 const Toolbar = ({ brand, model, vin, loading, onSubmit }: ToolbarProps) => {
   return (
     <>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          const data = new FormData(e.target as HTMLFormElement);
-          const vinValue = String(data.get('vin'));
-          if (!vinValue) return;
-          onSubmit({ vin: vinValue });
-        }}
-      >
-        <TextField defaultValue={vin} name="vin" label="Hledat VIN"></TextField>
-        <Button type="submit">Hledat</Button>
-      </form>
+      <VinForm vin={vin} loading={loading} onSubmit={onSubmit} />
       <BrandAutocomplete
         value={brand}
         onSelect={(value) => {
@@ -119,6 +154,7 @@ export default function Search({
           query: {
             brand: brandParam,
             model: brandParam ? modelParam : '',
+            vin: vinParam,
             page:
               brandParam !== brand || modelParam !== model || vinParam !== vin
                 ? 0
@@ -215,7 +251,8 @@ export default function Search({
             model,
             currentPage,
             onSubmit,
-            loading
+            loading,
+            vin
           } as ToolbarProps,
           filterPanel: {
             sx: { height: '100vh' },
