@@ -52,14 +52,7 @@ export default function ModelAutocomplete({
         }
       });
     }
-  }, [
-    request.value,
-    brand,
-    modelSearch,
-    searchModelDebounced,
-    setModels,
-    setModelSearch
-  ]);
+  }, [request.value, brand, searchModelDebounced]);
   useEffect(() => {
     if (!brand) return;
     if (searchModelDebounced) {
@@ -75,7 +68,7 @@ export default function ModelAutocomplete({
     } else if (topModelsPerBrand[brand]) {
       setModels(topModelsPerBrand[brand]);
     }
-  }, [request, brand, searchModelDebounced, modelSearch, topModelsPerBrand]);
+  }, [brand, searchModelDebounced]);
   return (
     <Autocomplete
       disabled={disabled}

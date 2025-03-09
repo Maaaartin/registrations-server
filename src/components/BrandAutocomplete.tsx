@@ -34,30 +34,24 @@ export default function BrandAutocomplete({
       });
     }
   }, [topBrands, setTopBrands]);
+
+  useEffect(() => {
+    if (!searchBrandDebounced) {
+      setBrands(topBrands);
+    } else if (brandSearch[searchBrandDebounced]) {
+      setBrands(brandSearch[searchBrandDebounced]);
+    } else {
+      const query = new URLSearchParams({ brand: searchBrandDebounced });
+      request.run({ query });
+    }
+  }, [searchBrandDebounced]);
   useEffect(() => {
     if (request.value && searchBrandDebounced) {
       setBrands(request.value);
       setBrandSearch({ ...brandSearch, [searchBrandDebounced]: request.value });
     }
-  }, [
-    brandSearch,
-    request.value,
-    searchBrandDebounced,
-    setBrands,
-    setBrandSearch
-  ]);
-  useEffect(() => {
-    if (searchBrandDebounced) {
-      if (brandSearch[searchBrandDebounced]) {
-        setBrands(brandSearch[searchBrandDebounced]);
-      } else {
-        const query = new URLSearchParams({ brand: searchBrandDebounced });
-        request.run({ query });
-      }
-    } else {
-      setBrands(topBrands);
-    }
-  }, [request, searchBrandDebounced, brandSearch, topBrands]);
+  }, [request.value, searchBrandDebounced]);
+
   return (
     <Autocomplete
       freeSolo
