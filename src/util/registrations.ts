@@ -24,3 +24,6 @@ export function serializeRegistration(
     })
   ) as SerializableRegistration;
 }
+
+export type ValueCountPair = { value: string; count: number };
+export type ValueCountPairs = ValueCountPair[];

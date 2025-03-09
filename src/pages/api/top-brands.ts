@@ -1,12 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../../prisma/index';
 import { topBrands } from '../../../prisma/client/sql';
+import { ValueCountPairs } from '../../util/registrations';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<string[]>
+  res: NextApiResponse<ValueCountPairs>
 ) {
   const result = await prisma.$queryRawTyped(topBrands());
-  const brands = result.map((value) => value.tovarni_znacka as string);
-  res.send(brands);
+  const mappedResult = result.map((value) => ({
+    value: String(value.tovarni_znacka),
+    count: Number(value.count)
+  }));
+  res.send(mappedResult);
 }

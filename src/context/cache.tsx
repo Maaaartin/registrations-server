@@ -6,26 +6,27 @@ import React, {
   useContext,
   useState
 } from 'react';
+import { ValueCountPairs } from '../util/registrations';
 
 type StateAction<T> = [T, Dispatch<SetStateAction<T>>];
 const CacheContext = createContext<{
-  topBrands: StateAction<string[]>;
+  topBrands: StateAction<ValueCountPairs>;
   brandSearch: StateAction<Record<string, string[]>>;
   topModelsPerBrand: StateAction<Record<string, string[]>>;
   modelSearch: StateAction<Record<string, Record<string, string[]>>>;
   count: StateAction<number>;
-  topColors: StateAction<{ value: string; count: number }[]>;
-  registrationsPerYear: StateAction<{ year: number; count: number }[]>;
+  topColors: StateAction<ValueCountPairs>;
+  registrationsPerYear: StateAction<ValueCountPairs>;
 }>(null!);
 
 export const CacheContextProvider = ({ children }: PropsWithChildren) => {
-  const topBrands = useState<string[]>([]);
+  const topBrands = useState<ValueCountPairs>([]);
   const brandSearch = useState<Record<string, string[]>>({});
   const topModelsPerBrand = useState<Record<string, string[]>>({});
   const modelSearch = useState<Record<string, Record<string, string[]>>>({});
   const count = useState(0);
-  const topColors = useState<{ value: string; count: number }[]>([]);
-  const registrationsPerYear = useState<{ year: number; count: number }[]>([]);
+  const topColors = useState<ValueCountPairs>([]);
+  const registrationsPerYear = useState<ValueCountPairs>([]);
   return (
     <CacheContext.Provider
       value={{

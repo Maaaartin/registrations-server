@@ -3,7 +3,7 @@ import zod from 'zod';
 export const DStringArray = zod.string().array();
 export const DString = zod.string();
 export const DNumber = zod.number();
-export const DTopColors = zod
+export const DValueCountPairs = zod
   .object({
     value: zod.string(),
     count: zod.number()

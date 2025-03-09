@@ -7,7 +7,8 @@ import useRequest from '../hooks/useRequest';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import RegistrationsChart from '../components/RegistrationsChart';
 import { useCacheContext } from '../context/cache';
-import { DNumber, DStringArray, DTopColors } from '../util/decoders';
+import { DNumber, DStringArray, DValueCountPairs } from '../util/decoders';
+import { ValueCountPair } from '../util/registrations';
 
 const CountCard = () => {
   const [count, setCount] = useCacheContext().count;
@@ -52,7 +53,7 @@ const BrandsCard = () => {
   const [topBrands, setTopBrands] = useCacheContext().topBrands;
   const request = useRequest({
     url: '/api/top-brands',
-    decoder: DStringArray
+    decoder: DValueCountPairs
   });
   useEffect(() => {
     if (!topBrands.length && !request.value) {
@@ -62,7 +63,10 @@ const BrandsCard = () => {
     }
   }, [topBrands, request, setTopBrands]);
   const renderValue = request.loading ? <CircularProgress /> : topBrands;
-  const render = (value: string) => ({ primary: value });
+  const render = (value: ValueCountPair) => ({
+    primary: value.value,
+    secondary: value.count
+  });
   return (
     <StatCard
       title="Top značky"
@@ -81,7 +85,7 @@ const ColorsCard = () => {
   const [topColors, setTopColors] = useCacheContext().topColors;
   const request = useRequest({
     url: '/api/top-colors',
-    decoder: DTopColors
+    decoder: DValueCountPairs
   });
   useEffect(() => {
     if (!topColors.length && !request.value) {
