@@ -1,7 +1,7 @@
 const createIndices = require('./indices/createIndices');
 const runImport = require('./dataImport/index');
 
-const [command] = process.argv;
+const [, , command] = process.argv;
 
 if (command === 'import') {
   console.log('running import');

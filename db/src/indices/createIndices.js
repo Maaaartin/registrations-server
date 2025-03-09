@@ -33,7 +33,7 @@ async function refresh(p) {
 }
 
 async function run() {
-  const [, , action] = process.argv;
+  const [, , , action] = process.argv;
 
   try {
     await client.connect();

@@ -70,4 +70,6 @@ function run() {
   });
 }
 
-client.connect().then(createTableFromHeaders).then(run);
+module.exports = () => {
+  return client.connect().then(createTableFromHeaders).then(run);
+};

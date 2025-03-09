@@ -116,38 +116,3 @@ exports.processRecord = function (record) {
   const values = columns.map((c) => mappedRecord[c]);
   return values;
 };
-
-const fileStream = fs.createReadStream(
-  '/Users/martin/Downloads/RSV_vypis_vozidel_20250204.csv'
-);
-const rl = readline.createInterface({
-  input: fileStream,
-  crlfDelay: Infinity
-});
-
-let lineNr = 0;
-const lineIterator = (async function* () {
-  for await (const line of rl) {
-    if (lineNr === 0) {
-      lineNr++;
-      continue;
-    }
-    if (lineNr % 1000 === 0) {
-      console.log('line', lineNr);
-    }
-    lineNr++;
-    yield line;
-  }
-})();
-
-exports.getBatch = async function () {
-  let count = 0;
-  const lines = [];
-  while (lines.length < BATCH_SIZE) {
-    const { value } = await lineIterator.next();
-    if (!value) break;
-    lines.push(value);
-    count++;
-  }
-  return lines;
-};
