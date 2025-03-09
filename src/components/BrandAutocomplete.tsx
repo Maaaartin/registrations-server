@@ -4,7 +4,7 @@ import useRequest from '../hooks/useRequest';
 import axios from 'axios';
 import { useCacheContext } from '../context/cache';
 import useDebounce from '../hooks/useDebounce';
-import { DStringArray } from '../util/decoders';
+import { DStringArray, DValueCountPairs } from '../util/decoders';
 
 export default function BrandAutocomplete({
   value,
@@ -29,7 +29,7 @@ export default function BrandAutocomplete({
   useEffect(() => {
     if (!topBrands.length) {
       axios.get('/api/top-brands').then((res) => {
-        const result = DStringArray.parse(res.data);
+        const result = DValueCountPairs.parse(res.data);
         setTopBrands(result);
       });
     }
@@ -37,7 +37,7 @@ export default function BrandAutocomplete({
 
   useEffect(() => {
     if (!searchBrandDebounced) {
-      setBrands(topBrands);
+      setBrands(topBrands.map(({ value }) => value));
     } else if (brandSearch[searchBrandDebounced]) {
       setBrands(brandSearch[searchBrandDebounced]);
     } else {

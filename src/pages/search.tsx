@@ -1,4 +1,11 @@
-import { Button, IconButton, InputAdornment, TextField } from '@mui/material';
+import {
+  Button,
+  Divider,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import prisma from '../../prisma';
@@ -109,8 +116,9 @@ const VinForm = ({
 
 const Toolbar = ({ brand, model, vin, loading, onSubmit }: ToolbarProps) => {
   return (
-    <>
+    <Stack direction="row" spacing={2}>
       <VinForm vin={vin} loading={loading} onSubmit={onSubmit} />
+      <Divider orientation="vertical" variant="middle" flexItem />
       <BrandAutocomplete
         value={brand}
         onSelect={(value) => {
@@ -126,7 +134,7 @@ const Toolbar = ({ brand, model, vin, loading, onSubmit }: ToolbarProps) => {
         }}
         disabled={loading || !brand}
       />
-    </>
+    </Stack>
   );
 };
 
