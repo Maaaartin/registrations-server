@@ -1,105 +1,288 @@
 {
-  "datum_1_registrace": "Datum 1. registrace",
-  "datum_1_registrace_v_cr": "Datum 1. registrace v ČR",
-  "ztp": "ZTP",
-  "es_eu": "ES/EU",
-  "druh_vozidla": "Druh vozidla",
-  "druh_vozidla_2_radek": "Druh vozidla 2. ř.",
-  "kategorie_vozidla": "Kategorie vozidla",
-  "tovarni_znacka": "Tovární značka",
-  "typ": "Typ",
-  "varianta": "Varianta",
-  "verze": "Verze",
-  "vin": "VIN",
-  "obchodni_oznaceni": "Obchodní označení",
-  "vyrobce_vozidla": "Výrobce vozidla",
-  "vyrobce_motoru": "Výrobce motoru",
-  "typ_motoru": "Typ motoru",
-  "max_vykon": "Max. výkon [kW] / [min⁻¹]",
-  "palivo": "Palivo",
-  "zdvihovy_objem": "Zdvihový objem [cm³]",
-  "plne_elektricke_vozidlo": "Plně elektrické vozidlo",
-  "hybridni_vozidlo": "Hybridní vozidlo",
-  "trida_hybridniho_vozidla": "Třída hybridního vozidla",
-  "emisni_limit": "Emisní limit [EHKOSN/EHSES]",
-  "stupeň_plneni_emisni_urovne": "Stupeň plnění emisní úrovně",
-  "korigovany_soucinitel_absorpce": "Korigovaný součinitel absorbce [m⁻¹]",
-  "co2_mesto": "CO2 město [g.km-1]",
-  "co2_mimo_mesto": "CO2 mimo město [g.km-1]",
-  "co2_kombi": "CO2 kombinované [g.km-1]",
-  "specificke_co2": "Specifické CO2",
-  "snizeni_emisi_nedc": "Snížení emisí – NEDC",
-  "snizeni_emisi_wltp": "Snížení emisí – WLTP",
-  "predpis_spotreba_paliva": "Spotřeba předpis",
-  "spotreba_mesto": "Spotřeba město [l.100km⁻¹]",
-  "spotreba_mimo_mesto": "Spotřeba mimo město [l.100km⁻¹]",
-  "spotreba_kombinovana": "Spotřeba kombinovaná [l.100km⁻¹]",
-  "spotreba_pri_rychlosti": "Spotřeba při rychlosti [l.100 km⁻¹]",
-  "spotreba_el_mobil": "Spotřeba el. mobil [Wh/km] – Z",
-  "dojezd_zr": "Dojezd ZR [km]",
-  "vyrobce_karoserie": "Výrobce karoserie",
-  "druh_karoserie": "Druh (typ)",
-  "vyrobni_cislo_karoserie": "Výrobní číslo karoserie",
-  "barva": "Barva",
-  "barva_doplnkova": "Barva doplňková",
-  "pocet_mist_celkem": "Počet míst celkem",
-  "pocet_mist_k_sezeni": "Počet míst k sezení",
-  "pocet_mist_k_stani": "Počet míst k stání",
-  "delka,sirka,vyska": "Celková délka/šířka/výška [mm]",
-  "rozvor": "Rozvor [mm]",
-  "rozchod": "Rozchod [mm]",
-  "provozni_hmotnost": "Provozní hmotnost",
-  "nejvetsi_technicky_pripustna_hmotnost,nejvetsi_povolena_hmotnost": "Největší technicky přípustná/povolená hmotnost [kg]",
-  "nejvetsi_technicky_pripustna_hmotnost_na_napravu,nejvetsi_povolena_hmotnost_na_napravu": "Největší technicky přípustná/povolená hmotnost na nápravu [kg]",
-  "nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_brzdeneho,nejvetsi_povolena_hmotnost_pripojneho_vozidla_brzdeneho": "Největší technicky přípustná/povolená hmotnost přípojného vozidla [kg] brzděného",
-  "nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_ne_brzdeneho,nejvetsi_povolena_hmotnost_pripojneho_vozidla_ne_brzdeneho": "Největší technicky přípustná/povolená hmotnost přípojného vozidla [kg] nebrzděného",
-  "nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy,nejvetsi_povolena_hmotnost_jizdni_soupravy": "Největší technicky přípustná/povolená hmotnost jízdní soupravy [kg]",
-  "hmotnosti_vozidla_pri_testu_wltp": "Hmotnosti vozidla při testu WLTP",
-  "prumerna_hodnota_uzitecneho_zatizeni": "Průměrná hodnota užitečného zatížení",
-  "spojovaci_zarizeni": "Spojovací zařízení - druh",
-  "pocet_naprav": "Počet náprav / z toho poháněných",
-  "kola_a_pneumatiky": "Kola a pneumatiky na nápravě - rozměry/montáž [N.1; N.2; N.3; N.4]",
-  "vnejsi_hluk_vozidla_stojici,vnejsi_hluk_vozidla_otacky": "Vnější hluk vozidla [dB(A)] - stojícího při ot. [min⁻¹]",
-  "vnejsi_hluk_vozidla_jizda": "Za jízdy",
-  "nejvyssi_rychlost": "Nejvyšší rychlost [km.h⁻¹]",
-  "pomer_vykon_hmotnost": "Poměr Výkon/Hmotnost [kW.kg⁻¹]",
-  "inovativni_technologie": "Inovativní technologie",
-  "stupeň_dokonceni": "Stupeň dokončení",
-  "faktor_odchylky_de": "Faktor odchylky - DE",
-  "faktor_verifikace_vf": "Faktor verifikace - Vf",
-  "ucel_vozidla": "Účel vozidla",
-  "dalsi_zaznamy": "Další záznamy",
-  "alternativni_provedeni": "Alternativní provedení",
-  "cislo_tp": "Číslo TP",
-  "cislo_orv": "Číslo ORV",
-  "druh_rz": "Druh RZ",
-  "zarazeni_vozidla": "Zařazení vozidla",
-  "status": "Status",
-  "pcv": "PČV",
-  "abs": "ABS",
-  "airbag": "Airbag",
-  "asr": "ASR",
-  "brzdy_nouzova": "Brzdy nouzová",
-  "brzdy_odlehcovaci": "Brzdy odlehčovací",
-  "brzdy_parkovaci": "Brzdy parkovací",
-  "brzdy_provozni": "Brzdy provozní",
-  "dopl_kovy_text_na_tp": "Doplňkový text na TP",
-  "hmotnosti_provozni_do": "Hmotnosti provozní Do",
-  "hmotnosti_zatizeni_sz": "Hmotnosti zatížení SZ",
-  "hmotnosti_zatizeni_sz_typ": "Hmotnosti zatížení SZ typ",
-  "hydropohon": "Hydropohon",
-  "objem_cisterny": "Objem cisterny",
-  "zatizeni_strechy": "Zatížení střechy",
-  "cislo_motoru": "Číslo motoru",
-  "nejvyssi_rychlost_omezeni": "Nejvyšší rychlost omezení",
-  "ovladani_brzd_sz": "Ovládání brzd SZ",
-  "ovladani_brzd_sz_druh": "Ovládání brzd SZ druh",
-  "retarder": "Retarder",
-  "rok_vyroby": "Rok výroby",
-  "delka_do": "Délka do",
-  "lozna_delka": "Ložná délka",
-  "lozna_sirka": "Ložná šířka",
-  "vyska_do": "Výška do",
-  "typ_kod": "Typ kód",
-  "rm_zaniku": "RM zániku"
+  "datum_1_registrace": {
+    "name": "Datum 1. registrace",
+    "description": "Datum první registrace (název do 1.11.2024 )"
+  },
+  "datum_1_registrace_v_cr": {
+    "name": "Datum 1. registrace v ČR",
+    "description": "Datum první registrace v ČR  (název do 1.11.2024 )"
+  },
+  "ztp": {
+    "name": "ZTP",
+    "description": "Číslo typového schválení vozidla  (do 1.11.2024 vedeno jako Číslo typového schválení)"
+  },
+  "es_eu": {
+    "name": "ES/EU",
+    "description": "Homologace ES  (název do 1.11.2024 )"
+  },
+  "druh_vozidla": {
+    "name": "Druh vozidla",
+    "description": "Druh vozidla, např. osobní automobil"
+  },
+  "druh_vozidla_2_radek": {
+    "name": "Druh vozidla 2. ř.",
+    "description": "Upřesnění předchozího bodu, např. AA SEDAN"
+  },
+  "kategorie_vozidla": {
+    "name": "Kategorie vozidla",
+    "description": "Kategorie vozidla, např. M1"
+  },
+  "tovarni_znacka": {
+    "name": "Tovární značka",
+    "description": "Tovární značka, např. Škoda"
+  },
+  "typ": { "name": "Typ", "description": "Typ, např. 6L" },
+  "varianta": { "name": "Varianta", "description": "Varianta SCNBXVX01" },
+  "verze": { "name": "Verze", "description": "Verze" },
+  "vin": {
+    "name": "VIN",
+    "description": "Identifikační číslo vozidla (VIN)"
+  },
+  "obchodni_oznaceni": {
+    "name": "Obchodní označení",
+    "description": "Obchodní označení, např. Octavia"
+  },
+  "vyrobce_vozidla": {
+    "name": "Výrobce vozidla",
+    "description": "Výrobce vozidla, např. Škoda Auto a.s."
+  },
+  "vyrobce_motoru": {
+    "name": "Výrobce motoru",
+    "description": "Výrobce motoru, např. Volkswagen AG"
+  },
+  "typ_motoru": { "name": "Typ motoru", "description": "Typ, např. BXV" },
+  "max_vykon": {
+    "name": "Max. výkon [kW] / [min⁻¹]"
+  },
+  "palivo": { "name": "Palivo" },
+  "zdvihovy_objem": { "name": "Zdvihový objem [cm³]" },
+  "plne_elektricke_vozidlo": {
+    "name": "Plně elektrické vozidlo",
+    "description": "Plně elektrické vozidlo (zavedeno od 1.11.2024)"
+  },
+  "hybridni_vozidlo": {
+    "name": "Hybridní vozidlo",
+    "description": "Hybridní vozidlo (zavedeno od 1.11.2024)"
+  },
+  "trida_hybridniho_vozidla": {
+    "name": "Třída hybridního vozidla",
+    "description": "Třída hybridního vozidla (zavedeno od 1.11.2024)"
+  },
+  "emisni_limit": {
+    "name": "Emisní limit [EHKOSN/EHSES]",
+    "description": "Emisní limit, např. EURO 6"
+  },
+  "stupeň_plneni_emisni_urovne": {
+    "name": "Stupeň plnění emisní úrovně",
+    "description": "Emisní limit, např. EURO 6"
+  },
+  "korigovany_soucinitel_absorpce": {
+    "name": "Korigovaný součinitel absorbce [m⁻¹]",
+    "description": "Korigovaný součinitel absorpce neboli kouřivost [m-1]"
+  },
+  "co2_mesto": { "name": "CO2 město [g.km-1]" },
+  "co2_mimo_mesto": { "name": "CO2 mimo město [g.km-1]" },
+  "co2_kombi": { "name": "CO2 kombinované [g.km-1]" },
+  "specificke_co2": {
+    "name": "Specifické CO2",
+    "description": "Specifické CO2 (zavedeno od 1.11.2024)"
+  },
+  "snizeni_emisi_nedc": {
+    "name": "Snížení emisí – NEDC",
+    "description": "Snížení emisí – NEDC (zavedeno od 1.11.2024)"
+  },
+  "snizeni_emisi_wltp": {
+    "name": "Snížení emisí – WLTP",
+    "description": "Snížení emisí – WLTP (zavedeno od 1.11.2024)"
+  },
+  "predpis_spotreba_paliva": { "name": "Spotřeba předpis" },
+  "spotreba_mesto": { "name": "Spotřeba město [l.100km⁻¹]" },
+  "spotreba_mimo_mesto": { "name": "Spotřeba mimo město [l.100km⁻¹]" },
+  "spotreba_kombinovana": { "name": "Spotřeba kombinovaná [l.100km⁻¹]" },
+  "spotreba_pri_rychlosti": { "name": "Spotřeba při rychlosti [l.100 km⁻¹]" },
+  "spotreba_el_mobil": { "name": "Spotřeba el. mobil [Wh/km] – Z" },
+  "dojezd_zr": { "name": "Dojezd ZR [km]" },
+  "vyrobce_karoserie": {
+    "name": "Výrobce karoserie"
+  },
+  "druh_karoserie": { "name": "Druh (typ)" },
+  "vyrobni_cislo_karoserie": {
+    "name": "Výrobní číslo karoserie",
+    "description": "Výrobní číslo, je-li odlišné od VIN"
+  },
+  "barva": { "name": "Barva", "description": "R – Barva, např. černá" },
+  "barva_doplnkova": { "name": "Barva doplňková" },
+  "pocet_mist_celkem": {
+    "name": "Počet míst celkem"
+  },
+  "pocet_mist_k_sezeni": {
+    "name": "Počet míst k sezení"
+  },
+  "pocet_mist_k_stani": {
+    "name": "Počet míst k stání"
+  },
+  "delka,sirka,vyska": { "name": "Celková délka/šířka/výška [mm]" },
+  "rozvor": { "name": "Rozvor [mm]" },
+  "rozchod": { "name": "Rozchod [mm]" },
+  "provozni_hmotnost": {
+    "name": "Provozní hmotnost [kg]"
+  },
+  "nejvetsi_technicky_pripustna_hmotnost,nejvetsi_povolena_hmotnost": {
+    "name": "Největší technicky přípustná/povolená hmotnost [kg]"
+  },
+  "nejvetsi_technicky_pripustna_hmotnost_na_napravu,nejvetsi_povolena_hmotnost_na_napravu": {
+    "name": "Největší technicky přípustná/povolená hmotnost na nápravu [kg]"
+  },
+  "nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_brzdeneho,nejvetsi_povolena_hmotnost_pripojneho_vozidla_brzdeneho": {
+    "name": "Největší technicky přípustná/povolená hmotnost přípojného vozidla [kg] brzděného"
+  },
+  "nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_ne_brzdeneho,nejvetsi_povolena_hmotnost_pripojneho_vozidla_ne_brzdeneho": {
+    "name": "Největší technicky přípustná/povolená hmotnost přípojného vozidla [kg] nebrzděného"
+  },
+  "nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy,nejvetsi_povolena_hmotnost_jizdni_soupravy": {
+    "name": "Největší technicky přípustná/povolená hmotnost jízdní soupravy [kg]"
+  },
+  "hmotnosti_vozidla_pri_testu_wltp": {
+    "name": "Hmotnosti vozidla při testu WLTP",
+    "description": "Hmotnosti vozidla při testu WLTP (zavedeno od 1.11.2024)"
+  },
+  "prumerna_hodnota_uzitecneho_zatizeni": {
+    "name": "Průměrná hodnota užitečného zatížení",
+    "description": "Průměrná hodnota užitečného zatížení (zavedeno od 1.11.2024)"
+  },
+  "spojovaci_zarizeni": { "name": "Spojovací zařízení - druh" },
+  "pocet_naprav": { "name": "Počet náprav / z toho poháněných" },
+  "kola_a_pneumatiky": {
+    "name": "Kola a pneumatiky na nápravě - rozměry/montáž [N.1; N.2; N.3; N.4]"
+  },
+  "vnejsi_hluk_vozidla_stojici": {
+    "name": "Vnější hluk vozidla [dB(A)] - stojícího při ot. [min⁻¹]",
+    "descrption": "Vnější hluk vozidla (dB(A)) stojícího při určitých otáčkách motoru"
+  },
+  "vnejsi_hluk_vozidla_otacky": {
+    "name": "Vnější hluk vozidla [dB(A)] - otáčky při ot. [min⁻¹]"
+  },
+  "vnejsi_hluk_vozidla_jizda": {
+    "name": "Vnější hluk vozidla [dB(A)] - za jízdy při ot. [min⁻¹]"
+  },
+  "nejvyssi_rychlost": { "name": "Nejvyšší rychlost [km.h⁻¹]" },
+  "pomer_vykon_hmotnost": { "name": "Poměr Výkon/Hmotnost [kW.kg⁻¹]" },
+  "inovativni_technologie": {
+    "name": "Inovativní technologie",
+    "description": "Inovativní technologie (zavedeno od 1.11.2024)"
+  },
+  "stupeň_dokonceni": {
+    "name": "Stupeň dokončení",
+    "description": "Stupeň dokončení (zavedeno od 1.11.2024)"
+  },
+  "faktor_odchylky_de": {
+    "name": "Faktor odchylky - DE",
+    "description": "Faktor odchylky - DE (zavedeno od 1.11.2024)"
+  },
+  "faktor_verifikace_vf": {
+    "name": "Faktor verifikace - Vf",
+    "description": "Faktor verifikace - Vf (zavedeno od 1.11.2024)"
+  },
+  "ucel_vozidla": {
+    "name": "Účel vozidla",
+    "description": "Účel využití vozidla, např. taxi"
+  },
+  "dalsi_zaznamy": {
+    "name": "Další záznamy",
+    "description": "Další záznamy, např. alternativní pneumatiky"
+  },
+  "alternativni_provedeni": {
+    "name": "Alternativní provedení",
+    "description": "Alternativní provedení  (zavedeno od 1.11.2024)"
+  },
+  "cislo_tp": {
+    "name": "Číslo TP",
+    "description": "Číslo posledního technického průkazu"
+  },
+  "cislo_orv": {
+    "name": "Číslo ORV",
+    "description": "Číslo posledního osvědčení o technickém průkazu"
+  },
+  "druh_rz": {
+    "name": "Druh RZ",
+    "description": "Druh RZ, např. STD. SILNIČNÍ"
+  },
+  "zarazeni_vozidla": {
+    "name": "Zařazení vozidla",
+    "description": "Typ registru (RSV, RHSV)"
+  },
+  "status": {
+    "name": "Status",
+    "description": "Status vozidla, nap. PROVOZOVANÉ"
+  },
+  "pcv": {
+    "name": "PČV",
+    "description": "Jedinečný identifikátor vozidla složí jako vazební provek pro další sady"
+  },
+  "abs": { "name": "ABS" },
+  "airbag": { "name": "Airbag" },
+  "asr": { "name": "ASR" },
+  "brzdy_nouzova": { "name": "Brzdy nouzová" },
+  "brzdy_odlehcovaci": {
+    "name": "Brzdy odlehčovací"
+  },
+  "brzdy_parkovaci": { "name": "Brzdy parkovací" },
+  "brzdy_provozni": { "name": "Brzdy provozní" },
+  "dopl_kovy_text_na_tp": {
+    "name": "Doplňkový text na TP"
+  },
+  "hmotnosti_provozni_do": {
+    "name": "Hmotnosti provozní Do",
+    "description": "Maximální provozní hmotnost"
+  },
+  "hmotnosti_zatizeni_sz": {
+    "name": "Hmotnosti zatížení SZ",
+    "description": "Největší svislé zatížení spojovacího zařízení (závěs/točnice)"
+  },
+  "hmotnosti_zatizeni_sz_typ": {
+    "name": "Hmotnosti zatížení SZ typ",
+    "description": "Největší svislé zatížení spojovacího zařízení (závěs/točnice)"
+  },
+  "hydropohon": { "name": "Hydropohon" },
+  "objem_cisterny": {
+    "name": "Objem cisterny",
+    "description": "Objem cisterny/skříně"
+  },
+  "zatizeni_strechy": {
+    "name": "Zatížení střechy",
+    "description": "Maximální zatížení střechy"
+  },
+  "cislo_motoru": {
+    "name": "Číslo motoru",
+    "description": "Evidenční číslo motoru"
+  },
+  "nejvyssi_rychlost_omezeni": {
+    "name": "Nejvyšší rychlost omezení",
+    "description": "Omezení maximální rychlosti"
+  },
+  "ovladani_brzd_sz": {
+    "name": "Ovládání brzd SZ",
+    "description": "Ovládání brzd spoj. zařízení"
+  },
+  "ovladani_brzd_sz_druh": {
+    "name": "Ovládání brzd SZ druh",
+    "description": "Ovládání brzd spoj. zařízení"
+  },
+  "retarder": { "name": "Retarder" },
+  "rok_vyroby": { "name": "Rok výroby", "description": "Rok výroby vozidla" },
+  "delka_do": { "name": "Délka do", "description": "Maximální délka" },
+  "lozna_delka": {
+    "name": "Ložná délka",
+    "description": "Délka ložné plochy"
+  },
+  "lozna_sirka": {
+    "name": "Ložná šířka",
+    "description": "1Šířka ložné plochy"
+  },
+  "vyska_do": { "name": "Výška do", "description": "Maximální výška" },
+  "typ_kod": { "name": "Typ kód", "description": "Typ, např. 6L" },
+  "rm_zaniku": {
+    "name": "RM zániku",
+    "description": "Registrační místo zániku vozidla"
+  }
 }

@@ -7,12 +7,14 @@ import {
 import type { registrations } from '../../prisma/client';
 import registrationColumnMap from '../registrationColumnMap.json';
 import { DataGrid } from '@mui/x-data-grid';
+import { Tooltip } from '@mui/material';
 
 type Props = { vehicle: SerializableRegistration | null };
 
 function mapVehicle(vehicle: SerializableRegistration): {
   id: string;
   value: SerializableRegistration[keyof SerializableRegistration];
+  description: string | null;
 }[] {
   const excludeFields: (keyof registrations)[] = [
     'id',
@@ -40,8 +42,13 @@ function mapVehicle(vehicle: SerializableRegistration): {
     vehicle.kola_a_pneumatiky_naprava_4
   ].join('; ');
   return Object.entries(filteredEntries).map(([key, value]) => {
+    const typed = registrationColumnMap as Record<
+      string,
+      Record<string, string>
+    >;
     return {
-      id: (registrationColumnMap as Record<string, string>)[key] || key,
+      id: typed[key]?.name || key,
+      description: typed[key]?.description || null,
       value
     };
   });
@@ -63,7 +70,14 @@ export default function Page({ vehicle }: Props) {
             headerName: 'Atribut',
             flex: 0.5,
             minWidth: 200,
-            renderCell: ({ row: { id } }) => id,
+            renderCell: ({ row: { id, description } }) =>
+              description ? (
+                <Tooltip title={description}>
+                  <span>{id} *</span>
+                </Tooltip>
+              ) : (
+                id
+              ),
             sortable: true,
             valueGetter: (_, { value }) => value
           },
