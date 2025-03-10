@@ -25,8 +25,8 @@ type Vehicle = Vehicles[0];
 type Props = {
   vehicles: Vehicles;
   currentPage: number;
-  brand: string;
-  model: string;
+  tovarni_znacka: string;
+  typ: string;
   vin: string;
 };
 
@@ -60,8 +60,8 @@ type ToolBarComponentProps = {
   loading: boolean;
   onSubmit: (
     params: Partial<{
-      brand: string;
-      model: string;
+      tovarni_znacka: string;
+      typ: string;
       vin: string;
       page: number;
     }>
@@ -114,25 +114,31 @@ const VinForm = ({
   );
 };
 
-const Toolbar = ({ brand, model, vin, loading, onSubmit }: ToolbarProps) => {
+const Toolbar = ({
+  tovarni_znacka,
+  typ,
+  vin,
+  loading,
+  onSubmit
+}: ToolbarProps) => {
   return (
     <Stack direction="row" spacing={2}>
       <VinForm vin={vin} loading={loading} onSubmit={onSubmit} />
       <Divider orientation="vertical" variant="middle" flexItem />
       <BrandAutocomplete
-        value={brand}
+        value={tovarni_znacka}
         onSelect={(value) => {
-          onSubmit({ brand: value });
+          onSubmit({ tovarni_znacka: value });
         }}
         disabled={loading}
       />
       <ModelAutocomplete
-        brand={brand}
-        model={model}
+        tovarni_znacka={tovarni_znacka}
+        typ={typ}
         onSelect={(value) => {
-          onSubmit({ model: value });
+          onSubmit({ typ: value });
         }}
-        disabled={loading || !brand}
+        disabled={loading || !tovarni_znacka}
       />
     </Stack>
   );
@@ -141,30 +147,37 @@ const Toolbar = ({ brand, model, vin, loading, onSubmit }: ToolbarProps) => {
 export default function Search({
   vehicles,
   currentPage,
-  brand,
-  model,
+  tovarni_znacka,
+  typ,
   vin
 }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const onSubmit = ({
-    brand: brandParam = brand,
-    model: modelParam = model,
+    tovarni_znacka: brandParam = tovarni_znacka,
+    typ: modelParam = typ,
     page,
     vin: vinParam = vin
-  }: Partial<{ brand: string; model: string; vin: string; page: number }>) => {
+  }: Partial<{
+    tovarni_znacka: string;
+    typ: string;
+    vin: string;
+    page: number;
+  }>) => {
     setLoading(true);
     return router
       .push(
         {
           pathname: router.pathname,
           query: {
-            brand: brandParam,
-            model: brandParam ? modelParam : '',
+            tovarni_znacka: brandParam,
+            typ: brandParam ? modelParam : '',
             vin: vinParam,
             page:
-              brandParam !== brand || modelParam !== model || vinParam !== vin
+              brandParam !== tovarni_znacka ||
+              modelParam !== typ ||
+              vinParam !== vin
                 ? 0
                 : page
           }
@@ -192,7 +205,7 @@ export default function Search({
         rows={vehicles}
         columns={[
           {
-            field: 'brand',
+            field: 'tovarni_znacka',
             headerName: 'Tovární značka',
             flex: 0.5,
             minWidth: 200,
@@ -201,7 +214,7 @@ export default function Search({
             filterable: false
           },
           {
-            field: 'model',
+            field: 'typ',
             headerName: 'Typ',
             flex: 0.5,
             minWidth: 300,
@@ -255,8 +268,8 @@ export default function Search({
         }}
         slotProps={{
           toolbar: {
-            brand,
-            model,
+            tovarni_znacka,
+            typ,
             currentPage,
             onSubmit,
             loading,
@@ -295,13 +308,16 @@ export default function Search({
 }
 
 const searchVehicles = unstable_cache(
-  (page: number, brand: string, type: string, vin) =>
+  (page: number, tovarni_znacka: string, type: string, vin) =>
     prisma.registrations.findMany({
       skip: page * pageSize,
       take: pageSize,
       where: vin
         ? { vin }
-        : { tovarni_znacka: brand || undefined, typ: type || undefined },
+        : {
+            tovarni_znacka: tovarni_znacka || undefined,
+            typ: type || undefined
+          },
       select: {
         id: true,
         tovarni_znacka: true,
@@ -320,24 +336,24 @@ const queryDecoder = zod.object({
     .string()
     .default('0')
     .transform((val) => Number(val) || 0),
-  brand: zod.string().default(''),
-  model: zod.string().default(''),
+  tovarni_znacka: zod.string().default(''),
+  typ: zod.string().default(''),
   vin: zod.string().default('')
 });
 
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { page, brand, model, vin } = queryDecoder.parse(context.query);
+  const { page, tovarni_znacka, typ, vin } = queryDecoder.parse(context.query);
 
-  const vehicles = await searchVehicles(page, brand, model, vin);
+  const vehicles = await searchVehicles(page, tovarni_znacka, typ, vin);
 
   return {
     props: {
       vehicles,
       currentPage: page,
-      brand,
-      model,
+      tovarni_znacka,
+      typ,
       vin
     }
   };

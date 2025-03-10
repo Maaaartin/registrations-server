@@ -7,14 +7,14 @@ import useDebounce from '../hooks/useDebounce';
 import { DStringArray } from '../util/decoders';
 
 export default function ModelAutocomplete({
-  brand,
-  model,
+  tovarni_znacka,
+  typ,
   onSelect,
   disabled
 }: {
-  brand: string;
-  model: string;
-  onSelect: (brand: string) => void;
+  tovarni_znacka: string;
+  typ: string;
+  onSelect: (tovarni_znacka: string) => void;
   disabled?: boolean;
 }) {
   const cache = useCacheContext();
@@ -29,46 +29,46 @@ export default function ModelAutocomplete({
     decoder: DStringArray
   });
   useEffect(() => {
-    if (brand && !topModelsPerBrand[brand]?.length) {
+    if (tovarni_znacka && !topModelsPerBrand[tovarni_znacka]?.length) {
       axios
-        .get('/api/top-models?' + new URLSearchParams({ brand }))
+        .get('/api/top-models?' + new URLSearchParams({ tovarni_znacka }))
         .then((res) => {
           const result = DStringArray.parse(res.data);
           setTopModelsPerBrand({
             ...topModelsPerBrand,
-            [brand]: result
+            [tovarni_znacka]: result
           });
         });
     }
-  }, [brand, topModelsPerBrand, setTopModelsPerBrand]);
+  }, [tovarni_znacka, topModelsPerBrand, setTopModelsPerBrand]);
   useEffect(() => {
     if (request.value && searchModelDebounced) {
       setModels(request.value);
       setModelSearch({
         ...modelSearch,
-        [brand]: {
-          ...modelSearch[brand],
+        [tovarni_znacka]: {
+          ...modelSearch[tovarni_znacka],
           [searchModelDebounced]: request.value
         }
       });
     }
-  }, [request.value, brand, searchModelDebounced]);
+  }, [request.value, tovarni_znacka, searchModelDebounced]);
   useEffect(() => {
-    if (!brand) return;
+    if (!tovarni_znacka) return;
     if (searchModelDebounced) {
-      if (modelSearch[brand]?.[searchModelDebounced]) {
-        setModels(modelSearch[brand][searchModelDebounced]);
+      if (modelSearch[tovarni_znacka]?.[searchModelDebounced]) {
+        setModels(modelSearch[tovarni_znacka][searchModelDebounced]);
       } else {
         const query = new URLSearchParams({
-          brand,
-          model: searchModelDebounced
+          tovarni_znacka,
+          typ: searchModelDebounced
         });
         request.run({ query });
       }
-    } else if (topModelsPerBrand[brand]) {
-      setModels(topModelsPerBrand[brand]);
+    } else if (topModelsPerBrand[tovarni_znacka]) {
+      setModels(topModelsPerBrand[tovarni_znacka]);
     }
-  }, [brand, searchModelDebounced]);
+  }, [tovarni_znacka, searchModelDebounced]);
   return (
     <Autocomplete
       disabled={disabled}
@@ -81,7 +81,7 @@ export default function ModelAutocomplete({
       onInputChange={(event, newInputValue) => {
         setSearchModel(newInputValue);
       }}
-      value={model}
+      value={typ}
       onBlur={() => {
         if (!searchModel) onSelect('');
       }}
