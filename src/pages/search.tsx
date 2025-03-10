@@ -5,40 +5,13 @@ import { useRouter } from 'next/router';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { DataGrid, GridSlotProps } from '@mui/x-data-grid';
-import { GridBaseColDef } from '@mui/x-data-grid/internals';
-import Link from 'next/link';
 import {
-  Vehicle,
   searchVehicles,
   pageSize,
   SearchProps,
   queryDecoder,
   formReducer
 } from '../util/search';
-
-type RenderCellFn = GridBaseColDef<Vehicle>['renderCell'];
-
-const LinkComponent = ({
-  id,
-  value
-}: {
-  id: number;
-  value: Vehicle[keyof Vehicle];
-}) => (
-  <Link
-    href={{
-      pathname: '/vehicle',
-      query: { id }
-    }}
-  >
-    {value}
-  </Link>
-);
-
-const renderCell: (field: keyof Vehicle) => RenderCellFn =
-  (field) =>
-  /* eslint-disable react/display-name */
-  ({ row }) => <LinkComponent id={row.id} value={row[field]} />;
 
 type ToolBarComponentProps = {
   loading: boolean;
@@ -166,23 +139,28 @@ export default function Search({
     page: number;
   }>) => {
     setLoading(true);
+    const query = Object.fromEntries(
+      Object.entries({
+        tovarni_znacka: brandParam,
+        typ: brandParam ? modelParam : '',
+        vin: vinParam,
+        cislo_tp: cislo_tpParam,
+        page:
+          brandParam !== tovarni_znacka ||
+          modelParam !== typ ||
+          vinParam !== vin ||
+          cislo_tpParam !== cislo_tp
+            ? 0
+            : page
+      }).filter(([, value]) =>
+        ['', null, undefined].every((val) => value !== val)
+      )
+    );
     return router
       .push(
         {
           pathname: router.pathname,
-          query: {
-            tovarni_znacka: brandParam,
-            typ: brandParam ? modelParam : '',
-            vin: vinParam,
-            cislo_tp: cislo_tpParam,
-            page:
-              brandParam !== tovarni_znacka ||
-              modelParam !== typ ||
-              vinParam !== vin ||
-              cislo_tpParam !== cislo_tp
-                ? 0
-                : page
-          }
+          query
         },
         undefined,
         { scroll: false }
@@ -198,6 +176,9 @@ export default function Search({
     <>
       <DataGrid
         rowSelection={false}
+        onRowClick={(params) => {
+          router.push({ pathname: '/vehicle', query: { id: params.row.id } });
+        }}
         sx={{
           '& .MuiDataGrid-row': {
             cursor: 'pointer'
@@ -211,7 +192,7 @@ export default function Search({
             headerName: 'Tovární značka',
             flex: 0.5,
             minWidth: 200,
-            renderCell: renderCell('tovarni_znacka'),
+            renderCell: (params) => params.row.tovarni_znacka,
             sortable: false,
             filterable: false
           },
@@ -220,7 +201,7 @@ export default function Search({
             headerName: 'Typ',
             flex: 0.5,
             minWidth: 300,
-            renderCell: renderCell('typ'),
+            renderCell: (params) => params.row.typ,
             sortable: false,
             filterable: false
           },
@@ -229,7 +210,7 @@ export default function Search({
             headerName: 'VIN',
             flex: 0.5,
             minWidth: 150,
-            renderCell: renderCell('vin'),
+            renderCell: (params) => params.row.vin,
             sortable: false,
             filterable: false
           },
@@ -238,7 +219,7 @@ export default function Search({
             headerName: 'Číslo TP',
             flex: 0.5,
             minWidth: 80,
-            renderCell: renderCell('cislo_tp'),
+            renderCell: (params) => params.row.cislo_tp,
             sortable: false,
             filterable: false
           }

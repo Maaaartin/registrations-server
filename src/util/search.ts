@@ -38,7 +38,6 @@ export const searchVehicles = unstable_cache(
   { revalidate: 3600, tags: ['search'] }
 );
 type Vehicles = Awaited<ReturnType<typeof searchVehicles>>;
-export type Vehicle = Vehicles[0];
 
 export type SearchProps = {
   vehicles: Vehicles;
