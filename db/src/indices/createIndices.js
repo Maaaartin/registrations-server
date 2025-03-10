@@ -21,15 +21,17 @@ async function create() {
   }
 }
 
-async function refresh(p) {
-  const scriptDirPath = path.join(dirPath, p);
-  const refreshCode = await fs.promises.readFile(
-    path.join(scriptDirPath, 'refresh.sql'),
-    'ascii'
-  );
-  console.log(`running refresh for ${p}`);
-  await client.query(refreshCode);
-  console.log(`ran refresh for ${p}`);
+async function refresh() {
+  const dirs = await readFolders();
+  for (const dir of dirs) {
+    const refreshCode = await fs.promises.readFile(
+      path.join(dirPath, dir, 'refresh.sql'),
+      'ascii'
+    );
+    console.log(`running refresh for ${dir}`);
+    await client.query(refreshCode);
+    console.log(`ran refresh for ${dir}`);
+  }
 }
 
 async function run() {

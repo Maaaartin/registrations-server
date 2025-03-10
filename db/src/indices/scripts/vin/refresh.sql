@@ -1,1 +1,1 @@
-REBUILD INDEX registrations_vin_idx;
+REINDEX INDEX registrations_vin_idx;

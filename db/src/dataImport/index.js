@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const client = require('../client');
 const {
   processRecord,
@@ -12,7 +13,15 @@ const schema = require('../schema.json');
 const headerMap = require('../headerMap.json');
 const { PassThrough, pipeline } = require('stream');
 
-function run() {
+async function run() {
+  const filePath = process.argv[3];
+  if (!filePath) {
+    console.error('Usage: node script.js <path-to-csv>');
+    process.exit(1);
+  }
+
+  const absolutePath = path.resolve(filePath);
+  const fileStream = fs.createReadStream(absolutePath);
   const parser = parse({
     columns: Object.keys(headerMap),
     relaxColumnCount: true,
@@ -23,14 +32,15 @@ function run() {
     fromLine: 1
   });
 
-  const fileStream = fs.createReadStream(
-    '/Users/martin/Downloads/RSV_vypis_vozidel_20250204.csv'
-  );
   fileStream.pipe(parser);
   let lineNr = 0;
   const interval = setInterval(() => {
     console.log('line', lineNr);
   }, 1000);
+
+  await client.connect();
+  await client.query('BEGIN');
+  await client.query('TRUNCATE registrations');
 
   const copyStream = client.query(
     copyFrom(
@@ -52,6 +62,7 @@ function run() {
     console.log(msg);
     if (err) {
       await logError('./errors_db.csv', err.message);
+      client.query('ROLLBACK');
     }
     process.exit(1);
   };
@@ -63,13 +74,15 @@ function run() {
   });
 
   pipeline(passThrough, copyStream, async (err) => {
+    if (err) {
+      await client.query('ROLLBACK');
+    }
     clearInterval(interval);
     console.log(err);
+    await client.query('COMMIT');
     await client.end();
     console.log('all done');
   });
 }
 
-module.exports = () => {
-  return client.connect().then(createTableFromHeaders).then(run);
-};
+module.exports = run;
