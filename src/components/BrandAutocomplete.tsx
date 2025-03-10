@@ -41,7 +41,9 @@ export default function BrandAutocomplete({
     } else if (brandSearch[searchBrandDebounced]) {
       setBrands(brandSearch[searchBrandDebounced]);
     } else {
-      const query = new URLSearchParams({ brand: searchBrandDebounced });
+      const query = new URLSearchParams({
+        tovarni_znacka: searchBrandDebounced
+      });
       request.run({ query });
     }
   }, [searchBrandDebounced]);

@@ -85,7 +85,7 @@ const VinForm = ({
       <TextField
         label="Číslo TP"
         variant="outlined"
-        value={state.vin}
+        value={state.cislo_tp}
         onChange={(e) =>
           dispatch({ type: 'update', key: 'cislo_tp', value: e.target.value })
         }
@@ -156,11 +156,13 @@ export default function Search({
     tovarni_znacka: brandParam = tovarni_znacka,
     typ: modelParam = typ,
     page,
-    vin: vinParam = vin
+    vin: vinParam = vin,
+    cislo_tp: cislo_tpParam = cislo_tp
   }: Partial<{
     tovarni_znacka: string;
     typ: string;
     vin: string;
+    cislo_tp: string;
     page: number;
   }>) => {
     setLoading(true);
@@ -172,10 +174,12 @@ export default function Search({
             tovarni_znacka: brandParam,
             typ: brandParam ? modelParam : '',
             vin: vinParam,
+            cislo_tp: cislo_tpParam,
             page:
               brandParam !== tovarni_znacka ||
               modelParam !== typ ||
-              vinParam !== vin
+              vinParam !== vin ||
+              cislo_tpParam !== cislo_tp
                 ? 0
                 : page
           }
@@ -313,7 +317,13 @@ export const getServerSideProps: GetServerSideProps<SearchProps> = async (
     context.query
   );
 
-  const vehicles = await searchVehicles(page, tovarni_znacka, typ, vin);
+  const vehicles = await searchVehicles(
+    page,
+    tovarni_znacka,
+    typ,
+    vin,
+    cislo_tp
+  );
 
   return {
     props: {

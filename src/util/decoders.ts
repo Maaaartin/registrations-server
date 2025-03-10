@@ -15,3 +15,12 @@ export const DRegistrationStats = zod
     count: DNumber
   })
   .array();
+
+export const DBrand = zod.object({
+  tovarni_znacka: zod.string().default('')
+});
+
+export const DBrandModel = DBrand.extend({
+  tovarni_znacka: zod.string().default(''),
+  typ: zod.string().default('')
+});

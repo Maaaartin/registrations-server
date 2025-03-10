@@ -40,7 +40,7 @@ export default function ModelAutocomplete({
           });
         });
     }
-  }, [tovarni_znacka, topModelsPerBrand, setTopModelsPerBrand]);
+  }, [tovarni_znacka]);
   useEffect(() => {
     if (request.value && searchModelDebounced) {
       setModels(request.value);
