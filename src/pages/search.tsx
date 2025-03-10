@@ -1,36 +1,20 @@
-import {
-  Button,
-  Divider,
-  IconButton,
-  InputAdornment,
-  Stack,
-  TextField
-} from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Button, Divider, Stack, TextField } from '@mui/material';
+import { useReducer, useState } from 'react';
 import { GetServerSideProps } from 'next';
-import prisma from '../../prisma';
 import { useRouter } from 'next/router';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { DataGrid, GridSlotProps } from '@mui/x-data-grid';
-import { unstable_cache } from 'next/cache';
-import zod from 'zod';
 import { GridBaseColDef } from '@mui/x-data-grid/internals';
 import Link from 'next/link';
-import CloseIcon from '@mui/icons-material/Close';
-
-type Vehicles = Awaited<ReturnType<typeof searchVehicles>>;
-type Vehicle = Vehicles[0];
-
-type Props = {
-  vehicles: Vehicles;
-  currentPage: number;
-  tovarni_znacka: string;
-  typ: string;
-  vin: string;
-};
-
-const pageSize = 20;
+import {
+  Vehicle,
+  searchVehicles,
+  pageSize,
+  SearchProps,
+  queryDecoder,
+  formReducer
+} from '../util/search';
 
 type RenderCellFn = GridBaseColDef<Vehicle>['renderCell'];
 
@@ -63,51 +47,58 @@ type ToolBarComponentProps = {
       tovarni_znacka: string;
       typ: string;
       vin: string;
+      cislo_tp: string;
       page: number;
     }>
   ) => Promise<boolean>;
 };
 
 type ToolbarProps = GridSlotProps['toolbar'] &
-  Omit<Props, 'vehicles'> &
+  Omit<SearchProps, 'vehicles'> &
   ToolBarComponentProps;
 
 const VinForm = ({
   vin = '',
+  cislo_tp = '',
   loading,
   onSubmit
-}: { vin: string } & ToolBarComponentProps) => {
-  const [value, setValue] = useState(vin);
-  useEffect(() => {
-    if (vin && !value) {
-      onSubmit({ vin: '' });
-    }
-  }, [vin, value]);
+}: { vin: string; cislo_tp: string } & ToolBarComponentProps) => {
+  const [state, dispatch] = useReducer(formReducer, { vin, cislo_tp });
+  const isEmpty = Object.values(state).every((value) => !value);
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        if (!value) return;
-        onSubmit({ vin: value });
+        if (!isEmpty) return;
+        onSubmit(state);
       }}
     >
       <TextField
         label="VIN"
         variant="outlined"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={state.vin}
+        onChange={(e) =>
+          dispatch({ type: 'update', key: 'vin', value: e.target.value })
+        }
         disabled={loading}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={() => setValue('')} edge="end">
-                <CloseIcon />
-              </IconButton>
-            </InputAdornment>
-          )
-        }}
       />
-      <Button type="submit" disabled={!value || loading}>
+      <TextField
+        label="Číslo TP"
+        variant="outlined"
+        value={state.vin}
+        onChange={(e) =>
+          dispatch({ type: 'update', key: 'cislo_tp', value: e.target.value })
+        }
+        disabled={loading}
+      />
+      <Button
+        type="button"
+        disabled={isEmpty || loading}
+        onClick={() => dispatch({ type: 'clear' })}
+      >
+        Reset
+      </Button>
+      <Button type="submit" disabled={isEmpty || loading}>
         Hledat
       </Button>
     </form>
@@ -118,12 +109,18 @@ const Toolbar = ({
   tovarni_znacka,
   typ,
   vin,
+  cislo_tp,
   loading,
   onSubmit
 }: ToolbarProps) => {
   return (
     <Stack direction="row" spacing={2}>
-      <VinForm vin={vin} loading={loading} onSubmit={onSubmit} />
+      <VinForm
+        vin={vin}
+        cislo_tp={cislo_tp}
+        loading={loading}
+        onSubmit={onSubmit}
+      />
       <Divider orientation="vertical" variant="middle" flexItem />
       <BrandAutocomplete
         value={tovarni_znacka}
@@ -149,8 +146,9 @@ export default function Search({
   currentPage,
   tovarni_znacka,
   typ,
-  vin
-}: Props) {
+  vin,
+  cislo_tp
+}: SearchProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -273,7 +271,8 @@ export default function Search({
             currentPage,
             onSubmit,
             loading,
-            vin
+            vin,
+            cislo_tp
           } as ToolbarProps,
           filterPanel: {
             sx: { height: '100vh' },
@@ -307,44 +306,12 @@ export default function Search({
   );
 }
 
-const searchVehicles = unstable_cache(
-  (page: number, tovarni_znacka: string, type: string, vin) =>
-    prisma.registrations.findMany({
-      skip: page * pageSize,
-      take: pageSize,
-      where: vin
-        ? { vin }
-        : {
-            tovarni_znacka: tovarni_znacka || undefined,
-            typ: type || undefined
-          },
-      select: {
-        id: true,
-        tovarni_znacka: true,
-        typ: true,
-        vin: true,
-        cislo_tp: true
-      }
-    }),
-
-  ['search'],
-  { revalidate: 3600, tags: ['search'] }
-);
-
-const queryDecoder = zod.object({
-  page: zod
-    .string()
-    .default('0')
-    .transform((val) => Number(val) || 0),
-  tovarni_znacka: zod.string().default(''),
-  typ: zod.string().default(''),
-  vin: zod.string().default('')
-});
-
-export const getServerSideProps: GetServerSideProps<Props> = async (
+export const getServerSideProps: GetServerSideProps<SearchProps> = async (
   context
 ) => {
-  const { page, tovarni_znacka, typ, vin } = queryDecoder.parse(context.query);
+  const { page, tovarni_znacka, typ, vin, cislo_tp } = queryDecoder.parse(
+    context.query
+  );
 
   const vehicles = await searchVehicles(page, tovarni_znacka, typ, vin);
 
@@ -354,7 +321,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       currentPage: page,
       tovarni_znacka,
       typ,
-      vin
+      vin,
+      cislo_tp
     }
   };
 };
