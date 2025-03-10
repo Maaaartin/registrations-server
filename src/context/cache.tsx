@@ -17,6 +17,7 @@ const CacheContext = createContext<{
   count: StateAction<number>;
   topColors: StateAction<ValueCountPairs>;
   registrationsPerYear: StateAction<ValueCountPairs>;
+  topKinds: StateAction<ValueCountPairs>;
 }>(null!);
 
 export const CacheContextProvider = ({ children }: PropsWithChildren) => {
@@ -27,6 +28,7 @@ export const CacheContextProvider = ({ children }: PropsWithChildren) => {
   const count = useState(0);
   const topColors = useState<ValueCountPairs>([]);
   const registrationsPerYear = useState<ValueCountPairs>([]);
+  const topKinds = useState<ValueCountPairs>([]);
   return (
     <CacheContext.Provider
       value={{
@@ -36,7 +38,8 @@ export const CacheContextProvider = ({ children }: PropsWithChildren) => {
         modelSearch,
         count,
         topColors,
-        registrationsPerYear
+        registrationsPerYear,
+        topKinds
       }}
     >
       {children}

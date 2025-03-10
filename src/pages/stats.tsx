@@ -81,6 +81,38 @@ const BrandsCard = () => {
   );
 };
 
+const KindsCard = () => {
+  const [topKinds, setTopKinds] = useCacheContext().topKinds;
+  const request = useRequest({
+    url: '/api/top-kinds',
+    decoder: DValueCountPairs
+  });
+  useEffect(() => {
+    if (!topKinds.length && !request.value) {
+      request.run();
+    } else if (request.value) {
+      setTopKinds(request.value);
+    }
+  }, [topKinds, request, setTopKinds]);
+  const renderValue = request.loading ? <CircularProgress /> : topKinds;
+  const render = (value: ValueCountPair) => ({
+    primary: value.value,
+    secondary: value.count
+  });
+  return (
+    <StatCard
+      title="Top druhy"
+      value={
+        Array.isArray(renderValue) ? (
+          <CardList data={renderValue} render={render}></CardList>
+        ) : (
+          renderValue
+        )
+      }
+    />
+  );
+};
+
 const ColorsCard = () => {
   const [topColors, setTopColors] = useCacheContext().topColors;
   const request = useRequest({
@@ -94,18 +126,21 @@ const ColorsCard = () => {
       setTopColors(request.value);
     }
   }, [topColors, request, setTopColors]);
-  if (request.loading) {
-    return <CircularProgress />;
-  }
   const render = (value: { value: string; count: number }) => ({
     primary: value.value,
     secondary: value.count
   });
-
+  const renderValue = request.loading ? <CircularProgress /> : topColors;
   return (
     <StatCard
       title="Top barvy"
-      value={<CardList data={topColors} render={render}></CardList>}
+      value={
+        Array.isArray(renderValue) ? (
+          <CardList data={renderValue} render={render}></CardList>
+        ) : (
+          renderValue
+        )
+      }
     />
   );
 };
@@ -130,6 +165,9 @@ export default function Stats() {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <ColorsCard></ColorsCard>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+          <KindsCard></KindsCard>
         </Grid>
       </Grid>
       <Grid size={{ xs: 12, md: 6 }}>
