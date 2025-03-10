@@ -25,7 +25,7 @@ const CountCard = () => {
   }, [count, request, setCount]);
   const renderValue = request.loading ? <CircularProgress /> : count;
 
-  return <StatCard title="Vozidel v databázi" value={renderValue} />;
+  return <StatCard title="Celkový počet záznamů" value={renderValue} />;
 };
 
 function CardList<T>({
