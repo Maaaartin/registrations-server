@@ -71,6 +71,9 @@ function ValueCell({ row: { value } }: CellParams) {
   if (typeof value === 'object' && value?.value) {
     return new Date(value.value).toLocaleDateString();
   }
+  if (typeof value === 'boolean') {
+    return value ? 'Ano' : 'Ne';
+  }
   return String(value);
 }
 
