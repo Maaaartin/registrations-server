@@ -25,6 +25,7 @@ const logError = async function (file, ...data) {
 };
 exports.logError = logError;
 exports.createTableFromHeaders = async () => {
+  await client.connect();
   await client.query(`DROP TABLE IF EXISTS registrations;`);
 
   const createTableQuery = `
@@ -37,6 +38,7 @@ exports.createTableFromHeaders = async () => {
       `;
 
   await client.query(createTableQuery);
+  await client.end();
   console.log("Table 'registrations' created successfully.");
 };
 
