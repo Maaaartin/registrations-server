@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Stack } from '@mui/system';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Stack } from '@mui/material';
 import DirectionsCarFilledIcon from '@mui/icons-material/DirectionsCarFilled';
 import Link from 'next/link';
 
