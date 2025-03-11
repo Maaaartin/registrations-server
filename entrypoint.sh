@@ -12,4 +12,4 @@ else
 fi
 
 export DATABASE_URL="postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$HOST/$POSTGRES_DB?schema=public"
-exec next $1
+exec npx next $1
