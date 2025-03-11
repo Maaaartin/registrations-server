@@ -30,7 +30,7 @@ type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<SearchProps, 'vehicles'> &
   ToolBarComponentProps;
 
-const VinForm = ({
+const TextSearchForm = ({
   vin = '',
   cislo_tp = '',
   loading,
@@ -46,34 +46,43 @@ const VinForm = ({
         onSubmit(state);
       }}
     >
-      <TextField
-        label="VIN"
-        variant="outlined"
-        value={state.vin}
-        onChange={(e) =>
-          dispatch({ type: 'update', key: 'vin', value: e.target.value })
-        }
-        disabled={loading}
-      />
-      <TextField
-        label="Číslo TP"
-        variant="outlined"
-        value={state.cislo_tp}
-        onChange={(e) =>
-          dispatch({ type: 'update', key: 'cislo_tp', value: e.target.value })
-        }
-        disabled={loading}
-      />
-      <Button
-        type="button"
-        disabled={isEmpty || loading}
-        onClick={() => dispatch({ type: 'clear' })}
-      >
-        Reset
-      </Button>
-      <Button type="submit" disabled={isEmpty || loading}>
-        Hledat
-      </Button>
+      <Stack spacing={1} padding={1}>
+        <TextField
+          label="VIN"
+          variant="outlined"
+          value={state.vin}
+          onChange={(e) =>
+            dispatch({ type: 'update', key: 'vin', value: e.target.value })
+          }
+          disabled={loading}
+        />
+        <TextField
+          label="Číslo TP"
+          variant="outlined"
+          value={state.cislo_tp}
+          onChange={(e) =>
+            dispatch({ type: 'update', key: 'cislo_tp', value: e.target.value })
+          }
+          disabled={loading}
+        />
+        <Button
+          color="error"
+          type="button"
+          variant="contained"
+          disabled={isEmpty || loading}
+          onClick={() => dispatch({ type: 'clear' })}
+        >
+          Reset
+        </Button>
+        <Button
+          color="success"
+          variant="contained"
+          type="submit"
+          disabled={isEmpty || loading}
+        >
+          Hledat
+        </Button>
+      </Stack>
     </form>
   );
 };
@@ -87,8 +96,8 @@ const Toolbar = ({
   onSubmit
 }: ToolbarProps) => {
   return (
-    <Stack direction="row" spacing={2}>
-      <VinForm
+    <Stack direction="row" spacing={2} padding={2}>
+      <TextSearchForm
         vin={vin}
         cislo_tp={cislo_tp}
         loading={loading}
