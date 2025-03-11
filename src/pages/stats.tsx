@@ -7,7 +7,7 @@ import useRequest from '../hooks/useRequest';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import RegistrationsChart from '../components/RegistrationsChart';
 import { useCacheContext } from '../context/cache';
-import { DNumber, DStringArray, DValueCountPairs } from '../util/decoders';
+import { DNumber, DValueCountPairs } from '../util/decoders';
 import { ValueCountPair } from '../util/registrations';
 
 const CountCard = () => {

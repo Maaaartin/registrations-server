@@ -9,12 +9,6 @@ export const DValueCountPairs = zod
     count: zod.number()
   })
   .array();
-export const DRegistrationStats = zod
-  .object({
-    year: DNumber,
-    count: DNumber
-  })
-  .array();
 
 export const DBrand = zod.object({
   tovarni_znacka: zod.string().default('')

@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
 import useRequest from '../hooks/useRequest';
 import { useCacheContext } from '../context/cache';
-import { DRegistrationStats } from '../util/decoders';
+import { DValueCountPairs } from '../util/decoders';
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
   return (
@@ -26,7 +26,7 @@ export default function RegistrationsChart() {
     useCacheContext().registrationsPerYear;
   const request = useRequest({
     url: '/api/registrations-per-year',
-    decoder: DRegistrationStats
+    decoder: DValueCountPairs
   });
   useEffect(() => {
     if (!registrationsPerYear.length && !request.value) {
@@ -41,7 +41,7 @@ export default function RegistrationsChart() {
     theme.palette.primary.main,
     theme.palette.primary.dark
   ];
-  const years = registrationsPerYear.map(({ year }) => year);
+  const years = registrationsPerYear.map(({ value }) => value);
   const values = registrationsPerYear.map(({ count }) => count);
   const sum = values.reduce((sum, curr) => (sum += curr), 0);
   return (
