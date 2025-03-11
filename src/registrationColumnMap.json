@@ -133,12 +133,6 @@
   "nejvetsi_technicky_pripustna_hmotnost_na_napravu,nejvetsi_povolena_hmotnost_na_napravu": {
     "name": "Největší technicky přípustná/povolená hmotnost na nápravu [kg]"
   },
-  "nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_brzdeneho,nejvetsi_povolena_hmotnost_pripojneho_vozidla_brzdeneho": {
-    "name": "Největší technicky přípustná/povolená hmotnost přípojného vozidla [kg] brzděného"
-  },
-  "nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_ne_brzdeneho,nejvetsi_povolena_hmotnost_pripojneho_vozidla_ne_brzdeneho": {
-    "name": "Největší technicky přípustná/povolená hmotnost přípojného vozidla [kg] nebrzděného"
-  },
   "nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy,nejvetsi_povolena_hmotnost_jizdni_soupravy": {
     "name": "Největší technicky přípustná/povolená hmotnost jízdní soupravy [kg]"
   },
@@ -268,7 +262,7 @@
     "name": "Ovládání brzd SZ druh",
     "description": "Ovládání brzd spoj. zařízení"
   },
-  "retarder": { "name": "Retarder" },
+  "retarder": { "name": "Retardér" },
   "rok_vyroby": { "name": "Rok výroby", "description": "Rok výroby vozidla" },
   "delka_do": { "name": "Délka do", "description": "Maximální délka" },
   "lozna_delka": {
@@ -284,5 +278,40 @@
   "rm_zaniku": {
     "name": "RM zániku",
     "description": "Registrační místo zániku vozidla"
+  },
+  "doplnkovy_text_na_tp": { "name": "Doplňkový text na TP" },
+  "delka": { "name": "Délka", "description": "Celková délka [mm]" },
+  "sirka": { "name": "Šířka", "description": "Celková šířka [mm]" },
+  "vyska": { "name": "Výška", "description": "Celková výška [mm]" },
+  "stupen_dokonceni": {
+    "name": "Stupeň dokončení",
+    "description": "Stupeň dokončení (zavedeno od 1.11.2024)"
+  },
+  "nejvetsi_technicky_pripustna_hmotnost": {
+    "name": "Největší technicky přípustná hmotnost [kg]"
+  },
+  "nejvetsi_technicky_pripustna_hmotnost_na_napravu": {
+    "name": "Největší technicky přípustná hmotnost na nápravu [kg]"
+  },
+  "nejvetsi_povolena_hmotnost_na_napravu": {
+    "name": "Největší technicky povolená hmotnost hmotnost na nápravu [kg]"
+  },
+  "nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_brzden": {
+    "name": "Největší technicky přípustná hmotnost přípojného vozidla brzděného [kg]"
+  },
+  "nejvetsi_povolena_hmotnost_pripojneho_vozidla_brzdeneho": {
+    "name": "Největší technicky povolená hmotnost přípojného vozidla brzděného [kg]"
+  },
+  "nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_ne_brz": {
+    "name": "Největší technicky přípustná hmotnost přípojného vozidla nebrzděného [kg]"
+  },
+  "nejvetsi_povolena_hmotnost_pripojneho_vozidla_ne_brzdeneho": {
+    "name": "Největší technicky povolená hmotnost přípojného vozidla nebrzděného [kg]"
+  },
+  "nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy": {
+    "name": "Největší technicky přípustná hmotnost jízdní soupravy [kg]"
+  },
+  "nejvetsi_povolena_hmotnost_jizdni_soupravy": {
+    "name": "Největší technicky povolená hmotnost přípojného vozidla nebrzděného [kg]"
   }
 }

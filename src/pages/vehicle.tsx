@@ -6,7 +6,7 @@ import {
 } from '../util/registrations';
 import type { registrations } from '../../prisma/client';
 import registrationColumnMap from '../registrationColumnMap.json';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import { Tooltip } from '@mui/material';
 
 type Props = { vehicle: SerializableRegistration | null };
@@ -20,6 +20,7 @@ function mapVehicle(vehicle: SerializableRegistration): {
     'id',
     'max_vykon',
     'max_vykon_otacky',
+    'naprav_pohanenych',
     'kola_a_pneumatiky_naprava_1',
     'kola_a_pneumatiky_naprava_2',
     'kola_a_pneumatiky_naprava_3',
@@ -53,16 +54,36 @@ function mapVehicle(vehicle: SerializableRegistration): {
     };
   });
 }
+type CellParams = GridRenderCellParams<ReturnType<typeof mapVehicle>[0]>;
+
+function AttributeCell({ row: { id, description } }: CellParams) {
+  if (description) {
+    return (
+      <Tooltip title={description}>
+        <span>{id} *</span>
+      </Tooltip>
+    );
+  }
+  return id;
+}
+
+function ValueCell({ row: { value } }: CellParams) {
+  if (typeof value === 'object' && value?.value) {
+    return new Date(value.value).toLocaleDateString();
+  }
+  return String(value);
+}
 
 /* eslint-disable react-hooks/rules-of-hooks */
 export default function Page({ vehicle }: Props) {
-  if (!vehicle) return 'not found';
+  if (!vehicle) return 'Nenalezeno';
   const mapped = mapVehicle(vehicle);
 
   return (
     <>
       <h1>VIN {vehicle.vin}</h1>
       <DataGrid
+        rowSelection={false}
         rows={mapped}
         columns={[
           {
@@ -70,24 +91,15 @@ export default function Page({ vehicle }: Props) {
             headerName: 'Atribut',
             flex: 0.5,
             minWidth: 200,
-            renderCell: ({ row: { id, description } }) =>
-              description ? (
-                <Tooltip title={description}>
-                  <span>{id} *</span>
-                </Tooltip>
-              ) : (
-                id
-              ),
-            sortable: true,
-            valueGetter: (_, { value }) => value
+            renderCell: AttributeCell,
+            sortable: true
           },
           {
             field: 'value',
             headerName: 'Hodnota',
             flex: 0.5,
             minWidth: 300,
-            renderCell: ({ row: { value } }) =>
-              typeof value === 'object' ? value?.value : String(value),
+            renderCell: ValueCell,
             sortable: false
           }
         ]}
