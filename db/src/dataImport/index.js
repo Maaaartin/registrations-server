@@ -1,12 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const client = require('../client');
-const {
-  processRecord,
-  createTableFromHeaders,
-  escapeCSVValue,
-  logError
-} = require('./helpers');
+const { processRecord, escapeCSVValue, logError } = require('./helpers');
 const { parse } = require('csv-parse');
 const copyFrom = require('pg-copy-streams').from;
 const schema = require('../schema.json');
