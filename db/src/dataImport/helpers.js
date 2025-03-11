@@ -1,5 +1,4 @@
 const fs = require('fs');
-const readline = require('readline');
 const client = require('../client');
 const schema = require('../schema.json');
 const headerMap = require('../headerMap.json');
