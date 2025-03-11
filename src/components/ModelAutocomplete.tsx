@@ -38,6 +38,7 @@ export default function ModelAutocomplete({
             ...topModelsPerBrand,
             [tovarni_znacka]: result
           });
+          setModels(result);
         });
     }
   }, [tovarni_znacka]);

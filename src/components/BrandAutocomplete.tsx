@@ -18,7 +18,9 @@ export default function BrandAutocomplete({
   const cache = useCacheContext();
   const [topBrands, setTopBrands] = cache.topBrands;
   const [brandSearch, setBrandSearch] = cache.brandSearch;
-  const [brands, setBrands] = useState<string[]>([]);
+  const [brands, setBrands] = useState<string[]>(
+    topBrands.map((val) => val.value)
+  );
   const [searchBrand, setSearchBrand] = useState('');
   const searchBrandDebounced = useDebounce(searchBrand, 300);
 
@@ -31,9 +33,10 @@ export default function BrandAutocomplete({
       axios.get('/api/top-brands').then((res) => {
         const result = DValueCountPairs.parse(res.data);
         setTopBrands(result);
+        setBrands(result.map((val) => val.value));
       });
     }
-  }, [topBrands, setTopBrands]);
+  }, [topBrands]);
 
   useEffect(() => {
     if (!searchBrandDebounced) {
