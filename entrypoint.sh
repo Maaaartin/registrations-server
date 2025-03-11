@@ -12,6 +12,5 @@ else
 fi
 
 export DATABASE_URL="postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$HOST/$POSTGRES_DB?schema=public"
-export NODE_ENV=production
 
 exec npx next $1
