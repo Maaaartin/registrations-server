@@ -87,6 +87,33 @@ const TextSearchForm = ({
   );
 };
 
+const AutocompleteSearchForm = ({
+  tovarni_znacka,
+  typ,
+  loading,
+  onSubmit
+}: ToolBarComponentProps & { tovarni_znacka: string; typ: string }) => {
+  return (
+    <Stack direction="row" spacing={1} padding={1}>
+      <BrandAutocomplete
+        value={tovarni_znacka}
+        onSelect={(value) => {
+          onSubmit({ tovarni_znacka: value });
+        }}
+        disabled={loading}
+      />
+      <ModelAutocomplete
+        tovarni_znacka={tovarni_znacka}
+        typ={typ}
+        onSelect={(value) => {
+          onSubmit({ typ: value });
+        }}
+        disabled={loading || !tovarni_znacka}
+      />
+    </Stack>
+  );
+};
+
 const Toolbar = ({
   tovarni_znacka,
   typ,
@@ -104,20 +131,11 @@ const Toolbar = ({
         onSubmit={onSubmit}
       />
       <Divider orientation="vertical" variant="middle" flexItem />
-      <BrandAutocomplete
-        value={tovarni_znacka}
-        onSelect={(value) => {
-          onSubmit({ tovarni_znacka: value });
-        }}
-        disabled={loading}
-      />
-      <ModelAutocomplete
+      <AutocompleteSearchForm
         tovarni_znacka={tovarni_znacka}
         typ={typ}
-        onSelect={(value) => {
-          onSubmit({ typ: value });
-        }}
-        disabled={loading || !tovarni_znacka}
+        loading={loading}
+        onSubmit={onSubmit}
       />
     </Stack>
   );
