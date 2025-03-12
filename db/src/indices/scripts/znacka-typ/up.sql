@@ -1,0 +1,1 @@
+CREATE INDEX idx_znacka_typ ON registrations (tovarni_znacka, typ);
