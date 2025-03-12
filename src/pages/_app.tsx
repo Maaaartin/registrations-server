@@ -69,7 +69,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
                       maxWidth: { sm: '100%', md: '1700px' }
                     }}
                   >
-                    <Component {...pageProps} />
+                    <Component {...pageProps} withDarkMode={false} />
                   </Box>
                 </CacheContextProvider>
               </Stack>
