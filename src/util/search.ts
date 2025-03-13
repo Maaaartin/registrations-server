@@ -1,30 +1,13 @@
 import { unstable_cache } from 'next/cache';
 import zod from 'zod';
 import prisma from '../../prisma';
-import { DBrandModel } from './decoders';
-
-export const pageSize = 20;
 
 export const searchVehicles = unstable_cache(
-  (
-    page: number,
-    tovarni_znacka: string,
-    type: string,
-    vin: string,
-    cislo_tp: string
-  ) =>
+  (vin: string, cislo_tp: string) =>
     prisma.registrations.findMany({
-      skip: page * pageSize,
-      take: pageSize,
-      where:
-        vin || cislo_tp
-          ? {
-              OR: [{ vin: { equals: vin } }, { cislo_tp: { equals: cislo_tp } }]
-            }
-          : {
-              tovarni_znacka: tovarni_znacka || undefined,
-              typ: type || undefined
-            },
+      where: {
+        OR: [{ vin: { equals: vin } }, { cislo_tp: { equals: cislo_tp } }]
+      },
       select: {
         id: true,
         tovarni_znacka: true,
@@ -37,22 +20,16 @@ export const searchVehicles = unstable_cache(
   ['search'],
   { revalidate: 3600, tags: ['search'] }
 );
-type Vehicles = Awaited<ReturnType<typeof searchVehicles>>;
+
+export type Vehicles = Awaited<ReturnType<typeof searchVehicles>>;
 
 export type SearchProps = {
   vehicles: Vehicles;
-  currentPage: number;
-  tovarni_znacka: string;
-  typ: string;
   vin: string;
   cislo_tp: string;
 };
 
-export const queryDecoder = DBrandModel.extend({
-  page: zod
-    .string()
-    .default('0')
-    .transform((val) => Number(val) || 0),
+export const queryDecoder = zod.object({
   vin: zod.string().default(''),
   cislo_tp: zod.string().default('')
 });

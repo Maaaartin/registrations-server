@@ -1,17 +1,15 @@
-import { Button, Divider, Stack, TextField } from '@mui/material';
-import { useReducer, useState } from 'react';
+import { Button, Stack, TextField } from '@mui/material';
+import { useEffect, useReducer, useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import BrandAutocomplete from '../components/BrandAutocomplete';
-import ModelAutocomplete from '../components/ModelAutocomplete';
-import { DataGrid, GridSlotProps } from '@mui/x-data-grid';
+import { GridSlotProps } from '@mui/x-data-grid';
 import {
   searchVehicles,
-  pageSize,
   SearchProps,
   queryDecoder,
   formReducer
 } from '../util/search';
+import VehicleDataGrid from '../components/VehicleDataGrid';
 
 type ToolBarComponentProps = {
   loading: boolean;
@@ -87,41 +85,7 @@ const TextSearchForm = ({
   );
 };
 
-const AutocompleteSearchForm = ({
-  tovarni_znacka,
-  typ,
-  loading,
-  onSubmit
-}: ToolBarComponentProps & { tovarni_znacka: string; typ: string }) => {
-  return (
-    <Stack direction="row" spacing={1} padding={1} overflow="scroll">
-      <BrandAutocomplete
-        value={tovarni_znacka}
-        onSelect={(value) => {
-          onSubmit({ tovarni_znacka: value });
-        }}
-        disabled={loading}
-      />
-      <ModelAutocomplete
-        tovarni_znacka={tovarni_znacka}
-        typ={typ}
-        onSelect={(value) => {
-          onSubmit({ typ: value });
-        }}
-        disabled={loading || !tovarni_znacka}
-      />
-    </Stack>
-  );
-};
-
-const Toolbar = ({
-  tovarni_znacka,
-  typ,
-  vin,
-  cislo_tp,
-  loading,
-  onSubmit
-}: ToolbarProps) => {
+const Toolbar = ({ vin, cislo_tp, loading, onSubmit }: ToolbarProps) => {
   return (
     <Stack direction="row" spacing={2} padding={2}>
       <TextSearchForm
@@ -130,55 +94,32 @@ const Toolbar = ({
         loading={loading}
         onSubmit={onSubmit}
       />
-      <Divider orientation="vertical" variant="middle" flexItem />
-      <AutocompleteSearchForm
-        tovarni_znacka={tovarni_znacka}
-        typ={typ}
-        loading={loading}
-        onSubmit={onSubmit}
-      />
     </Stack>
   );
 };
 
-export default function Search({
-  vehicles,
-  currentPage,
-  tovarni_znacka,
-  typ,
-  vin,
-  cislo_tp
-}: SearchProps) {
+export default function Search({ vehicles, vin, cislo_tp }: SearchProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (loading && vehicles.length === 1) {
+      router.push({ pathname: '/vehicle', query: { id: vehicles[0].id } });
+    }
+  }, [loading, vehicles]);
+
   const onSubmit = ({
-    tovarni_znacka: brandParam = tovarni_znacka,
-    typ: modelParam = typ,
-    page,
     vin: vinParam = vin,
     cislo_tp: cislo_tpParam = cislo_tp
   }: Partial<{
-    tovarni_znacka: string;
-    typ: string;
     vin: string;
     cislo_tp: string;
-    page: number;
   }>) => {
     setLoading(true);
     const query = Object.fromEntries(
       Object.entries({
-        tovarni_znacka: brandParam,
-        typ: brandParam ? modelParam : '',
         vin: vinParam,
-        cislo_tp: cislo_tpParam,
-        page:
-          brandParam !== tovarni_znacka ||
-          modelParam !== typ ||
-          vinParam !== vin ||
-          cislo_tpParam !== cislo_tp
-            ? 0
-            : page
+        cislo_tp: cislo_tpParam
       }).filter(([, value]) =>
         ['', null, undefined].every((val) => value !== val)
       )
@@ -196,81 +137,17 @@ export default function Search({
         setLoading(false);
       });
   };
-  const rowCount =
-    vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1;
 
   return (
     <>
-      <DataGrid
-        rowSelection={false}
-        onRowClick={(params) => {
-          router.push({ pathname: '/vehicle', query: { id: params.row.id } });
-        }}
-        sx={{
-          '& .MuiDataGrid-row': {
-            cursor: 'pointer'
-          },
-          width: '100%'
-        }}
-        rows={vehicles}
-        columns={[
-          {
-            field: 'tovarni_znacka',
-            headerName: 'Tovární značka',
-            flex: 0.5,
-            minWidth: 200,
-            renderCell: (params) => params.row.tovarni_znacka,
-            sortable: false,
-            filterable: false
-          },
-          {
-            field: 'typ',
-            headerName: 'Typ',
-            flex: 0.5,
-            minWidth: 300,
-            renderCell: (params) => params.row.typ,
-            sortable: false,
-            filterable: false
-          },
-          {
-            field: 'vin',
-            headerName: 'VIN',
-            flex: 0.5,
-            minWidth: 150,
-            renderCell: (params) => params.row.vin,
-            sortable: false,
-            filterable: false
-          },
-          {
-            field: 'cislo_tp',
-            headerName: 'Číslo TP',
-            flex: 0.5,
-            minWidth: 80,
-            renderCell: (params) => params.row.cislo_tp,
-            sortable: false,
-            filterable: false
-          }
-        ]}
-        getRowClassName={(params) =>
-          params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
-        }
+      <VehicleDataGrid
+        vehicles={vehicles}
+        loading={loading}
         initialState={{
           pagination: {
-            paginationModel: { page: currentPage, pageSize },
-            meta: { hasNextPage: true }
+            meta: { hasNextPage: false }
           }
         }}
-        paginationModel={{ page: currentPage, pageSize }}
-        paginationMode="server"
-        filterMode="server"
-        pageSizeOptions={[pageSize]}
-        onPaginationModelChange={(params) => {
-          return onSubmit({ page: params.page });
-        }}
-        rowCount={rowCount}
-        loading={loading}
-        disableColumnResize
-        density="compact"
         slots={{
           toolbar: Toolbar as React.JSXElementConstructor<
             GridSlotProps['toolbar']
@@ -278,40 +155,11 @@ export default function Search({
         }}
         slotProps={{
           toolbar: {
-            tovarni_znacka,
-            typ,
-            currentPage,
             onSubmit,
             loading,
             vin,
             cislo_tp
-          } as ToolbarProps,
-          filterPanel: {
-            sx: { height: '100vh' },
-            filterFormProps: {
-              logicOperatorInputProps: {
-                variant: 'outlined',
-                size: 'small'
-              },
-              columnInputProps: {
-                variant: 'outlined',
-                size: 'small',
-                sx: { mt: 'auto' }
-              },
-              operatorInputProps: {
-                variant: 'outlined',
-                size: 'small',
-                sx: { mt: 'auto' }
-              },
-              valueInputProps: {
-                InputComponentProps: {
-                  variant: 'outlined',
-                  size: 'small',
-                  sx: { width: '100vh' }
-                }
-              }
-            }
-          }
+          } as ToolbarProps
         }}
       />
     </>
@@ -321,24 +169,13 @@ export default function Search({
 export const getServerSideProps: GetServerSideProps<SearchProps> = async (
   context
 ) => {
-  const { page, tovarni_znacka, typ, vin, cislo_tp } = queryDecoder.parse(
-    context.query
-  );
+  const { vin, cislo_tp } = queryDecoder.parse(context.query);
 
-  const vehicles = await searchVehicles(
-    page,
-    tovarni_znacka,
-    typ,
-    vin,
-    cislo_tp
-  );
+  const vehicles = await searchVehicles(vin, cislo_tp);
 
   return {
     props: {
       vehicles,
-      currentPage: page,
-      tovarni_znacka,
-      typ,
       vin,
       cislo_tp
     }
