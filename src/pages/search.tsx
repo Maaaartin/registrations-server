@@ -94,7 +94,7 @@ const AutocompleteSearchForm = ({
   onSubmit
 }: ToolBarComponentProps & { tovarni_znacka: string; typ: string }) => {
   return (
-    <Stack direction="row" spacing={1} padding={1}>
+    <Stack direction="row" spacing={1} padding={1} overflow="scroll">
       <BrandAutocomplete
         value={tovarni_znacka}
         onSelect={(value) => {

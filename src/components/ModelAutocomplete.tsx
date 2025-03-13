@@ -1,10 +1,10 @@
-import { Autocomplete, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import useRequest from '../hooks/useRequest';
 import axios from 'axios';
 import { useCacheContext } from '../context/cache';
 import useDebounce from '../hooks/useDebounce';
 import { DStringArray } from '../util/decoders';
+import AutocompleteBase from './AutocompleteBase';
 
 export default function ModelAutocomplete({
   tovarni_znacka,
@@ -71,13 +71,11 @@ export default function ModelAutocomplete({
     }
   }, [tovarni_znacka, searchModelDebounced]);
   return (
-    <Autocomplete
+    <AutocompleteBase
+      label="Typ"
       disabled={disabled}
-      disablePortal
       options={models}
-      sx={{ width: 300 }}
       loading={request.loading}
-      renderInput={(params) => <TextField {...params} label="Model" />}
       inputValue={searchModel}
       onInputChange={(event, newInputValue) => {
         setSearchModel(newInputValue);

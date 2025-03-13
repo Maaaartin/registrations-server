@@ -1,10 +1,10 @@
-import { Autocomplete, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import useRequest from '../hooks/useRequest';
 import axios from 'axios';
 import { useCacheContext } from '../context/cache';
 import useDebounce from '../hooks/useDebounce';
 import { DStringArray, DValueCountPairs } from '../util/decoders';
+import AutocompleteBase from './AutocompleteBase';
 
 export default function BrandAutocomplete({
   value,
@@ -58,14 +58,11 @@ export default function BrandAutocomplete({
   }, [request.value, searchBrandDebounced]);
 
   return (
-    <Autocomplete
-      freeSolo
+    <AutocompleteBase
+      label="Značka"
       disabled={disabled}
-      disablePortal
       options={brands}
-      sx={{ width: 300 }}
       loading={request.loading}
-      renderInput={(params) => <TextField {...params} label="Značka" />}
       inputValue={searchBrand}
       onInputChange={(event, newInputValue) => {
         setSearchBrand(newInputValue);
