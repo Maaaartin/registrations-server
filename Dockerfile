@@ -5,12 +5,8 @@ WORKDIR /app
 
 COPY temp ./
 
-RUN yarn --frozen-lockfile
-RUN yarn build
-RUN find /app -mindepth 1 ! -name 'entrypoint.sh' ! -name 'package.json' ! -name 'yarn.lock' ! -name '.next' ! -path '/app/.next/*' ! -path '/app/prisma/*' -delete
-
 RUN yarn --production --frozen-lockfile
-
+RUN yarn build
 EXPOSE 3000
 
 
