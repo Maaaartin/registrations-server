@@ -61,9 +61,6 @@ export default function VehicleDataGrid({ loading, vehicles, ...rest }: Props) {
           filterable: false
         }
       ]}
-      paginationMode="server"
-      filterMode="server"
-      rowCount={vehicles.length}
       loading={loading}
       disableColumnResize
       density="compact"

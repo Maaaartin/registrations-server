@@ -75,8 +75,7 @@ export default function RegistrationsChart() {
           ]}
           series={[
             {
-              id: 'direct',
-              label: 'Direct',
+              id: 'year',
               showMark: false,
               curve: 'linear',
               stack: 'total',
