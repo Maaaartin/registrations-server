@@ -5,18 +5,18 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import Analytics from '@mui/icons-material/Analytics';
 import Search from '@mui/icons-material/Search';
-import Discover from '@mui/icons-material/Abc';
+import Storage from '@mui/icons-material/Storage';
 import Link from 'next/link';
 import { Home } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 
 export const mainListItems = [
   { text: 'Domů', icon: <Home />, route: '/' },
-  { text: 'Statistiky', icon: <SettingsRoundedIcon />, route: '/stats' },
+  { text: 'Statistiky', icon: <Analytics />, route: '/stats' },
   { text: 'Hledat', icon: <Search />, route: '/search' },
-  { text: 'Prozkoumat databázi', icon: <Discover />, route: '/discover' }
+  { text: 'Prozkoumat databázi', icon: <Storage />, route: '/discover' }
 ];
 
 export default function MenuContent() {
