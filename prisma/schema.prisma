@@ -128,5 +128,7 @@ model registrations {
   typ_kod                                                         String?
   rm_zaniku                                                       String?
 
+  @@index([tovarni_znacka, typ], map: "idx_znacka_typ")
+  @@index([cislo_tp])
   @@index([vin])
 }

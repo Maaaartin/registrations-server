@@ -8,6 +8,8 @@ export * from "./searchTypesForBrand"
 
 export * from "./topBrands"
 
+export * from "./topCategories"
+
 export * from "./topColors"
 
 export * from "./topKinds"

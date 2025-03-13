@@ -4,20 +4,25 @@ const client = require('../client');
 
 const dirPath = path.resolve(__dirname, './scripts/');
 const readFolders = () => fs.promises.readdir(dirPath);
+
+async function runDownAndUp(dirName) {
+  const [downCode, upCode] = await Promise.all(
+    ['down.sql', 'up.sql'].map((script) =>
+      fs.promises.readFile(path.join(dirPath, dirName, script), 'ascii')
+    )
+  );
+  console.log(`running down for ${dirName}`);
+  await client.query(downCode);
+  console.log(`ran down for ${dirName}`);
+  console.log(`running up for ${dirName}`);
+  await client.query(upCode);
+  console.log(`ran up for ${dirName}`);
+}
+
 async function create() {
   const dirs = await readFolders();
   for (const dir of dirs) {
-    const [downCode, upCode] = await Promise.all(
-      ['down.sql', 'up.sql'].map((script) =>
-        fs.promises.readFile(path.join(dirPath, dir, script), 'ascii')
-      )
-    );
-    console.log(`running down for ${dir}`);
-    await client.query(downCode);
-    console.log(`ran down for ${dir}`);
-    console.log(`running up for ${dir}`);
-    await client.query(upCode);
-    console.log(`ran up for ${dir}`);
+    await runDownAndUp(dir);
   }
 }
 
@@ -29,8 +34,13 @@ async function refresh() {
       'ascii'
     );
     console.log(`running refresh for ${dir}`);
-    await client.query(refreshCode);
-    console.log(`ran refresh for ${dir}`);
+    try {
+      await client.query(refreshCode);
+      console.log(`ran refresh for ${dir}`);
+    } catch (error) {
+      console.log(`failed refresh ${dir}`);
+      await runDownAndUp(dir);
+    }
   }
 }
 

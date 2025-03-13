@@ -4,6 +4,7 @@ exports.registrationCountsByYear = require("./registrationCountsByYear.js").regi
 exports.searchBrands = require("./searchBrands.js").searchBrands
 exports.searchTypesForBrand = require("./searchTypesForBrand.js").searchTypesForBrand
 exports.topBrands = require("./topBrands.js").topBrands
+exports.topCategories = require("./topCategories.js").topCategories
 exports.topColors = require("./topColors.js").topColors
 exports.topKinds = require("./topKinds.js").topKinds
 exports.topTypesForBrand = require("./topTypesForBrand.js").topTypesForBrand
