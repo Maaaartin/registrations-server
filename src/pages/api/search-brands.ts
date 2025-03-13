@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../../prisma/index';
-import { searchBrands } from '../../../prisma/client/sql';
+import { searchBrands_ } from '../../../prisma/queries';
 import { DBrand } from '../../util/decoders';
 
 export default async function handler(
@@ -9,7 +8,6 @@ export default async function handler(
 ) {
   const { tovarni_znacka } = DBrand.parse(req.query);
   if (!tovarni_znacka) return res.send([]);
-  const result = await prisma.$queryRawTyped(searchBrands(tovarni_znacka, 10));
-  const brands = result.map((value) => value.tovarni_znacka as string);
-  res.send(brands);
+  const result = await searchBrands_(tovarni_znacka);
+  res.send(result);
 }
