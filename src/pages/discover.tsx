@@ -1,7 +1,5 @@
 import { Stack } from '@mui/material';
-import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { GridSlotProps } from '@mui/x-data-grid';
@@ -12,30 +10,26 @@ import {
   queryDecoder
 } from '../util/discover';
 import VehicleDataGrid from '../components/VehicleDataGrid';
+import useDataGridSubmit from '../hooks/useDataGridSubmit';
 
-type ToolBarComponentProps = {
-  loading: boolean;
-  onSubmit: (
-    params: Partial<{
-      tovarni_znacka: string;
-      typ: string;
-      vin: string;
-      cislo_tp: string;
-      page: number;
-    }>
-  ) => Promise<boolean>;
+type SearchParams = {
+  page: number;
+  tovarni_znacka: string;
+  typ: string;
 };
+
+type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
 
 type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<DiscoverProps, 'vehicles'> &
-  ToolBarComponentProps;
+  SubmitProps;
 
 const AutocompleteSearchForm = ({
   tovarni_znacka,
   typ,
   loading,
   onSubmit
-}: ToolBarComponentProps & { tovarni_znacka: string; typ: string }) => {
+}: SubmitProps & Omit<SearchParams, 'page'>) => {
   return (
     <Stack direction="row" spacing={1} padding={1} overflow="scroll">
       <BrandAutocomplete
@@ -58,13 +52,21 @@ const AutocompleteSearchForm = ({
 };
 
 const Toolbar = ({ tovarni_znacka, typ, loading, onSubmit }: ToolbarProps) => {
+  const onSubmit_ = (params: Partial<SearchParams>) =>
+    onSubmit({
+      ...params,
+      page:
+        params.tovarni_znacka !== tovarni_znacka || params.typ !== typ
+          ? 0
+          : params.page
+    });
   return (
     <Stack direction="row" spacing={2} padding={2}>
       <AutocompleteSearchForm
         tovarni_znacka={tovarni_znacka}
         typ={typ}
         loading={loading}
-        onSubmit={onSubmit}
+        onSubmit={onSubmit_}
       />
     </Stack>
   );
@@ -76,43 +78,12 @@ export default function Discover({
   tovarni_znacka,
   typ
 }: DiscoverProps) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
+    page: currentPage,
+    tovarni_znacka,
+    typ
+  });
 
-  const onSubmit = ({
-    tovarni_znacka: brandParam = tovarni_znacka,
-    typ: modelParam = typ,
-    page
-  }: Partial<{
-    tovarni_znacka: string;
-    typ: string;
-    vin: string;
-    cislo_tp: string;
-    page: number;
-  }>) => {
-    setLoading(true);
-    const query = Object.fromEntries(
-      Object.entries({
-        tovarni_znacka: brandParam,
-        typ: brandParam ? modelParam : '',
-        page: brandParam !== tovarni_znacka || modelParam !== typ ? 0 : page
-      }).filter(([, value]) =>
-        ['', null, undefined].every((val) => value !== val)
-      )
-    );
-    return router
-      .push(
-        {
-          pathname: router.pathname,
-          query
-        },
-        undefined,
-        { scroll: false }
-      )
-      .finally(() => {
-        setLoading(false);
-      });
-  };
   const rowCount =
     vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1;
 
@@ -132,9 +103,7 @@ export default function Discover({
         }}
         paginationModel={{ page: currentPage, pageSize }}
         pageSizeOptions={[pageSize]}
-        onPaginationModelChange={(params) => {
-          return onSubmit({ page: params.page });
-        }}
+        onPaginationModelChange={(params) => onSubmit({ page: params.page })}
         rowCount={rowCount}
         slots={{
           toolbar: Toolbar as React.JSXElementConstructor<
@@ -145,7 +114,6 @@ export default function Discover({
           toolbar: {
             tovarni_znacka,
             typ,
-            currentPage,
             onSubmit,
             loading
           } as ToolbarProps

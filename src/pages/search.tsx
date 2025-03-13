@@ -1,5 +1,5 @@
 import { Button, Stack, TextField } from '@mui/material';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { GridSlotProps } from '@mui/x-data-grid';
@@ -10,30 +10,25 @@ import {
   formReducer
 } from '../util/search';
 import VehicleDataGrid from '../components/VehicleDataGrid';
+import useDataGridSubmit from '../hooks/useDataGridSubmit';
 
-type ToolBarComponentProps = {
-  loading: boolean;
-  onSubmit: (
-    params: Partial<{
-      tovarni_znacka: string;
-      typ: string;
-      vin: string;
-      cislo_tp: string;
-      page: number;
-    }>
-  ) => Promise<boolean>;
+type SearchParams = {
+  vin: string;
+  cislo_tp: string;
 };
+
+type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
 
 type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<SearchProps, 'vehicles'> &
-  ToolBarComponentProps;
+  SubmitProps;
 
 const TextSearchForm = ({
   vin = '',
   cislo_tp = '',
   loading,
   onSubmit
-}: { vin: string; cislo_tp: string } & ToolBarComponentProps) => {
+}: SearchParams & SubmitProps) => {
   const [state, dispatch] = useReducer(formReducer, { vin, cislo_tp });
   const isEmpty = Object.values(state).every((value) => !value);
   return (
@@ -100,43 +95,16 @@ const Toolbar = ({ vin, cislo_tp, loading, onSubmit }: ToolbarProps) => {
 
 export default function Search({ vehicles, vin, cislo_tp }: SearchProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
+    vin,
+    cislo_tp
+  });
 
   useEffect(() => {
     if (loading && vehicles.length === 1) {
       router.push({ pathname: '/vehicle', query: { id: vehicles[0].id } });
     }
   }, [loading, vehicles]);
-
-  const onSubmit = ({
-    vin: vinParam = vin,
-    cislo_tp: cislo_tpParam = cislo_tp
-  }: Partial<{
-    vin: string;
-    cislo_tp: string;
-  }>) => {
-    setLoading(true);
-    const query = Object.fromEntries(
-      Object.entries({
-        vin: vinParam,
-        cislo_tp: cislo_tpParam
-      }).filter(([, value]) =>
-        ['', null, undefined].every((val) => value !== val)
-      )
-    );
-    return router
-      .push(
-        {
-          pathname: router.pathname,
-          query
-        },
-        undefined,
-        { scroll: false }
-      )
-      .finally(() => {
-        setLoading(false);
-      });
-  };
 
   return (
     <>
