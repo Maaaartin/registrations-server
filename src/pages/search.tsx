@@ -171,7 +171,10 @@ export const getServerSideProps: GetServerSideProps<SearchProps> = async (
 ) => {
   const { vin, cislo_tp } = queryDecoder.parse(context.query);
 
-  const vehicles = await searchVehicles(vin, cislo_tp);
+  const vehicles =
+    [vin, cislo_tp].filter(Boolean).length === 0
+      ? []
+      : await searchVehicles(vin, cislo_tp);
 
   return {
     props: {

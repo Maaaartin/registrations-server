@@ -6,7 +6,12 @@ export const searchVehicles = unstable_cache(
   (vin: string, cislo_tp: string) =>
     prisma.registrations.findMany({
       where: {
-        OR: [{ vin: { equals: vin } }, { cislo_tp: { equals: cislo_tp } }]
+        AND: [
+          { key: 'vin', value: vin },
+          { key: 'cislo_tp', value: cislo_tp }
+        ]
+          .filter(({ value }) => value)
+          .map(({ key, value }) => ({ [key]: { equals: value } }))
       },
       select: {
         id: true,
