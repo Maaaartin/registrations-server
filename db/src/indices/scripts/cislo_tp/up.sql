@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS registrations_cislo_tp_idx ON registrations (cislo_tp);
