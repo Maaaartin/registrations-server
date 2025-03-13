@@ -17,7 +17,7 @@ const CountCard = () => {
     decoder: DNumber
   });
   useEffect(() => {
-    if (!count && !request.value) {
+    if (!count && !request.value && !request.error) {
       request.run();
     } else if (request.value) {
       setCount(request.value);
@@ -56,7 +56,7 @@ const BrandsCard = () => {
     decoder: DValueCountPairs
   });
   useEffect(() => {
-    if (!topBrands.length && !request.value) {
+    if (!topBrands.length && !request.value && !request.error) {
       request.run();
     } else if (request.value) {
       setTopBrands(request.value);
@@ -88,7 +88,7 @@ const KindsCard = () => {
     decoder: DValueCountPairs
   });
   useEffect(() => {
-    if (!topKinds.length && !request.value) {
+    if (!topKinds.length && !request.value && !request.error) {
       request.run();
     } else if (request.value) {
       setTopKinds(request.value);
@@ -120,7 +120,7 @@ const ColorsCard = () => {
     decoder: DValueCountPairs
   });
   useEffect(() => {
-    if (!topColors.length && !request.value) {
+    if (!topColors.length && !request.value && !request.error) {
       request.run();
     } else if (request.value) {
       setTopColors(request.value);
