@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY temp ./
 
-RUN yarn --production --frozen-lockfile
+RUN yarn --frozen-lockfile
 RUN yarn build
 EXPOSE 3000
 
