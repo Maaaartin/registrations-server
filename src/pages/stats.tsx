@@ -81,6 +81,38 @@ const BrandsCard = () => {
   );
 };
 
+const CategoriesCard = () => {
+  const [topCategories, setTopCategories] = useCacheContext().topCategories;
+  const request = useRequest({
+    url: '/api/top-categories',
+    decoder: DValueCountPairs
+  });
+  useEffect(() => {
+    if (!topCategories.length && !request.value && !request.error) {
+      request.run();
+    } else if (request.value) {
+      setTopCategories(request.value);
+    }
+  }, [topCategories, request, setTopCategories]);
+  const renderValue = request.loading ? <CircularProgress /> : topCategories;
+  const render = (value: ValueCountPair) => ({
+    primary: value.value,
+    secondary: value.count
+  });
+  return (
+    <StatCard
+      title="Top kategorie"
+      value={
+        Array.isArray(renderValue) ? (
+          <CardList data={renderValue} render={render}></CardList>
+        ) : (
+          renderValue
+        )
+      }
+    />
+  );
+};
+
 const KindsCard = () => {
   const [topKinds, setTopKinds] = useCacheContext().topKinds;
   const request = useRequest({
@@ -168,6 +200,9 @@ export default function Stats() {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <KindsCard></KindsCard>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+          <CategoriesCard></CategoriesCard>
         </Grid>
       </Grid>
       <Grid size={{ xs: 12, md: 6 }}>
