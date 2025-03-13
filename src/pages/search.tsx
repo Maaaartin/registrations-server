@@ -42,7 +42,7 @@ const TextSearchForm = ({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        if (!isEmpty) return;
+        if (isEmpty) return;
         onSubmit(state);
       }}
     >
