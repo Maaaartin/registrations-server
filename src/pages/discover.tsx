@@ -16,12 +16,19 @@ import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
-type SearchParams = {
-  page: number;
+type AutocompleteParams = {
   tovarni_znacka: string;
   typ: string;
+};
+
+type DateSearchParams = {
   datum_prvni_registrace_od: string | null;
 };
+
+type SearchParams = AutocompleteParams &
+  DateSearchParams & {
+    page: number;
+  };
 
 type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
 
@@ -32,12 +39,11 @@ type ToolbarProps = GridSlotProps['toolbar'] &
 const AutocompleteSearchForm = ({
   tovarni_znacka,
   typ,
-  datum_prvni_registrace_od,
   loading,
   onSubmit
-}: SubmitProps & Omit<SearchParams, 'page'>) => {
+}: SubmitProps & AutocompleteParams) => {
   return (
-    <Stack direction="row" spacing={1} padding={1} overflow="scroll">
+    <>
       <BrandAutocomplete
         value={tovarni_znacka}
         onSelect={(value) => {
@@ -53,23 +59,34 @@ const AutocompleteSearchForm = ({
         }}
         disabled={loading || !tovarni_znacka}
       />
-      <LocalizationProvider dateAdapter={AdapterLuxon}>
-        <DatePicker
-          label="Datum první registrace od"
-          value={
-            datum_prvni_registrace_od
-              ? DateTime.fromFormat(datum_prvni_registrace_od, DateFormat)
-              : null
-          }
-          onChange={(newValue) => {
-            onSubmit({
-              datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || null
-            });
-          }}
-          views={['day', 'month', 'year']}
-        />
-      </LocalizationProvider>
-    </Stack>
+    </>
+  );
+};
+
+const DateSearch = ({
+  datum_prvni_registrace_od,
+  onSubmit,
+  loading
+}: SubmitProps & DateSearchParams) => {
+  return (
+    <LocalizationProvider dateAdapter={AdapterLuxon}>
+      <DatePicker
+        disableFuture
+        disabled={loading}
+        label="Datum první registrace od"
+        value={
+          datum_prvni_registrace_od
+            ? DateTime.fromFormat(datum_prvni_registrace_od, DateFormat)
+            : null
+        }
+        onChange={(newValue) => {
+          onSubmit({
+            datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || null
+          });
+        }}
+        views={['day', 'month', 'year']}
+      />
+    </LocalizationProvider>
   );
 };
 
@@ -93,9 +110,13 @@ const Toolbar = ({
       <AutocompleteSearchForm
         tovarni_znacka={tovarni_znacka}
         typ={typ}
-        datum_prvni_registrace_od={datum_prvni_registrace_od}
         loading={loading}
         onSubmit={onSubmit_}
+      />
+      <DateSearch
+        loading={loading}
+        onSubmit={onSubmit_}
+        datum_prvni_registrace_od={datum_prvni_registrace_od}
       />
     </Stack>
   );
