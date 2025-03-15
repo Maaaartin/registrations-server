@@ -44,6 +44,8 @@ export const queryDecoder = DBrandModel.extend({
   datum_prvni_registrace_od: DDate
 });
 
+export const DateFormat = 'yyyy-MM-dd';
+
 export type DiscoverProps = {
   currentPage: number;
   tovarni_znacka: string;

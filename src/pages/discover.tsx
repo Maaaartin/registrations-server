@@ -5,6 +5,7 @@ import ModelAutocomplete from '../components/ModelAutocomplete';
 import { GridSlotProps } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
 import {
+  DateFormat,
   DiscoverProps,
   discoverVehicles,
   pageSize,
@@ -62,8 +63,7 @@ const AutocompleteSearchForm = ({
           }
           onChange={(newValue) => {
             onSubmit({
-              datum_prvni_registrace_od:
-                newValue?.toFormat('yyyy-MM-dd') || null
+              datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || null
             });
           }}
           views={['day', 'month', 'year']}
@@ -174,8 +174,9 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
       currentPage: page,
       tovarni_znacka,
       typ,
-      datum_prvni_registrace_od:
-        datum_prvni_registrace_od?.toISOString() || null
+      datum_prvni_registrace_od: datum_prvni_registrace_od
+        ? DateTime.fromJSDate(datum_prvni_registrace_od).toFormat(DateFormat)
+        : null
     }
   };
 };
