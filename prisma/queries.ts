@@ -1,5 +1,7 @@
+import { DateTime } from 'luxon';
 import prisma from '.';
 import queries from './client/sql';
+import { DateFormat } from '../src/util/discover';
 
 export async function count_() {
   const [result] = await prisma.$queryRawTyped(queries.count());
@@ -66,4 +68,17 @@ export async function topTypesForBrand_(brand: string) {
     queries.topTypesForBrand(brand, 10)
   );
   return result.map((value) => String(value.typ));
+}
+
+export async function lowestRegistrationDate_() {
+  const result = await prisma.registrations.findFirst({
+    where: {
+      datum_1_registrace: { not: null }
+    },
+    orderBy: { datum_1_registrace: 'asc' }
+  });
+  if (!result) return null;
+  return DateTime.fromJSDate(result.datum_1_registrace as Date).toFormat(
+    DateFormat
+  );
 }
