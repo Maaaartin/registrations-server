@@ -23,6 +23,7 @@ type AutocompleteParams = {
 
 type DateSearchParams = {
   datum_prvni_registrace_od: string | null;
+  datum_prvni_registrace_do: string | null;
 };
 
 type SearchParams = AutocompleteParams &
@@ -65,6 +66,7 @@ const AutocompleteSearchForm = ({
 
 const DateSearch = ({
   datum_prvni_registrace_od,
+  datum_prvni_registrace_do,
   onSubmit,
   loading
 }: SubmitProps & DateSearchParams) => {
@@ -86,6 +88,22 @@ const DateSearch = ({
         }}
         views={['day', 'month', 'year']}
       />
+      <DatePicker
+        disableFuture
+        disabled={loading}
+        label="Datum první registrace do"
+        value={
+          datum_prvni_registrace_do
+            ? DateTime.fromFormat(datum_prvni_registrace_do, DateFormat)
+            : null
+        }
+        onChange={(newValue) => {
+          onSubmit({
+            datum_prvni_registrace_do: newValue?.toFormat(DateFormat) || null
+          });
+        }}
+        views={['day', 'month', 'year']}
+      />
     </LocalizationProvider>
   );
 };
@@ -94,6 +112,7 @@ const Toolbar = ({
   tovarni_znacka,
   typ,
   datum_prvni_registrace_od,
+  datum_prvni_registrace_do,
   loading,
   onSubmit
 }: ToolbarProps) => {
@@ -117,6 +136,7 @@ const Toolbar = ({
         loading={loading}
         onSubmit={onSubmit_}
         datum_prvni_registrace_od={datum_prvni_registrace_od}
+        datum_prvni_registrace_do={datum_prvni_registrace_do}
       />
     </Stack>
   );
@@ -127,13 +147,15 @@ export default function Discover({
   currentPage,
   tovarni_znacka,
   typ,
-  datum_prvni_registrace_od
+  datum_prvni_registrace_od,
+  datum_prvni_registrace_do
 }: DiscoverProps) {
   const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
     tovarni_znacka,
     typ,
-    datum_prvni_registrace_od
+    datum_prvni_registrace_od,
+    datum_prvni_registrace_do
   });
 
   const rowCount =
@@ -167,6 +189,7 @@ export default function Discover({
             tovarni_znacka,
             typ,
             datum_prvni_registrace_od,
+            datum_prvni_registrace_do,
             onSubmit,
             loading
           } as ToolbarProps
@@ -179,14 +202,20 @@ export default function Discover({
 export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
   context
 ) => {
-  const { page, tovarni_znacka, typ, datum_prvni_registrace_od } =
-    queryDecoder.parse(context.query);
+  const {
+    page,
+    tovarni_znacka,
+    typ,
+    datum_prvni_registrace_od,
+    datum_prvni_registrace_do
+  } = queryDecoder.parse(context.query);
 
   const vehicles = await discoverVehicles(
     page,
     tovarni_znacka,
     typ,
-    datum_prvni_registrace_od
+    datum_prvni_registrace_od,
+    datum_prvni_registrace_do
   );
 
   return {
@@ -197,6 +226,9 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
       typ,
       datum_prvni_registrace_od: datum_prvni_registrace_od
         ? DateTime.fromJSDate(datum_prvni_registrace_od).toFormat(DateFormat)
+        : null,
+      datum_prvni_registrace_do: datum_prvni_registrace_do
+        ? DateTime.fromJSDate(datum_prvni_registrace_do).toFormat(DateFormat)
         : null
     }
   };
