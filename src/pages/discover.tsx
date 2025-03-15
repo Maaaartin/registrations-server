@@ -58,7 +58,7 @@ const AutocompleteSearchForm = ({
           label="Datum první registrace od"
           value={
             datum_prvni_registrace_od
-              ? DateTime.fromISO(datum_prvni_registrace_od)
+              ? DateTime.fromFormat(datum_prvni_registrace_od, DateFormat)
               : null
           }
           onChange={(newValue) => {
