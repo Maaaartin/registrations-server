@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { GridSlotProps } from '@mui/x-data-grid';
+import { DateTime } from 'luxon';
 import {
   DiscoverProps,
   discoverVehicles,
@@ -11,11 +12,14 @@ import {
 } from '../util/discover';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
 type SearchParams = {
   page: number;
   tovarni_znacka: string;
   typ: string;
+  datum_prvni_registrace_od: string | null;
 };
 
 type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
@@ -27,6 +31,7 @@ type ToolbarProps = GridSlotProps['toolbar'] &
 const AutocompleteSearchForm = ({
   tovarni_znacka,
   typ,
+  datum_prvni_registrace_od,
   loading,
   onSubmit
 }: SubmitProps & Omit<SearchParams, 'page'>) => {
@@ -47,11 +52,31 @@ const AutocompleteSearchForm = ({
         }}
         disabled={loading || !tovarni_znacka}
       />
+      <LocalizationProvider dateAdapter={AdapterLuxon}>
+        <DatePicker
+          label="Datum první registrace od"
+          value={
+            datum_prvni_registrace_od
+              ? DateTime.fromISO(datum_prvni_registrace_od)
+              : null
+          }
+          onChange={(newValue) => {
+            onSubmit({ datum_prvni_registrace_od: newValue?.toISO() });
+          }}
+          views={['day', 'month', 'year']}
+        />
+      </LocalizationProvider>
     </Stack>
   );
 };
 
-const Toolbar = ({ tovarni_znacka, typ, loading, onSubmit }: ToolbarProps) => {
+const Toolbar = ({
+  tovarni_znacka,
+  typ,
+  datum_prvni_registrace_od,
+  loading,
+  onSubmit
+}: ToolbarProps) => {
   const onSubmit_ = (params: Partial<SearchParams>) =>
     onSubmit({
       ...params,
@@ -65,6 +90,7 @@ const Toolbar = ({ tovarni_znacka, typ, loading, onSubmit }: ToolbarProps) => {
       <AutocompleteSearchForm
         tovarni_znacka={tovarni_znacka}
         typ={typ}
+        datum_prvni_registrace_od={datum_prvni_registrace_od}
         loading={loading}
         onSubmit={onSubmit_}
       />
@@ -76,12 +102,14 @@ export default function Discover({
   vehicles,
   currentPage,
   tovarni_znacka,
-  typ
+  typ,
+  datum_prvni_registrace_od
 }: DiscoverProps) {
   const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
     tovarni_znacka,
-    typ
+    typ,
+    datum_prvni_registrace_od: datum_prvni_registrace_od
   });
 
   const rowCount =
@@ -114,6 +142,7 @@ export default function Discover({
           toolbar: {
             tovarni_znacka,
             typ,
+            datum_prvni_registrace_od,
             onSubmit,
             loading
           } as ToolbarProps
@@ -126,16 +155,24 @@ export default function Discover({
 export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
   context
 ) => {
-  const { page, tovarni_znacka, typ } = queryDecoder.parse(context.query);
+  const { page, tovarni_znacka, typ, datum_prvni_registrace_od } =
+    queryDecoder.parse(context.query);
 
-  const vehicles = await discoverVehicles(page, tovarni_znacka, typ);
+  const vehicles = await discoverVehicles(
+    page,
+    tovarni_znacka,
+    typ,
+    datum_prvni_registrace_od
+  );
 
   return {
     props: {
       vehicles,
       currentPage: page,
       tovarni_znacka,
-      typ
+      typ,
+      datum_prvni_registrace_od:
+        datum_prvni_registrace_od?.toISOString() || null
     }
   };
 };

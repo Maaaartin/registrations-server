@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 
 export default function useDataGridSubmit<
-  T extends Record<string, string | number>
+  T extends Record<string, string | number | null>
 >(initParams: T) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();

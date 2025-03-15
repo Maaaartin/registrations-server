@@ -15,8 +15,6 @@ import {
   datePickersCustomizations,
   treeViewCustomizations
 } from '../theme/customizations';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { CacheContextProvider } from '../context/cache';
 
 const xThemeComponents = {
@@ -39,43 +37,41 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
         />
       </Head>
       <AppTheme themeComponents={xThemeComponents}>
-        <LocalizationProvider dateAdapter={AdapterLuxon}>
-          <CssBaseline />
-          <Box sx={{ display: 'flex' }}>
-            <SideMenu />
-            <AppNavbar />
-            <Box
-              component="main"
-              sx={(theme) => ({
-                flexGrow: 1,
-                backgroundColor: alpha(theme.palette.background.default, 1),
-                overflow: 'auto'
-              })}
+        <CssBaseline />
+        <Box sx={{ display: 'flex' }}>
+          <SideMenu />
+          <AppNavbar />
+          <Box
+            component="main"
+            sx={(theme) => ({
+              flexGrow: 1,
+              backgroundColor: alpha(theme.palette.background.default, 1),
+              overflow: 'auto'
+            })}
+          >
+            <Stack
+              spacing={2}
+              sx={{
+                alignItems: 'center',
+                mx: 3,
+                pb: 5,
+                mt: { xs: 8, md: 0 }
+              }}
             >
-              <Stack
-                spacing={2}
-                sx={{
-                  alignItems: 'center',
-                  mx: 3,
-                  pb: 5,
-                  mt: { xs: 8, md: 0 }
-                }}
-              >
-                <Header />
-                <CacheContextProvider>
-                  <Box
-                    sx={{
-                      width: '100%',
-                      maxWidth: { sm: '100%', md: '1700px' }
-                    }}
-                  >
-                    <Component {...pageProps} withDarkMode={false} />
-                  </Box>
-                </CacheContextProvider>
-              </Stack>
-            </Box>
+              <Header />
+              <CacheContextProvider>
+                <Box
+                  sx={{
+                    width: '100%',
+                    maxWidth: { sm: '100%', md: '1700px' }
+                  }}
+                >
+                  <Component {...pageProps} withDarkMode={false} />
+                </Box>
+              </CacheContextProvider>
+            </Stack>
           </Box>
-        </LocalizationProvider>
+        </Box>{' '}
       </AppTheme>
     </>
   );

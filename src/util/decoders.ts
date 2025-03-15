@@ -18,3 +18,8 @@ export const DBrandModel = DBrand.extend({
   tovarni_znacka: zod.string().default(''),
   typ: zod.string().default('')
 });
+
+export const DDate = zod
+  .string()
+  .optional()
+  .transform((val) => (val ? new Date(val) : null));
