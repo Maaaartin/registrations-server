@@ -61,7 +61,10 @@ const AutocompleteSearchForm = ({
               : null
           }
           onChange={(newValue) => {
-            onSubmit({ datum_prvni_registrace_od: newValue?.toISO() });
+            onSubmit({
+              datum_prvni_registrace_od:
+                newValue?.toFormat('yyyy-MM-dd') || null
+            });
           }}
           views={['day', 'month', 'year']}
         />
@@ -109,7 +112,7 @@ export default function Discover({
     page: currentPage,
     tovarni_znacka,
     typ,
-    datum_prvni_registrace_od: datum_prvni_registrace_od
+    datum_prvni_registrace_od
   });
 
   const rowCount =

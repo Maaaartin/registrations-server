@@ -21,5 +21,6 @@ export const DBrandModel = DBrand.extend({
 
 export const DDate = zod
   .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/)
   .optional()
   .transform((val) => (val ? new Date(val) : null));
