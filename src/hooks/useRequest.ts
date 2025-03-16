@@ -5,7 +5,7 @@ import { ZodError } from 'zod';
 
 type UseRequestProps<T> = {
   url: string;
-  decoder?: zod.ZodType<T>;
+  decoder?: zod.ZodType<T> | zod.ZodEffects<zod.ZodOptional<zod.ZodString>, T>;
 };
 type UseRequestRunProps<D> = {
   query?: URLSearchParams;

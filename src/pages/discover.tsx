@@ -15,6 +15,8 @@ import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import useRequest from '../hooks/useRequest';
+import { DDate } from '../util/decoders';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
@@ -70,6 +72,7 @@ const DateSearch = ({
   onSubmit,
   loading
 }: SubmitProps & DateSearchParams) => {
+  const request = useRequest({ url: '/api/lowest-date', decoder: DDate });
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <DatePicker
@@ -92,6 +95,7 @@ const DateSearch = ({
         disableFuture
         disabled={loading}
         label="Datum první registrace do"
+        minDate={request.value ? DateTime.fromJSDate(request.value) : undefined}
         value={
           datum_prvni_registrace_do
             ? DateTime.fromFormat(datum_prvni_registrace_do, DateFormat)
