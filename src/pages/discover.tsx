@@ -4,6 +4,7 @@ import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { GridSlotProps } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
+import zod from 'zod';
 import {
   DateFormat,
   DiscoverProps,
@@ -15,7 +16,6 @@ import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import useRequest from '../hooks/useRequest';
 import { DDate } from '../util/decoders';
 
 type AutocompleteParams = {
@@ -66,13 +66,23 @@ const AutocompleteSearchForm = ({
   );
 };
 
+const dateDecoder = zod.object({
+  lowest: DDate,
+  greatest: DDate
+});
+
 const DateSearch = ({
   datum_prvni_registrace_od,
   datum_prvni_registrace_do,
   onSubmit,
   loading
 }: SubmitProps & DateSearchParams) => {
-  const request = useRequest({ url: '/api/lowest-date', decoder: DDate });
+  const fromDate = datum_prvni_registrace_od
+    ? DateTime.fromFormat(datum_prvni_registrace_od, DateFormat)
+    : undefined;
+  const toDate = datum_prvni_registrace_do
+    ? DateTime.fromFormat(datum_prvni_registrace_do, DateFormat)
+    : undefined;
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <DatePicker
@@ -84,6 +94,7 @@ const DateSearch = ({
             ? DateTime.fromFormat(datum_prvni_registrace_od, DateFormat)
             : null
         }
+        maxDate={toDate}
         onChange={(newValue) => {
           onSubmit({
             datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || null
@@ -95,12 +106,8 @@ const DateSearch = ({
         disableFuture
         disabled={loading}
         label="Datum první registrace do"
-        minDate={request.value ? DateTime.fromJSDate(request.value) : undefined}
-        value={
-          datum_prvni_registrace_do
-            ? DateTime.fromFormat(datum_prvni_registrace_do, DateFormat)
-            : null
-        }
+        minDate={fromDate}
+        value={toDate}
         onChange={(newValue) => {
           onSubmit({
             datum_prvni_registrace_do: newValue?.toFormat(DateFormat) || null

@@ -5,7 +5,7 @@ import { ZodError } from 'zod';
 
 type UseRequestProps<T> = {
   url: string;
-  decoder?: zod.ZodType<T> | zod.ZodEffects<zod.ZodOptional<zod.ZodString>, T>;
+  decoder?: zod.ZodType<T>;
 };
 type UseRequestRunProps<D> = {
   query?: URLSearchParams;
@@ -49,7 +49,7 @@ export default function useRequest<T, D = Record<string, string>>({
         })
         .then((res) => {
           if (decoder) {
-            setValue(decoder.parse(res.data));
+            setValue(decoder.parse(res.data as any));
           } else {
             setValue(res.data);
           }
