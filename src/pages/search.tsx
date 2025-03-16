@@ -3,12 +3,8 @@ import { useEffect, useReducer } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { GridSlotProps } from '@mui/x-data-grid';
-import {
-  searchVehicles,
-  SearchProps,
-  queryDecoder,
-  formReducer
-} from '../util/search';
+import { SearchProps, formReducer } from '../util/search';
+import { searchVehicles, queryDecoder } from '../util/search/server';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
 
