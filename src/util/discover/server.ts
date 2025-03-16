@@ -38,7 +38,8 @@ export const discoverVehicles = unstable_cache(
         tovarni_znacka: true,
         typ: true,
         vin: true,
-        cislo_tp: true
+        cislo_tp: true,
+        cislo_orv: true
       }
     });
   },

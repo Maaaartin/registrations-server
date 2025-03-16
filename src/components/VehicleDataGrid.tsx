@@ -59,6 +59,15 @@ export default function VehicleDataGrid({ loading, vehicles, ...rest }: Props) {
           renderCell: (params) => params.row.cislo_tp,
           sortable: false,
           filterable: false
+        },
+        {
+          field: 'cislo_orv',
+          headerName: 'Číslo ORV',
+          flex: 0.5,
+          minWidth: 80,
+          renderCell: (params) => params.row.cislo_orv,
+          sortable: false,
+          filterable: false
         }
       ]}
       loading={loading}

@@ -2,27 +2,33 @@ import type { searchVehicles } from './server';
 
 export type Vehicles = Awaited<ReturnType<typeof searchVehicles>>;
 
-export type SearchProps = {
-  vehicles: Vehicles;
+export type SearchState = {
   vin: string;
   cislo_tp: string;
+  cislo_orv: string;
 };
 
-type FormState = { vin: string; cislo_tp: string };
+export type SearchProps = {
+  vehicles: Vehicles;
+} & SearchState;
 
 type FormAction =
-  | { type: 'update'; key: keyof FormState; value: FormState[keyof FormState] }
+  | {
+      type: 'update';
+      key: keyof SearchState;
+      value: SearchState[keyof SearchState];
+    }
   | { type: 'clear' };
 
 export const formReducer = (
-  state: FormState,
+  state: SearchState,
   action: FormAction
-): FormState => {
+): SearchState => {
   switch (action.type) {
     case 'update':
       return { ...state, [action.key]: action.value };
     case 'clear':
-      return { vin: '', cislo_tp: '' };
+      return { vin: '', cislo_tp: '', cislo_orv: '' };
     default:
       return state;
   }

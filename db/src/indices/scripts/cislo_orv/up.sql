@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS registrations_cislo_orv_idx ON registrations (cislo_orv);

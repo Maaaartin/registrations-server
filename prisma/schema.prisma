@@ -129,6 +129,7 @@ model registrations {
   rm_zaniku                                                       String?
 
   @@index([tovarni_znacka, typ], map: "idx_znacka_typ")
+  @@index([cislo_orv])
   @@index([cislo_tp])
   @@index([datum_1_registrace])
   @@index([vin])
