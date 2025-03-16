@@ -1,3 +1,4 @@
+'use server';
 import { unstable_cache } from 'next/cache';
 import zod from 'zod';
 import prisma from '../../prisma';
