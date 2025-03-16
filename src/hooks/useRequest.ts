@@ -49,7 +49,7 @@ export default function useRequest<T, D = Record<string, string>>({
         })
         .then((res) => {
           if (decoder) {
-            setValue(decoder.parse(res.data as any));
+            setValue(decoder.parse(res.data));
           } else {
             setValue(res.data);
           }

@@ -4,7 +4,6 @@ import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { GridSlotProps } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
-import zod from 'zod';
 import {
   DateFormat,
   DiscoverProps,
@@ -16,7 +15,6 @@ import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { DDate } from '../util/decoders';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
@@ -65,11 +63,6 @@ const AutocompleteSearchForm = ({
     </>
   );
 };
-
-const dateDecoder = zod.object({
-  lowest: DDate,
-  greatest: DDate
-});
 
 const DateSearch = ({
   datum_prvni_registrace_od,
