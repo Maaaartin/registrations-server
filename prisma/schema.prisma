@@ -130,5 +130,6 @@ model registrations {
 
   @@index([tovarni_znacka, typ], map: "idx_znacka_typ")
   @@index([cislo_tp])
+  @@index([datum_1_registrace])
   @@index([vin])
 }
