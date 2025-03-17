@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 
+export const CLEAR_SYMBOL = '__CLEAR__';
+
 export default function useDataGridSubmit<
   T extends Record<string, string | number | null>
 >(initParams: T) {
@@ -11,7 +13,7 @@ export default function useDataGridSubmit<
       setLoading(true);
       const entries = Object.entries(initParams).map(([key, value]) => [
         key,
-        params[key] ?? value
+        params[key] === CLEAR_SYMBOL ? null : (params[key] ?? value)
       ]);
       const query = Object.fromEntries(
         entries.filter(([, value]) =>

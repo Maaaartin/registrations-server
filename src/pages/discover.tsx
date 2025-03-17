@@ -6,7 +6,7 @@ import { GridSlotProps } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
 import { DateFormat, DiscoverProps, pageSize } from '../util/discover';
 import VehicleDataGrid from '../components/VehicleDataGrid';
-import useDataGridSubmit from '../hooks/useDataGridSubmit';
+import useDataGridSubmit, { CLEAR_SYMBOL } from '../hooks/useDataGridSubmit';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { discoverVehicles, queryDecoder } from '../util/discover/server';
@@ -67,10 +67,10 @@ const DateSearch = ({
 }: SubmitProps & DateSearchParams) => {
   const fromDate = datum_prvni_registrace_od
     ? DateTime.fromFormat(datum_prvni_registrace_od, DateFormat)
-    : undefined;
+    : null;
   const toDate = datum_prvni_registrace_do
     ? DateTime.fromFormat(datum_prvni_registrace_do, DateFormat)
-    : undefined;
+    : null;
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <DatePicker
@@ -82,26 +82,40 @@ const DateSearch = ({
             ? DateTime.fromFormat(datum_prvni_registrace_od, DateFormat)
             : null
         }
-        maxDate={toDate}
+        slotProps={{
+          actionBar: {
+            actions: ['clear']
+          }
+        }}
+        maxDate={toDate || undefined}
         onChange={(newValue) => {
           onSubmit({
-            datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || null
+            datum_prvni_registrace_od:
+              newValue?.toFormat(DateFormat) || CLEAR_SYMBOL
           });
         }}
-        views={['day', 'month', 'year']}
+        openTo="year"
+        views={['day', 'year']}
       />
       <DatePicker
         disableFuture
         disabled={loading}
         label="Datum první registrace do"
-        minDate={fromDate}
+        minDate={fromDate || undefined}
+        slotProps={{
+          actionBar: {
+            actions: ['clear']
+          }
+        }}
         value={toDate}
         onChange={(newValue) => {
           onSubmit({
-            datum_prvni_registrace_do: newValue?.toFormat(DateFormat) || null
+            datum_prvni_registrace_do:
+              newValue?.toFormat(DateFormat) || CLEAR_SYMBOL
           });
         }}
-        views={['day', 'month', 'year']}
+        openTo="year"
+        views={['day', 'year']}
       />
     </LocalizationProvider>
   );
