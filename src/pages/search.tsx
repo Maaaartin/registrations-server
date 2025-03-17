@@ -26,7 +26,7 @@ const Toolbar = ({
     cislo_tp,
     cislo_orv
   });
-  const isEmpty = Object.values(state).every((value) => !value);
+  const isEmpty = !Object.values(state).filter(Boolean).length;
   return (
     <Stack direction="row" spacing={2} padding={2}>
       <form
@@ -145,10 +145,11 @@ export default function Search({
 export const getServerSideProps: GetServerSideProps<SearchProps> = async (
   context
 ) => {
-  const { vin, cislo_tp, cislo_orv } = queryDecoder.parse(context.query);
-
+  const parsed = queryDecoder.parse(context.query);
+  const { vin, cislo_tp, cislo_orv } = parsed;
+  const values = Object.values(parsed);
   const vehicles =
-    [vin, cislo_tp].filter(Boolean).length === 0
+    values.filter(Boolean).length === 0
       ? []
       : await searchVehicles(vin, cislo_tp, cislo_orv);
 
