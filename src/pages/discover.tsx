@@ -77,16 +77,13 @@ const DateSearch = ({
         disableFuture
         disabled={loading}
         label="Datum první registrace od"
-        value={
-          datum_prvni_registrace_od
-            ? DateTime.fromFormat(datum_prvni_registrace_od, DateFormat)
-            : null
-        }
+        value={fromDate}
         slotProps={{
           actionBar: {
             actions: ['clear']
           }
         }}
+        format={DateFormat}
         maxDate={toDate || undefined}
         onChange={(newValue) => {
           onSubmit({
@@ -107,6 +104,7 @@ const DateSearch = ({
             actions: ['clear']
           }
         }}
+        format={DateFormat}
         value={toDate}
         onChange={(newValue) => {
           onSubmit({
@@ -121,36 +119,16 @@ const DateSearch = ({
   );
 };
 
-const Toolbar = ({
-  tovarni_znacka,
-  typ,
-  datum_prvni_registrace_od,
-  datum_prvni_registrace_do,
-  loading,
-  onSubmit
-}: ToolbarProps) => {
+const Toolbar = (props: ToolbarProps) => {
   const onSubmit_ = (params: Partial<SearchParams>) =>
-    onSubmit({
+    props.onSubmit({
       ...params,
-      page:
-        params.tovarni_znacka !== tovarni_znacka || params.typ !== typ
-          ? 0
-          : params.page
+      page: 0
     });
   return (
     <Stack direction="row" spacing={2} padding={2}>
-      <AutocompleteSearchForm
-        tovarni_znacka={tovarni_znacka}
-        typ={typ}
-        loading={loading}
-        onSubmit={onSubmit_}
-      />
-      <DateSearch
-        loading={loading}
-        onSubmit={onSubmit_}
-        datum_prvni_registrace_od={datum_prvni_registrace_od}
-        datum_prvni_registrace_do={datum_prvni_registrace_do}
-      />
+      <AutocompleteSearchForm {...props} onSubmit={onSubmit_} />
+      <DateSearch {...props} onSubmit={onSubmit_} />
     </Stack>
   );
 };
