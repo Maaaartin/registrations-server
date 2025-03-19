@@ -6,7 +6,7 @@ import { GridSlotProps } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
 import { DateFormat, DiscoverProps, pageSize } from '../util/discover';
 import VehicleDataGrid from '../components/VehicleDataGrid';
-import useDataGridSubmit, { CLEAR_SYMBOL } from '../hooks/useDataGridSubmit';
+import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { discoverVehicles, queryDecoder } from '../util/discover/server';
@@ -43,7 +43,9 @@ const AutocompleteSearchForm = ({
       <BrandAutocomplete
         value={tovarni_znacka}
         onSelect={(value) => {
-          onSubmit({ tovarni_znacka: value });
+          if (value !== tovarni_znacka) {
+            onSubmit({ tovarni_znacka: value, typ: '' });
+          }
         }}
         disabled={loading}
       />
@@ -51,7 +53,9 @@ const AutocompleteSearchForm = ({
         tovarni_znacka={tovarni_znacka}
         typ={typ}
         onSelect={(value) => {
-          onSubmit({ typ: value });
+          if (value !== typ) {
+            onSubmit({ typ: value });
+          }
         }}
         disabled={loading || !tovarni_znacka}
       />
@@ -87,8 +91,7 @@ const DateSearch = ({
         maxDate={toDate || undefined}
         onChange={(newValue) => {
           onSubmit({
-            datum_prvni_registrace_od:
-              newValue?.toFormat(DateFormat) || CLEAR_SYMBOL
+            datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || ''
           });
         }}
         openTo="year"
@@ -108,8 +111,7 @@ const DateSearch = ({
         value={toDate}
         onChange={(newValue) => {
           onSubmit({
-            datum_prvni_registrace_do:
-              newValue?.toFormat(DateFormat) || CLEAR_SYMBOL
+            datum_prvni_registrace_do: newValue?.toFormat(DateFormat) || ''
           });
         }}
         openTo="year"
