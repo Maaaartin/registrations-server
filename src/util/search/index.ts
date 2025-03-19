@@ -33,3 +33,5 @@ export const formReducer = (
       return state;
   }
 };
+
+export const limit = 100;

@@ -1,9 +1,9 @@
-import { Button, Stack, TextField } from '@mui/material';
+import { Button, Stack, TextField, Typography } from '@mui/material';
 import { useEffect, useReducer } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { GridSlotProps } from '@mui/x-data-grid';
-import { SearchProps, SearchState, formReducer } from '../util/search';
+import { SearchProps, SearchState, formReducer, limit } from '../util/search';
 import { searchVehicles, queryDecoder } from '../util/search/server';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
@@ -12,14 +12,15 @@ type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchState>>;
 
 type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<SearchProps, 'vehicles'> &
-  SubmitProps;
+  SubmitProps & { resultCount: number };
 
 const Toolbar = ({
   vin,
   cislo_tp,
   cislo_orv,
   loading,
-  onSubmit
+  onSubmit,
+  resultCount
 }: ToolbarProps) => {
   const [state, dispatch] = useReducer(formReducer, {
     vin,
@@ -28,7 +29,7 @@ const Toolbar = ({
   });
   const isEmpty = !Object.values(state).filter(Boolean).length;
   return (
-    <Stack direction="row" spacing={2} padding={2}>
+    <>
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -91,7 +92,12 @@ const Toolbar = ({
           </Button>
         </Stack>
       </form>
-    </Stack>
+      {resultCount >= limit && (
+        <Typography variant="caption">
+          Bylo nalezeno více než {limit} výsledků. Zkuste zpřesnnit hledání.
+        </Typography>
+      )}
+    </>
   );
 };
 
@@ -134,7 +140,8 @@ export default function Search({
             onSubmit,
             loading,
             vin,
-            cislo_tp
+            cislo_tp,
+            resultCount: vehicles.length
           } as ToolbarProps
         }}
       />

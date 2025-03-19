@@ -1,6 +1,7 @@
 import { unstable_cache } from 'next/cache';
 import zod from 'zod';
 import prisma from '../../../prisma';
+import { limit } from '.';
 
 export const searchVehicles = unstable_cache(
   (vin: string, cislo_tp: string, cislo_orv: string) =>
@@ -21,7 +22,8 @@ export const searchVehicles = unstable_cache(
         vin: true,
         cislo_tp: true,
         cislo_orv: true
-      }
+      },
+      take: limit
     }),
 
   ['search'],
