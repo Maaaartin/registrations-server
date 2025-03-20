@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
-import useRequest from '../hooks/useRequest';
-import { useCacheContext } from '../context/cache';
-import { DValueCountPairs } from '../util/decoders';
+import useFetch from '../hooks/useFetch';
+import { registrationsPerYearAction } from '../actions';
 
 function AreaGradient({ color, id }: { color: string; id: string }) {
   return (
@@ -22,27 +21,14 @@ function AreaGradient({ color, id }: { color: string; id: string }) {
 
 export default function RegistrationsChart() {
   const theme = useTheme();
-  const [registrationsPerYear, setRegistrationsPerYear] =
-    useCacheContext().registrationsPerYear;
-  const request = useRequest({
-    url: '/api/registrations-per-year',
-    decoder: DValueCountPairs
-  });
-  useEffect(() => {
-    if (!registrationsPerYear.length && !request.value) {
-      request.run();
-    } else if (request.value) {
-      setRegistrationsPerYear(request.value);
-    }
-  }, [registrationsPerYear, request, setRegistrationsPerYear]);
-
+  const { data, isLoading } = useFetch(registrationsPerYearAction);
   const colorPalette = [
     theme.palette.primary.light,
     theme.palette.primary.main,
     theme.palette.primary.dark
   ];
-  const years = registrationsPerYear.map(({ value }) => value);
-  const values = registrationsPerYear.map(({ count }) => count);
+  const years = data?.map(({ value }) => value) || [];
+  const values = data?.map(({ count }) => count) || [];
   const sum = values.reduce((sum, curr) => (sum += curr), 0);
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
@@ -87,7 +73,7 @@ export default function RegistrationsChart() {
           height={250}
           margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
           grid={{ horizontal: true }}
-          loading={request.loading}
+          loading={isLoading}
           sx={{
             '& .MuiAreaElement-series-organic': {
               fill: "url('#organic')"

@@ -3,28 +3,21 @@ import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 // import Copyright from '../components/Copyright';
 import StatCard from '../components/StatCard';
-import useRequest from '../hooks/useRequest';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import RegistrationsChart from '../components/RegistrationsChart';
-import { useCacheContext } from '../context/cache';
-import { DNumber, DValueCountPairs } from '../util/decoders';
 import { ValueCountPair } from '../util/registrations';
+import useFetch from '../hooks/useFetch';
+import {
+  countAction,
+  topBrandsAction,
+  topCategoriesAction,
+  topColorsAction,
+  topKindsAction
+} from '../actions';
 
 const CountCard = () => {
-  const [count, setCount] = useCacheContext().count;
-  const request = useRequest({
-    url: '/api/count',
-    decoder: DNumber
-  });
-  useEffect(() => {
-    if (!count && !request.value && !request.error) {
-      request.run();
-    } else if (request.value) {
-      setCount(request.value);
-    }
-  }, [count, request, setCount]);
-  const renderValue = request.loading ? <CircularProgress /> : count;
-
+  const { data, isLoading } = useFetch(countAction);
+  const renderValue = isLoading ? <CircularProgress /> : data;
   return <StatCard title="Celkový počet záznamů" value={renderValue} />;
 };
 
@@ -50,19 +43,8 @@ function CardList<T>({
 }
 
 const BrandsCard = () => {
-  const [topBrands, setTopBrands] = useCacheContext().topBrands;
-  const request = useRequest({
-    url: '/api/top-brands',
-    decoder: DValueCountPairs
-  });
-  useEffect(() => {
-    if (!topBrands.length && !request.value && !request.error) {
-      request.run();
-    } else if (request.value) {
-      setTopBrands(request.value);
-    }
-  }, [topBrands, request, setTopBrands]);
-  const renderValue = request.loading ? <CircularProgress /> : topBrands;
+  const { data, isLoading } = useFetch(topBrandsAction);
+  const renderValue = isLoading ? <CircularProgress /> : data;
   const render = (value: ValueCountPair) => ({
     primary: value.value,
     secondary: value.count
@@ -82,19 +64,8 @@ const BrandsCard = () => {
 };
 
 const CategoriesCard = () => {
-  const [topCategories, setTopCategories] = useCacheContext().topCategories;
-  const request = useRequest({
-    url: '/api/top-categories',
-    decoder: DValueCountPairs
-  });
-  useEffect(() => {
-    if (!topCategories.length && !request.value && !request.error) {
-      request.run();
-    } else if (request.value) {
-      setTopCategories(request.value);
-    }
-  }, [topCategories, request, setTopCategories]);
-  const renderValue = request.loading ? <CircularProgress /> : topCategories;
+  const { data, isLoading } = useFetch(topCategoriesAction);
+  const renderValue = isLoading ? <CircularProgress /> : data;
   const render = (value: ValueCountPair) => ({
     primary: value.value,
     secondary: value.count
@@ -114,19 +85,8 @@ const CategoriesCard = () => {
 };
 
 const KindsCard = () => {
-  const [topKinds, setTopKinds] = useCacheContext().topKinds;
-  const request = useRequest({
-    url: '/api/top-kinds',
-    decoder: DValueCountPairs
-  });
-  useEffect(() => {
-    if (!topKinds.length && !request.value && !request.error) {
-      request.run();
-    } else if (request.value) {
-      setTopKinds(request.value);
-    }
-  }, [topKinds, request, setTopKinds]);
-  const renderValue = request.loading ? <CircularProgress /> : topKinds;
+  const { data, isLoading } = useFetch(topKindsAction);
+  const renderValue = isLoading ? <CircularProgress /> : data;
   const render = (value: ValueCountPair) => ({
     primary: value.value,
     secondary: value.count
@@ -146,23 +106,12 @@ const KindsCard = () => {
 };
 
 const ColorsCard = () => {
-  const [topColors, setTopColors] = useCacheContext().topColors;
-  const request = useRequest({
-    url: '/api/top-colors',
-    decoder: DValueCountPairs
-  });
-  useEffect(() => {
-    if (!topColors.length && !request.value && !request.error) {
-      request.run();
-    } else if (request.value) {
-      setTopColors(request.value);
-    }
-  }, [topColors, request, setTopColors]);
+  const { data, isLoading } = useFetch(topColorsAction);
   const render = (value: { value: string; count: number }) => ({
     primary: value.value,
     secondary: value.count
   });
-  const renderValue = request.loading ? <CircularProgress /> : topColors;
+  const renderValue = isLoading ? <CircularProgress /> : data;
   return (
     <StatCard
       title="Top barvy"
