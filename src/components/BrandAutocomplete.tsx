@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import useRequest from '../hooks/useRequest';
-import axios from 'axios';
-import { useCacheContext } from '../context/cache';
 import useDebounce from '../hooks/useDebounce';
-import { DStringArray, DValueCountPairs } from '../util/decoders';
 import AutocompleteBase from './AutocompleteBase';
+import useFetch from '../hooks/useFetch';
+import { searchBrandsAction, topBrandsAction } from '../actions';
 
 export default function BrandAutocomplete({
   value,
@@ -15,54 +13,31 @@ export default function BrandAutocomplete({
   onSelect: (brand: string) => void;
   disabled?: boolean;
 }) {
-  const cache = useCacheContext();
-  const [topBrands, setTopBrands] = cache.topBrands;
-  const [brandSearch, setBrandSearch] = cache.brandSearch;
-  const [brands, setBrands] = useState<string[]>(
-    topBrands.map((val) => val.value)
-  );
   const [searchBrand, setSearchBrand] = useState('');
   const searchBrandDebounced = useDebounce(searchBrand, 300);
-
-  const request = useRequest({
-    url: '/api/search-brands',
-    decoder: DStringArray
-  });
-  useEffect(() => {
-    if (!topBrands.length) {
-      axios.get('/api/top-brands').then((res) => {
-        const result = DValueCountPairs.parse(res.data);
-        setTopBrands(result);
-        setBrands(result.map((val) => val.value));
-      });
-    }
-  }, [topBrands]);
+  const topBrandsFetch = useFetch(topBrandsAction);
+  const brandSearchFetch = useFetch(
+    searchBrandsAction,
+    new URLSearchParams({
+      tovarni_znacka: searchBrandDebounced
+    })
+  );
+  const [brands, setBrands] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!searchBrandDebounced) {
-      setBrands(topBrands.map(({ value }) => value));
-    } else if (brandSearch[searchBrandDebounced]) {
-      setBrands(brandSearch[searchBrandDebounced]);
-    } else {
-      const query = new URLSearchParams({
-        tovarni_znacka: searchBrandDebounced
-      });
-      request.run({ query });
+    if (!searchBrandDebounced && topBrandsFetch.data) {
+      setBrands(topBrandsFetch.data.map(({ value }) => value));
+    } else if (brandSearchFetch.data) {
+      setBrands(brandSearchFetch.data);
     }
-  }, [searchBrandDebounced]);
-  useEffect(() => {
-    if (request.value && searchBrandDebounced) {
-      setBrands(request.value);
-      setBrandSearch({ ...brandSearch, [searchBrandDebounced]: request.value });
-    }
-  }, [request.value, searchBrandDebounced]);
+  }, [searchBrandDebounced, topBrandsFetch.data, brandSearchFetch.data]);
 
   return (
     <AutocompleteBase
       label="Značka"
       disabled={disabled}
       options={brands}
-      loading={request.loading}
+      loading={topBrandsFetch.isLoading || brandSearchFetch.isLoading}
       inputValue={searchBrand}
       onInputChange={(event, newInputValue) => {
         setSearchBrand(newInputValue);

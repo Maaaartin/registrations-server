@@ -15,7 +15,6 @@ import {
   datePickersCustomizations,
   treeViewCustomizations
 } from '../theme/customizations';
-import { CacheContextProvider } from '../context/cache';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -59,16 +58,14 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
               }}
             >
               <Header />
-              <CacheContextProvider>
-                <Box
-                  sx={{
-                    width: '100%',
-                    maxWidth: { sm: '100%', md: '1700px' }
-                  }}
-                >
-                  <Component {...pageProps} withDarkMode={false} />
-                </Box>
-              </CacheContextProvider>
+              <Box
+                sx={{
+                  width: '100%',
+                  maxWidth: { sm: '100%', md: '1700px' }
+                }}
+              >
+                <Component {...pageProps} withDarkMode={false} />
+              </Box>
             </Stack>
           </Box>
         </Box>{' '}
