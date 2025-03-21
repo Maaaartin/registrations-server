@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import AutocompleteBase from './AutocompleteBase';
 import useFetch from '../hooks/useFetch';
-import { searchBrandsAction, topBrandsAction } from '../actions';
+import { searchBrandsAction } from '../actions';
 
 export default function BrandAutocomplete({
   value,
@@ -15,29 +15,17 @@ export default function BrandAutocomplete({
 }) {
   const [searchBrand, setSearchBrand] = useState('');
   const searchBrandDebounced = useDebounce(searchBrand, 300);
-  const topBrandsFetch = useFetch(topBrandsAction);
-  const brandSearchFetch = useFetch(
-    searchBrandsAction,
-    new URLSearchParams({
-      tovarni_znacka: searchBrandDebounced
-    })
+  const { data, isLoading } = useFetch(
+    searchBrandsAction(searchBrandDebounced)
   );
-  const [brands, setBrands] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (!searchBrandDebounced && topBrandsFetch.data) {
-      setBrands(topBrandsFetch.data.map(({ value }) => value));
-    } else if (brandSearchFetch.data) {
-      setBrands(brandSearchFetch.data);
-    }
-  }, [searchBrandDebounced, topBrandsFetch.data, brandSearchFetch.data]);
+  const brands = data ? data.map(({ value }) => value) : [];
 
   return (
     <AutocompleteBase
       label="Značka"
       disabled={disabled}
       options={brands}
-      loading={topBrandsFetch.isLoading || brandSearchFetch.isLoading}
+      loading={isLoading}
       inputValue={searchBrand}
       onInputChange={(event, newInputValue) => {
         setSearchBrand(newInputValue);

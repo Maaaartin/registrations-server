@@ -118,7 +118,7 @@ export default function Search({
     if (loading && vehicles.length === 1) {
       router.push({ pathname: '/vehicle', query: { id: vehicles[0].id } });
     }
-  }, [loading, vehicles]);
+  }, [loading, vehicles, router]);
 
   return (
     <>

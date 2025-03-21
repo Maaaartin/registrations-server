@@ -32,17 +32,33 @@ export const registrationsPerYearAction: FetchAction<ValueCountPairs> = {
   decoder: DValueCountPairs
 };
 
-export const searchBrandsAction: FetchAction<string[]> = {
-  url: '/api/search-brands',
-  decoder: DStringArray
+function buildQueryUrl(url: string, queryObj: Record<string, string>) {
+  return `${url}?${new URLSearchParams(queryObj)}`;
+}
+
+export const searchBrandsAction = (
+  tovarni_znacka: string
+): FetchAction<ValueCountPairs> => {
+  if (!tovarni_znacka) return topBrandsAction;
+  return {
+    url: buildQueryUrl('/api/search-brands', { tovarni_znacka }),
+    decoder: DValueCountPairs
+  };
 };
 
-export const topModelsAction: FetchAction<string[]> = {
+const topModelsAction: FetchAction<string[]> = {
   url: '/api/top-models',
   decoder: DStringArray
 };
 
-export const searchModelsAction: FetchAction<string[]> = {
-  url: '/api/search-models',
-  decoder: DStringArray
+export const searchModelsAction = (
+  tovarni_znacka: string,
+  typ: string
+): FetchAction<string[]> => {
+  if (!tovarni_znacka) return { url: null };
+  if (!typ) return topModelsAction;
+  return {
+    url: buildQueryUrl('/api/search-models', { tovarni_znacka, typ }),
+    decoder: DStringArray
+  };
 };

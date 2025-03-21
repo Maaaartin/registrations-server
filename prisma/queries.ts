@@ -51,7 +51,10 @@ export async function topCategories_() {
 
 export async function searchBrands_(brand: string) {
   const result = await prisma.$queryRawTyped(queries.searchBrands(brand, 10));
-  return result.map((value) => String(value.tovarni_znacka));
+  return result.map((value) => ({
+    value: String(value.tovarni_znacka),
+    count: Number(value.count)
+  }));
 }
 
 export async function searchModels_(brand: string, model: string) {
