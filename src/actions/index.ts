@@ -62,3 +62,8 @@ export const searchModelsAction = (
     decoder: DStringArray
   };
 };
+
+export const topFuelsAction: FetchAction<ValueCountPairs> = {
+  url: '/api/top-fuels',
+  decoder: DValueCountPairs
+};

@@ -12,6 +12,8 @@ export * from "./topCategories"
 
 export * from "./topColors"
 
+export * from "./topFuels"
+
 export * from "./topKinds"
 
 export * from "./topTypesForBrand"

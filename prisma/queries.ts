@@ -70,3 +70,11 @@ export async function topTypesForBrand_(brand: string) {
   );
   return result.map((value) => String(value.typ));
 }
+
+export async function topFuels_() {
+  const data = await prisma.$queryRawTyped(queries.topFuels(10));
+  return data.map((value) => ({
+    value: value.palivo as string,
+    count: Number(value.count)
+  }));
+}

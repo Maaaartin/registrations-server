@@ -12,6 +12,7 @@ import {
   topBrandsAction,
   topCategoriesAction,
   topColorsAction,
+  topFuelsAction,
   topKindsAction
 } from '../actions';
 
@@ -126,6 +127,27 @@ const ColorsCard = () => {
   );
 };
 
+const FuelsCard = () => {
+  const { data, isLoading } = useFetch(topFuelsAction);
+  const render = (value: { value: string; count: number }) => ({
+    primary: value.value,
+    secondary: value.count
+  });
+  const renderValue = isLoading ? <CircularProgress /> : data;
+  return (
+    <StatCard
+      title="Top paliva"
+      value={
+        Array.isArray(renderValue) ? (
+          <CardList data={renderValue} render={render}></CardList>
+        ) : (
+          renderValue
+        )
+      }
+    />
+  );
+};
+
 export default function Stats() {
   return (
     <>
@@ -152,6 +174,9 @@ export default function Stats() {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <CategoriesCard></CategoriesCard>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+          <FuelsCard></FuelsCard>
         </Grid>
       </Grid>
       <Grid size={{ xs: 12, md: 6 }}>
