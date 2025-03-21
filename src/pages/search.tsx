@@ -1,7 +1,6 @@
+import { useReducer } from 'react';
 import { Button, Stack, TextField, Typography } from '@mui/material';
-import { useEffect, useReducer } from 'react';
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
 import { GridSlotProps } from '@mui/x-data-grid';
 import { SearchProps, SearchState, formReducer, limit } from '../util/search';
 import { searchVehicles, queryDecoder } from '../util/search/server';
@@ -107,18 +106,11 @@ export default function Search({
   cislo_tp,
   cislo_orv
 }: SearchProps) {
-  const router = useRouter();
   const { loading, onSubmit } = useDataGridSubmit<SearchState>({
     vin,
     cislo_tp,
     cislo_orv
   });
-
-  useEffect(() => {
-    if (loading && vehicles.length === 1) {
-      router.push({ pathname: '/vehicle', query: { id: vehicles[0].id } });
-    }
-  }, [loading, vehicles, router]);
 
   return (
     <>
@@ -160,12 +152,16 @@ export const getServerSideProps: GetServerSideProps<SearchProps> = async (
       ? []
       : await searchVehicles(vin, cislo_tp, cislo_orv);
 
+  const props = { vehicles, vin, cislo_tp, cislo_orv };
+  if (vehicles.length === 1) {
+    return {
+      redirect: {
+        destination: `/vehicle?id=${vehicles[0].id}`
+      },
+      props
+    };
+  }
   return {
-    props: {
-      vehicles,
-      vin,
-      cislo_tp,
-      cislo_orv
-    }
+    props
   };
 };
