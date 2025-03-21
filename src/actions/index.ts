@@ -46,17 +46,17 @@ export const searchBrandsAction = (
   };
 };
 
-const topModelsAction: FetchAction<string[]> = {
-  url: '/api/top-models',
+const topModelsAction = (tovarni_znacka: string): FetchAction<string[]> => ({
+  url: buildQueryUrl('/api/top-models', { tovarni_znacka }),
   decoder: DStringArray
-};
+});
 
 export const searchModelsAction = (
   tovarni_znacka: string,
   typ: string
 ): FetchAction<string[]> => {
   if (!tovarni_znacka) return { url: null };
-  if (!typ) return topModelsAction;
+  if (!typ) return topModelsAction(tovarni_znacka);
   return {
     url: buildQueryUrl('/api/search-models', { tovarni_znacka, typ }),
     decoder: DStringArray
