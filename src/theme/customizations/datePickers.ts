@@ -23,24 +23,17 @@ export const datePickersCustomizations: PickerComponents<Theme> = {
         [`& .${menuItemClasses.root}`]: {
           borderRadius: 6,
           margin: '0 6px'
-        },
-        ...theme.applyStyles('dark', {
-          background: gray[900],
-          boxShadow:
-            'hsla(220, 30%, 5%, 0.7) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.8) 0px 8px 16px -5px'
-        })
+        }
       })
     }
   },
   MuiPickersArrowSwitcher: {
     styleOverrides: {
-      spacer: { width: 16 },
+      spacer: { width: 30 },
       button: ({ theme }) => ({
         backgroundColor: 'transparent',
         color: theme.palette.grey[500],
-        ...theme.applyStyles('dark', {
-          color: theme.palette.grey[400]
-        })
+        padding: 0
       })
     }
   },
@@ -48,7 +41,7 @@ export const datePickersCustomizations: PickerComponents<Theme> = {
     styleOverrides: {
       switchViewButton: {
         padding: 0,
-        border: 'none'
+        border: 'black'
       }
     }
   },
@@ -71,26 +64,7 @@ export const datePickersCustomizations: PickerComponents<Theme> = {
           outlineOffset: '2px',
           backgroundColor: 'transparent',
           [`&.${pickersMonthClasses.selected}`]: { backgroundColor: gray[700] }
-        },
-        ...theme.applyStyles('dark', {
-          color: theme.palette.grey[300],
-          '&:hover': {
-            backgroundColor: theme.palette.action.hover
-          },
-          [`&.${pickersMonthClasses.selected}`]: {
-            color: theme.palette.common.black,
-            fontWeight: theme.typography.fontWeightMedium,
-            backgroundColor: gray[300]
-          },
-          '&:focus': {
-            outline: `3px solid ${alpha(brand[500], 0.5)}`,
-            outlineOffset: '2px',
-            backgroundColor: 'transparent',
-            [`&.${pickersMonthClasses.selected}`]: {
-              backgroundColor: gray[300]
-            }
-          }
-        })
+        }
       })
     }
   },
@@ -114,26 +88,7 @@ export const datePickersCustomizations: PickerComponents<Theme> = {
           outlineOffset: '2px',
           backgroundColor: 'transparent',
           [`&.${pickersYearClasses.selected}`]: { backgroundColor: gray[700] }
-        },
-        ...theme.applyStyles('dark', {
-          color: theme.palette.grey[300],
-          '&:hover': {
-            backgroundColor: theme.palette.action.hover
-          },
-          [`&.${pickersYearClasses.selected}`]: {
-            color: theme.palette.common.black,
-            fontWeight: theme.typography.fontWeightMedium,
-            backgroundColor: gray[300]
-          },
-          '&:focus': {
-            outline: `3px solid ${alpha(brand[500], 0.5)}`,
-            outlineOffset: '2px',
-            backgroundColor: 'transparent',
-            [`&.${pickersYearClasses.selected}`]: {
-              backgroundColor: gray[300]
-            }
-          }
-        })
+        }
       })
     }
   },
@@ -156,24 +111,7 @@ export const datePickersCustomizations: PickerComponents<Theme> = {
           outlineOffset: '2px',
           backgroundColor: 'transparent',
           [`&.${pickersDayClasses.selected}`]: { backgroundColor: gray[700] }
-        },
-        ...theme.applyStyles('dark', {
-          color: theme.palette.grey[300],
-          '&:hover': {
-            backgroundColor: theme.palette.action.hover
-          },
-          [`&.${pickersDayClasses.selected}`]: {
-            color: theme.palette.common.black,
-            fontWeight: theme.typography.fontWeightMedium,
-            backgroundColor: gray[300]
-          },
-          '&:focus': {
-            outline: `3px solid ${alpha(brand[500], 0.5)}`,
-            outlineOffset: '2px',
-            backgroundColor: 'transparent',
-            [`&.${pickersDayClasses.selected}`]: { backgroundColor: gray[300] }
-          }
-        })
+        }
       })
     }
   }
