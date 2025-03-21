@@ -3,7 +3,7 @@ import { SerializableRegistration } from '../registrations';
 import registrationColumnMap from '../../registrationColumnMap.json';
 import type { GridRenderCellParams } from '@mui/x-data-grid';
 
-export type Props = { vehicle: SerializableRegistration | null };
+export type Props = { vehicle: SerializableRegistration };
 
 export function mapVehicle(vehicle: SerializableRegistration): {
   id: string;
