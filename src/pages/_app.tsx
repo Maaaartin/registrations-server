@@ -28,10 +28,10 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
-        <title>Technická data vozidel</title>
+        <title>Info o vozidlech</title>
         <meta
           lang="cs"
-          name="description"
+          name="Info o vozidlech"
           content="Portál pro vyhledávání v registru vozidel Ministerstva dopravy"
         />
       </Head>
@@ -64,11 +64,11 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
                   maxWidth: { sm: '100%', md: '1700px' }
                 }}
               >
-                <Component {...pageProps} withDarkMode={false} />
+                <Component {...pageProps} />
               </Box>
             </Stack>
           </Box>
-        </Box>{' '}
+        </Box>
       </AppTheme>
     </>
   );
