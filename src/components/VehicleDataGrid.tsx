@@ -2,6 +2,7 @@ import React from 'react';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import { Vehicles } from '../util/search';
+import { gridLocaleText } from '../util/localization';
 
 type Props = Omit<DataGridProps, 'columns'> & {
   loading: boolean;
@@ -12,6 +13,7 @@ export default function VehicleDataGrid({ loading, vehicles, ...rest }: Props) {
   const router = useRouter();
   return (
     <DataGrid
+      localeText={gridLocaleText}
       rowSelection={false}
       onRowClick={(params) => {
         router.push({ pathname: '/vehicle', query: { id: params.row.id } });

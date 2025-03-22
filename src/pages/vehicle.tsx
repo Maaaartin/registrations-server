@@ -3,6 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Tooltip } from '@mui/material';
 import { CellParams, Props, mapVehicle } from '../util/vehicle';
 import { getVehicle, queryDecoder } from '../util/vehicle/server';
+import { gridLocaleText } from '../util/localization';
 
 function AttributeCell({ row: { id, description } }: CellParams) {
   if (description) {
@@ -34,6 +35,7 @@ export default function Page({ vehicle }: Props) {
         {vehicle.tovarni_znacka}, {vehicle.typ} ({vehicle.vin})
       </h1>
       <DataGrid
+        localeText={gridLocaleText}
         rowSelection={false}
         rows={mapped}
         columns={[

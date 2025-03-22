@@ -1,0 +1,23 @@
+import type { GridLocaleText } from '@mui/x-data-grid';
+import type { PickersInputLocaleText } from '@mui/x-date-pickers';
+import type { DateTime } from 'luxon';
+
+export const gridLocaleText: Partial<GridLocaleText> = {
+  columnMenuHideColumn: 'Skrýt sloupec',
+  columnMenuManageColumns: 'Přizpůsobit sloupce',
+  MuiTablePagination: {
+    labelDisplayedRows: ({ page, from, to, count }) => {
+      if (count === -1) {
+        return `Strana ${page + 1}`;
+      }
+      return `${from} - ${to} z ${count}}`;
+    },
+    labelRowsPerPage: 'Řádků na stránku'
+  },
+  columnMenuSortAsc: 'Seřadit vzestupně',
+  columnMenuSortDesc: 'Seřadit sestupně'
+};
+
+export const datePickerLocaleText: PickersInputLocaleText<DateTime> = {
+  clearButtonLabel: 'Reset'
+};

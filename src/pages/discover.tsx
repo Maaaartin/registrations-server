@@ -10,6 +10,7 @@ import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { discoverVehicles, queryDecoder } from '../util/discover/server';
+import { datePickerLocaleText } from '../util/localization';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
@@ -79,7 +80,7 @@ const DateSearch = ({
     <LocalizationProvider
       dateAdapter={AdapterLuxon}
       adapterLocale="cs"
-      localeText={{ clearButtonLabel: 'Reset' }}
+      localeText={datePickerLocaleText}
     >
       <DatePicker
         disableFuture
