@@ -3,7 +3,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Tooltip } from '@mui/material';
 import { CellParams, Props, mapVehicle } from '../util/vehicle';
 import { getVehicle, queryDecoder } from '../util/vehicle/server';
-import { notFound } from 'next/navigation';
 
 function AttributeCell({ row: { id, description } }: CellParams) {
   if (description) {
@@ -28,12 +27,12 @@ function ValueCell({ row: { value } }: CellParams) {
 
 /* eslint-disable react-hooks/rules-of-hooks */
 export default function Page({ vehicle }: Props) {
-  if (!vehicle) notFound();
   const mapped = mapVehicle(vehicle);
-
   return (
     <>
-      <h1>VIN {vehicle.vin}</h1>
+      <h1>
+        {vehicle.tovarni_znacka}, {vehicle.typ} ({vehicle.vin})
+      </h1>
       <DataGrid
         rowSelection={false}
         rows={mapped}
