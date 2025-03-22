@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function HomePage() {
   return (
     <>
@@ -13,7 +15,9 @@ export default function HomePage() {
       <p>
         Data nejsou nijak filtrovaná, to znamená, že pokud se v údajích
         nacházejí chyby, jsou tyto chyby zobrazeny i zde. Cílem tohoto portálu
-        je pouze umožnit vyhledávání v otevřených datech.
+        je pouze umožnit vyhledávání v otevřených datech. Příklady chybných dat
+        jsou viditelná například ve <Link href="/stats">Statistikách</Link> (Top
+        listy)
       </p>
     </>
   );
