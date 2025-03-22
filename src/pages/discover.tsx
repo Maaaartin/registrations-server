@@ -76,7 +76,11 @@ const DateSearch = ({
     ? DateTime.fromFormat(datum_prvni_registrace_do, DateFormat)
     : null;
   return (
-    <LocalizationProvider dateAdapter={AdapterLuxon}>
+    <LocalizationProvider
+      dateAdapter={AdapterLuxon}
+      adapterLocale="cs"
+      localeText={{ clearButtonLabel: 'Reset' }}
+    >
       <DatePicker
         disableFuture
         disabled={loading}
