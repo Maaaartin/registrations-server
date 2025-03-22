@@ -23,17 +23,11 @@ const xThemeComponents = {
   ...treeViewCustomizations
 };
 
-// Layout component with common structure
 const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
         <title>Info o vozidlech</title>
-        <meta
-          lang="cs"
-          name="Info o vozidlech"
-          content="Portál pro vyhledávání v registru vozidel Ministerstva dopravy"
-        />
       </Head>
       <AppTheme themeComponents={xThemeComponents}>
         <CssBaseline />
