@@ -9,6 +9,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model imports {
+  id          Int       @id @default(autoincrement())
+  pcv         BigInt?
+  country     String?
+  import_date DateTime? @db.Date
+}
+
 model registrations {
   id                                                              Int       @id @default(autoincrement())
   datum_1_registrace                                              DateTime? @db.Date
@@ -127,10 +134,4 @@ model registrations {
   vyska_do                                                        BigInt?
   typ_kod                                                         String?
   rm_zaniku                                                       String?
-
-  @@index([tovarni_znacka, typ], map: "idx_znacka_typ")
-  @@index([cislo_orv])
-  @@index([cislo_tp])
-  @@index([datum_1_registrace])
-  @@index([vin])
 }

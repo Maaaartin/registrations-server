@@ -1,16 +1,14 @@
 import type { registrations } from '../../prisma/client';
 
-type ConvertDatesToString<T> = {
+export type Serializable<T> = {
   [K in keyof T]: T[K] extends Date | null
     ? { type: 'Date'; value: string } | null
     : T[K];
 };
 
-export type SerializableRegistration = ConvertDatesToString<registrations>;
+export type SerializableRegistration = Serializable<registrations>;
 
-export function serializeRegistration(
-  vehicle: registrations
-): SerializableRegistration {
+export function serialize<T, R>(vehicle: Record<string, R>): Serializable<T> {
   return Object.fromEntries(
     Object.entries(vehicle).map(([key, value]) => {
       return [
@@ -22,7 +20,7 @@ export function serializeRegistration(
             : value
       ];
     })
-  ) as SerializableRegistration;
+  ) as Serializable<T>;
 }
 
 export type ValueCountPair = { value: string; count: number };
