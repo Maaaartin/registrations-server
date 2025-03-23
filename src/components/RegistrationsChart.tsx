@@ -33,7 +33,7 @@ export default function RegistrationsChart() {
   return (
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
-        <Typography component="h2" variant="subtitle2" gutterBottom>
+        <Typography component="h3" variant="subtitle2" gutterBottom>
           Počet registrací
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>

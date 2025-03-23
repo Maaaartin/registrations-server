@@ -13,7 +13,7 @@ export default function StatCard({ title, value }: StatCardProps) {
   return (
     <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>
       <CardContent>
-        <Typography component="h2" variant="subtitle2" gutterBottom>
+        <Typography component="h3" variant="subtitle2" gutterBottom>
           {title}
         </Typography>
         <Stack
