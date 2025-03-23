@@ -1,1 +1,3 @@
-CREATE INDEX IF NOT EXISTS registrations_cislo_orv_idx ON registrations (cislo_orv);
+CREATE INDEX IF NOT EXISTS registrations_cislo_orv_idx ON registrations (cislo_orv)
+WHERE
+    cislo_orv IS NOT NULL;

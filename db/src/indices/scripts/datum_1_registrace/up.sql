@@ -1,1 +1,5 @@
-CREATE INDEX IF NOT EXISTS registrations_datum_1_registrace_idx ON registrations (datum_1_registrace);
+CREATE INDEX IF NOT EXISTS registrations_datum_1_registrace_idx ON registrations (datum_1_registrace)
+WHERE
+    datum_1_registrace IS NOT NULL;
+
+;
