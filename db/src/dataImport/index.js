@@ -21,7 +21,7 @@ async function run() {
     relaxQuotes: true,
     record_delimiter: '\r\n',
     raw: true,
-    fromLine: 1
+    fromLine: 2
   });
 
   fileStream.pipe(parser);
