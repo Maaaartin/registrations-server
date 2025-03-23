@@ -22,19 +22,21 @@ export const mainListItems = [
 export default function MenuContent() {
   const router = useRouter();
   return (
-    <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
-      <List dense>
-        {mainListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <Link href={item.route}>
-              <ListItemButton selected={item.route === router.pathname}>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-        ))}
-      </List>
-    </Stack>
+    <nav aria-label="Menu">
+      <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
+        <List dense>
+          {mainListItems.map((item, index) => (
+            <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+              <Link href={item.route}>
+                <ListItemButton selected={item.route === router.pathname}>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.text} />
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          ))}
+        </List>
+      </Stack>
+    </nav>
   );
 }
