@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import Grid from '@mui/material/Grid2';
-import Typography from '@mui/material/Typography';
 // import Copyright from '../components/Copyright';
 import StatCard from '../components/StatCard';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
@@ -151,9 +150,6 @@ const FuelsCard = () => {
 export default function Stats() {
   return (
     <>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Statistiky
-      </Typography>
       <Grid
         container
         spacing={2}

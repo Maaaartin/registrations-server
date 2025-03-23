@@ -26,7 +26,8 @@ export default function NavbarBreadcrumbs() {
       separator={<NavigateNextRoundedIcon fontSize="small" />}
     >
       <Typography
-        variant="body1"
+        variant="h2"
+        component="h2"
         sx={{ color: 'text.primary', fontWeight: 600 }}
       >
         {viewName?.text}
