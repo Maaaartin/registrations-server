@@ -1,7 +1,5 @@
 const fs = require('fs');
 const client = require('../client');
-const schema = require('../schema.json');
-const headerMap = require('../headerMap.json');
 
 const BATCH_SIZE = 500;
 exports.BATCH_SIZE = BATCH_SIZE;
@@ -25,11 +23,16 @@ const logError = async function (file, ...data) {
 };
 exports.logError = logError;
 exports.createTableFromHeaders = async () => {
+  const tableName = process.argv[3];
+  if (!['registrations', 'imports'].includes(tableName)) {
+    throw new Error(`Unknown table ${tableName}`);
+  }
+  const schema = require(`../schema-${tableName}.json`);
   await client.connect();
-  await client.query(`DROP TABLE IF EXISTS registrations;`);
+  await client.query(`DROP TABLE IF EXISTS ${tableName};`);
 
   const createTableQuery = `
-        CREATE TABLE IF NOT EXISTS registrations (
+        CREATE TABLE IF NOT EXISTS ${tableName} (
           id SERIAL PRIMARY KEY,
           ${Object.entries(schema)
             .map(([column, type]) => `"${column}" ${type}`)
@@ -39,10 +42,9 @@ exports.createTableFromHeaders = async () => {
 
   await client.query(createTableQuery);
   await client.end();
-  console.log("Table 'registrations' created successfully.");
+  console.log(`Table '${tableName}' created successfully.`);
 };
 
-const columns = Object.keys(schema);
 const currentYear = new Date().getFullYear();
 function parseDate(value) {
   const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
@@ -95,7 +97,7 @@ function parseValue(value, type) {
   }
 }
 
-exports.processRecord = function (record) {
+exports.processRecord = function (headerMap, schema, record) {
   const mappedRecord = Object.entries(headerMap).reduce(
     (acc, [key, mapping]) => {
       const delimiter =
@@ -114,6 +116,6 @@ exports.processRecord = function (record) {
     },
     {}
   );
-  const values = columns.map((c) => mappedRecord[c]);
+  const values = Object.keys(schema).map((c) => mappedRecord[c]);
   return values;
 };

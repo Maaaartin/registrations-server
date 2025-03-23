@@ -1,0 +1,1 @@
+{ "pcv": "BIGINT", "country": "TEXT", "import_date": "DATE" }

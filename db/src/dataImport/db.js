@@ -1,5 +1,5 @@
 const client = require('../client');
-const schema = require('../schema.json');
+const schema = require('../schema-registrations.json');
 const { logError, BATCH_SIZE } = require('./helpers');
 
 const columns = Object.keys(schema);
