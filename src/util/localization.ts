@@ -10,12 +10,24 @@ export const gridLocaleText: Partial<GridLocaleText> = {
       if (count === -1) {
         return `Strana ${page + 1}`;
       }
-      return `${from} - ${to} z ${count}}`;
+      return `${from} - ${to} z ${count}`;
     },
     labelRowsPerPage: 'Řádků na stránku'
   },
   columnMenuSortAsc: 'Seřadit vzestupně',
-  columnMenuSortDesc: 'Seřadit sestupně'
+  columnMenuSortDesc: 'Seřadit sestupně',
+  filterPanelColumns: 'Sloupec',
+  filterPanelInputLabel: 'Hodnota',
+  filterPanelInputPlaceholder: '',
+  filterOperatorContains: 'Obsahuje',
+  filterOperatorDoesNotContain: 'Neobsahuje',
+  filterOperatorEquals: 'Rovná se',
+  filterOperatorDoesNotEqual: 'Nerovná se',
+  filterOperatorStartsWith: 'Začíná textem',
+  filterOperatorEndsWith: 'Končí textem',
+  filterOperatorIsEmpty: 'Je prázdné',
+  filterOperatorIsNotEmpty: 'Není prázdné',
+  filterOperatorIsAnyOf: 'Je jedno z'
 };
 
 export const datePickerLocaleText: PickersInputLocaleText<DateTime> = {
