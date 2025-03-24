@@ -1,5 +1,5 @@
 import type { registrations } from '../../../prisma/client';
-import { SerializableRegistration } from '../registrations';
+import { SerializableRegistration } from '../data';
 import registrationColumnMap from '../../registrationColumnMap.json';
 import type { GridRenderCellParams } from '@mui/x-data-grid';
 

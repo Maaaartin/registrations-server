@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid2';
 import StatCard from '../components/StatCard';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import RegistrationsChart from '../components/RegistrationsChart';
-import { ValueCountPair } from '../util/registrations';
+import { ValueCountPair } from '../util/data';
 import useFetch from '../hooks/useFetch';
 import {
   countAction,

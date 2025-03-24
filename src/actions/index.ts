@@ -1,6 +1,6 @@
 import type { FetchAction } from '../hooks/useFetch';
 import { DValueCountPairs, DNumber, DStringArray } from '../util/decoders';
-import type { ValueCountPairs } from '../util/registrations';
+import type { ValueCountPairs } from '../util/data';
 
 export const topBrandsAction: FetchAction<ValueCountPairs> = {
   url: '/api/top-brands',

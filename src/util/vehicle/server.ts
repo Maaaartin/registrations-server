@@ -1,6 +1,6 @@
 import zod from 'zod';
 import prisma from '../../../prisma';
-import { serialize } from '../../util/registrations';
+import { serialize } from '../data';
 
 export const queryDecoder = zod.object({
   id: zod

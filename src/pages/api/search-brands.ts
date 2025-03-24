@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { searchBrands_ } from '../../../prisma/queries';
 import { DBrand } from '../../util/decoders';
-import { ValueCountPairs } from '../../util/registrations';
+import { ValueCountPairs } from '../../util/data';
 
 export default async function handler(
   req: NextApiRequest,
