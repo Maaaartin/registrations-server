@@ -68,10 +68,11 @@ async function run() {
 
   pipeline(passThrough, copyStream, async (err) => {
     if (err) {
+      console.error(err);
       await client.query('ROLLBACK');
+      process.exit(1);
     }
     clearInterval(interval);
-    console.log(err);
     await client.query('COMMIT');
     await client.end();
     console.log('all done');
