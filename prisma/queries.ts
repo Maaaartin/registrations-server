@@ -78,3 +78,11 @@ export async function topFuels_() {
     count: Number(value.count)
   }));
 }
+
+export async function countriesImports_() {
+  const data = await prisma.$queryRawTyped(queries.topCountriesImports());
+  return data.map((value) => ({
+    value: value.country as string,
+    count: Number(value.count)
+  }));
+}

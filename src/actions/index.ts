@@ -67,3 +67,8 @@ export const topFuelsAction: FetchAction<ValueCountPairs> = {
   url: '/api/top-fuels',
   decoder: DValueCountPairs
 };
+
+export const countriesImportsAction: FetchAction<ValueCountPairs> = {
+  url: '/api/countries-imports',
+  decoder: DValueCountPairs
+};

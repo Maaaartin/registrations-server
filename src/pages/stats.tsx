@@ -8,6 +8,7 @@ import { ValueCountPair } from '../util/data';
 import useFetch from '../hooks/useFetch';
 import {
   countAction,
+  countriesImportsAction,
   topBrandsAction,
   topCategoriesAction,
   topColorsAction,
@@ -147,6 +148,27 @@ const FuelsCard = () => {
   );
 };
 
+const CountriesImportsCard = () => {
+  const { data, isLoading } = useFetch(countriesImportsAction);
+  const render = (value: { value: string; count: number }) => ({
+    primary: value.value,
+    secondary: value.count
+  });
+  const renderValue = isLoading ? <CircularProgress /> : data?.splice(0, 10);
+  return (
+    <StatCard
+      title="Top countries"
+      value={
+        Array.isArray(renderValue) ? (
+          <CardList data={renderValue} render={render}></CardList>
+        ) : (
+          renderValue
+        )
+      }
+    />
+  );
+};
+
 export default function Stats() {
   return (
     <>
@@ -173,6 +195,9 @@ export default function Stats() {
         </Grid>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <FuelsCard></FuelsCard>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+          <CountriesImportsCard></CountriesImportsCard>
         </Grid>
       </Grid>
       <Grid size={{ xs: 12, md: 6 }}>
