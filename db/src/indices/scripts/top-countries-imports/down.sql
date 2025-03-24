@@ -1,0 +1,1 @@
+DROP MATERIALIZED VIEW IF EXISTS top_countries_imports;

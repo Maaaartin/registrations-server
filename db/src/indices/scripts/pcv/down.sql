@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS registrations_pcv_idx;
