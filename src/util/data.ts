@@ -8,7 +8,7 @@ export type Serializable<T> = {
 
 export type SerializableRegistration = Serializable<registrations>;
 
-export function serialize<T, R>(vehicle: Record<string, R>): Serializable<T> {
+export function serialize<T>(vehicle: object): Serializable<T> {
   return Object.fromEntries(
     Object.entries(vehicle).map(([key, value]) => {
       return [
