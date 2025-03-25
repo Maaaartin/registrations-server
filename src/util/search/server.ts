@@ -2,11 +2,11 @@ import { unstable_cache } from 'next/cache';
 import zod from 'zod';
 import prisma from '../../../prisma';
 import { limit } from '.';
-import { vehicleSelect } from '../data';
+import { serialize, vehicleSelect } from '../data';
 
 export const searchVehicles = unstable_cache(
-  (vin: string, cislo_tp: string, cislo_orv: string) =>
-    prisma.registrations.findMany({
+  async (vin: string, cislo_tp: string, cislo_orv: string) => {
+    const result = await prisma.registrations.findMany({
       where: {
         AND: [
           { key: 'vin', value: vin },
@@ -18,7 +18,9 @@ export const searchVehicles = unstable_cache(
       },
       select: vehicleSelect,
       take: limit
-    }),
+    });
+    return result.map(serialize<(typeof result)[0]>);
+  },
 
   ['search'],
   { revalidate: 3600, tags: ['search'] }

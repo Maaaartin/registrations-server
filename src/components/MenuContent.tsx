@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import Analytics from '@mui/icons-material/Analytics';
 import Search from '@mui/icons-material/Search';
 import Storage from '@mui/icons-material/Storage';
+import GetApp from '@mui/icons-material/GetApp';
 import Link from 'next/link';
 import { Home } from '@mui/icons-material';
 import { useRouter } from 'next/router';
@@ -16,6 +17,7 @@ export const mainListItems = [
   { text: 'Domů', icon: <Home />, route: '/' },
   { text: 'Statistiky', icon: <Analytics />, route: '/stats' },
   { text: 'Hledat', icon: <Search />, route: '/search' },
+  { text: 'Dovozy', icon: <GetApp />, route: '/imports' },
   { text: 'Prozkoumat databázi', icon: <Storage />, route: '/discover' }
 ];
 

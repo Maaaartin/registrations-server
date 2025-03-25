@@ -17,7 +17,7 @@ export function serialize<T>(vehicle: object): Serializable<T> {
           ? { type: 'Date', value: value.toISOString() }
           : typeof value === 'bigint'
             ? Number(value)
-            : value
+            : (value ?? null)
       ];
     })
   ) as Serializable<T>;

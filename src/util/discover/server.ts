@@ -3,10 +3,10 @@ import zod from 'zod';
 import prisma from '../../../prisma';
 import { pageSize } from './index';
 import { DBrandModel, DDate, DPage } from '../decoders';
-import { vehicleSelect } from '../data';
+import { serialize, vehicleSelect } from '../data';
 
 export const discoverVehicles = unstable_cache(
-  (
+  async (
     page: number,
     tovarni_znacka: string,
     type: string,
@@ -26,7 +26,7 @@ export const discoverVehicles = unstable_cache(
       .filter(({ value }) => Object.values(value).filter(Boolean).length)
       .map(({ key, value }) => ({ [key]: value }));
 
-    return prisma.registrations.findMany({
+    const result = await prisma.registrations.findMany({
       skip: page * pageSize,
       take: pageSize,
       where: {
@@ -36,6 +36,7 @@ export const discoverVehicles = unstable_cache(
       },
       select: vehicleSelect
     });
+    return result.map(serialize<(typeof result)[0]>);
   },
 
   ['discover'],

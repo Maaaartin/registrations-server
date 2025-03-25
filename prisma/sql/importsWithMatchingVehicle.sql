@@ -2,32 +2,50 @@
 -- @param {Int} $2:offset
 -- @param {String} $3:country?
 WITH
-    matched_vehicles AS (
-        SELECT
-            i.pcv,
-            r.pcv AS registration_pcv
+    matched_imports AS (
+        SELECT DISTINCT
+            i.pcv
         FROM
             imports i
             JOIN registrations r ON i.pcv = r.pcv
+        WHERE
+            (
+                i.country = $3
+                OR $3 IS NULL
+            ) -- Optional country filter
+        ORDER BY
+            i.pcv -- Ensure deterministic ordering for pagination
         LIMIT
-            10
+            $1
+        OFFSET
+            $2
     )
+    -- Query to get paginated import records with matches in registrations
 SELECT
-    *
+    'imports' AS source,
+    i.pcv,
+    i.id
 FROM
     imports i
 WHERE
-    (
-        i.country = $3
-        OR $3 IS NULL
-    )
-    AND i.pcv IN (
+    i.pcv IN (
         SELECT
             pcv
         FROM
-            matched_vehicles
+            matched_imports
     )
-LIMIT
-    $1
-OFFSET
-    $2;
+UNION ALL
+-- Query to get corresponding registration records
+SELECT
+    'registrations' AS source,
+    r.pcv,
+    r.id
+FROM
+    registrations r
+WHERE
+    r.pcv IN (
+        SELECT
+            pcv
+        FROM
+            matched_imports
+    );

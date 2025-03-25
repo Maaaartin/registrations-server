@@ -14,22 +14,32 @@ export const queryDecoder = zod
 
 export const searchImports = unstable_cache(
   async (page: number, importCountry: string) => {
-    const imports = await prisma.$queryRawTyped(
+    const result = await prisma.$queryRawTyped(
       importsWithMatchingVehicle(
         pageSize,
         page * pageSize,
         importCountry || null
       )
     );
-    const vehicles = await prisma.registrations.findMany({
-      select: vehicleSelect,
-      where: {
-        pcv: { in: imports.map((i) => i.pcv) as bigint[] }
-      },
-      take: imports.length
-    });
+
+    const importsIds = result
+      .filter((row) => row.source === 'imports')
+      .map((row) => row.id);
+    const registrationsIds = result
+      .filter((row) => row.source === 'registrations')
+      .map((row) => row.id);
+    const [vehicles, imports] = await Promise.all([
+      prisma.registrations.findMany({
+        select: vehicleSelect,
+        where: {
+          id: { in: registrationsIds as number[] }
+        }
+      }),
+      prisma.imports.findMany({ where: { id: { in: importsIds as number[] } } })
+    ]);
     const vehiclesWithImports = vehicles.map((vehicle) => {
       const matchingImport = imports.find((i) => i.pcv === vehicle.pcv);
+
       return {
         ...vehicle,
         import_country: matchingImport?.country,
@@ -38,9 +48,8 @@ export const searchImports = unstable_cache(
     });
     return vehiclesWithImports.map(serialize<(typeof vehiclesWithImports)[0]>);
   },
-
-  ['import'],
-  { revalidate: 3600, tags: ['import'] }
+  ['imports'],
+  { revalidate: 3600, tags: ['imports'] }
 );
 
 export type VehiclesWithImportData = Awaited<ReturnType<typeof searchImports>>;

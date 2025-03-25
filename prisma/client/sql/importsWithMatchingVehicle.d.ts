@@ -10,9 +10,8 @@ export const importsWithMatchingVehicle: (limit: number, offset: number, country
 export namespace importsWithMatchingVehicle {
   export type Parameters = [limit: number, offset: number, country: string | null]
   export type Result = {
-    id: number
+    source: string | null
     pcv: bigint | null
-    country: string | null
-    import_date: Date | null
+    id: number | null
   }
 }
