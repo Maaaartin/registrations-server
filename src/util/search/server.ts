@@ -2,6 +2,7 @@ import { unstable_cache } from 'next/cache';
 import zod from 'zod';
 import prisma from '../../../prisma';
 import { limit } from '.';
+import { vehicleSelect } from '../data';
 
 export const searchVehicles = unstable_cache(
   (vin: string, cislo_tp: string, cislo_orv: string) =>
@@ -15,14 +16,7 @@ export const searchVehicles = unstable_cache(
           .filter(({ value }) => value)
           .map(({ key, value }) => ({ [key]: { equals: value } }))
       },
-      select: {
-        id: true,
-        tovarni_znacka: true,
-        typ: true,
-        vin: true,
-        cislo_tp: true,
-        cislo_orv: true
-      },
+      select: vehicleSelect,
       take: limit
     }),
 

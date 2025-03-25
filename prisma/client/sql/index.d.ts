@@ -1,5 +1,7 @@
 export * from "./count"
 
+export * from "./importsWithMatchingVehicle"
+
 export * from "./registrationCountsByYear"
 
 export * from "./searchBrands"

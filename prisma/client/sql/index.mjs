@@ -1,4 +1,5 @@
 export * from "./count.mjs"
+export * from "./importsWithMatchingVehicle.mjs"
 export * from "./registrationCountsByYear.mjs"
 export * from "./searchBrands.mjs"
 export * from "./searchTypesForBrand.mjs"

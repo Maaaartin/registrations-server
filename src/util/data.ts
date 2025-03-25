@@ -25,3 +25,13 @@ export function serialize<T>(vehicle: object): Serializable<T> {
 
 export type ValueCountPair = { value: string; count: number };
 export type ValueCountPairs = ValueCountPair[];
+
+export const vehicleSelect = {
+  id: true,
+  tovarni_znacka: true,
+  typ: true,
+  vin: true,
+  cislo_tp: true,
+  cislo_orv: true,
+  pcv: true
+} as const;

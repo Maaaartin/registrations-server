@@ -174,7 +174,6 @@ export default function Discover({
       <VehicleDataGrid
         paginationMode="server"
         filterMode="server"
-        vehicles={vehicles}
         loading={loading}
         rows={vehicles}
         initialState={{

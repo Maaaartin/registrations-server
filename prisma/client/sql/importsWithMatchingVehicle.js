@@ -1,0 +1,3 @@
+"use strict"
+const { makeTypedQueryFactory: $mkFactory } = require("../runtime/library")
+exports.importsWithMatchingVehicle = /*#__PURE__*/ $mkFactory("WITH\nmatched_vehicles AS (\nSELECT\ni.pcv,\nr.pcv AS registration_pcv\nFROM\nimports i\nJOIN registrations r ON i.pcv = r.pcv\nLIMIT\n10\n)\nSELECT\n*\nFROM\nimports i\nWHERE\n(\ni.country = $3\nOR $3 IS NULL\n)\nAND i.pcv IN (\nSELECT\npcv\nFROM\nmatched_vehicles\n)\nLIMIT\n$1\nOFFSET\n$2;")

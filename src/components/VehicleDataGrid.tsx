@@ -1,15 +1,11 @@
 import React from 'react';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
-import { Vehicles } from '../util/search';
 import { gridLocaleText } from '../util/localization';
 
-type Props = Omit<DataGridProps, 'columns'> & {
-  loading: boolean;
-  vehicles: Vehicles;
-};
+type Props = Omit<DataGridProps, 'columns'>;
 
-export default function VehicleDataGrid({ loading, vehicles, ...rest }: Props) {
+export default function VehicleDataGrid(props: Props) {
   const router = useRouter();
   return (
     <DataGrid
@@ -24,7 +20,6 @@ export default function VehicleDataGrid({ loading, vehicles, ...rest }: Props) {
         },
         width: '100%'
       }}
-      rows={vehicles}
       columns={[
         {
           field: 'tovarni_znacka',
@@ -72,7 +67,6 @@ export default function VehicleDataGrid({ loading, vehicles, ...rest }: Props) {
           filterable: false
         }
       ]}
-      loading={loading}
       disableColumnResize
       density="compact"
       slotProps={{
@@ -102,9 +96,9 @@ export default function VehicleDataGrid({ loading, vehicles, ...rest }: Props) {
             }
           }
         },
-        ...rest.slotProps?.toolbar
+        ...props.slotProps?.toolbar
       }}
-      {...rest}
+      {...props}
     />
   );
 }

@@ -1,5 +1,6 @@
 "use strict"
 exports.count = require("./count.edge.js").count
+exports.importsWithMatchingVehicle = require("./importsWithMatchingVehicle.edge.js").importsWithMatchingVehicle
 exports.registrationCountsByYear = require("./registrationCountsByYear.edge.js").registrationCountsByYear
 exports.searchBrands = require("./searchBrands.edge.js").searchBrands
 exports.searchTypesForBrand = require("./searchTypesForBrand.edge.js").searchTypesForBrand

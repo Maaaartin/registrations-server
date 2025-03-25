@@ -115,7 +115,7 @@ export default function Search({
   return (
     <>
       <VehicleDataGrid
-        vehicles={vehicles}
+        rows={vehicles}
         loading={loading}
         initialState={{
           pagination: {

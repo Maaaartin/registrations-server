@@ -2,7 +2,8 @@ import { unstable_cache } from 'next/cache';
 import zod from 'zod';
 import prisma from '../../../prisma';
 import { pageSize } from './index';
-import { DBrandModel, DDate } from '../decoders';
+import { DBrandModel, DDate, DPage } from '../decoders';
+import { vehicleSelect } from '../data';
 
 export const discoverVehicles = unstable_cache(
   (
@@ -33,14 +34,7 @@ export const discoverVehicles = unstable_cache(
         typ: type || undefined,
         AND: query
       },
-      select: {
-        id: true,
-        tovarni_znacka: true,
-        typ: true,
-        vin: true,
-        cislo_tp: true,
-        cislo_orv: true
-      }
+      select: vehicleSelect
     });
   },
 
@@ -48,11 +42,10 @@ export const discoverVehicles = unstable_cache(
   { revalidate: 3600, tags: ['discover'] }
 );
 
-export const queryDecoder = DBrandModel.extend({
-  page: zod
-    .string()
-    .default('0')
-    .transform((val) => Number(val) || 0),
-  datum_prvni_registrace_od: DDate,
-  datum_prvni_registrace_do: DDate
-});
+export const queryDecoder = zod
+  .object({
+    datum_prvni_registrace_od: DDate,
+    datum_prvni_registrace_do: DDate
+  })
+  .merge(DBrandModel)
+  .merge(DPage);
