@@ -27,7 +27,8 @@ export const gridLocaleText: Partial<GridLocaleText> = {
   filterOperatorEndsWith: 'Končí textem',
   filterOperatorIsEmpty: 'Je prázdné',
   filterOperatorIsNotEmpty: 'Není prázdné',
-  filterOperatorIsAnyOf: 'Je jedno z'
+  filterOperatorIsAnyOf: 'Je jedno z',
+  noRowsLabel: 'Žádná data'
 };
 
 export const datePickerLocaleText: PickersInputLocaleText<DateTime> = {
