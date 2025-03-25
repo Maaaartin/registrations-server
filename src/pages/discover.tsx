@@ -7,7 +7,11 @@ import { DateTime } from 'luxon';
 import { DateFormat, DiscoverProps, pageSize } from '../util/discover';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import {
+  DatePicker,
+  DatePickerProps,
+  LocalizationProvider
+} from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { discoverVehicles, queryDecoder } from '../util/discover/server';
 import { datePickerLocaleText } from '../util/localization';
@@ -64,6 +68,28 @@ const AutocompleteSearchForm = ({
   );
 };
 
+const datePickerProps: Partial<DatePickerProps<DateTime>> = {
+  disableFuture: true,
+  slotProps: {
+    actionBar: {
+      actions: ['clear']
+    },
+    popper: {
+      sx: {
+        '.MuiPickersYear-yearButton.Mui-disabled': {
+          opacity: 0.5,
+          textDecoration: 'line-through',
+          color: 'gray',
+          cursor: 'not-allowed'
+        }
+      }
+    }
+  },
+  format: DateFormat,
+  openTo: 'year',
+  views: ['day', 'year']
+};
+
 const DateSearch = ({
   datum_prvni_registrace_od,
   datum_prvni_registrace_do,
@@ -83,44 +109,28 @@ const DateSearch = ({
       localeText={datePickerLocaleText}
     >
       <DatePicker
-        disableFuture
+        {...datePickerProps}
         disabled={loading}
         label="Datum první registrace od"
         value={fromDate}
-        slotProps={{
-          actionBar: {
-            actions: ['clear']
-          }
-        }}
-        format={DateFormat}
         maxDate={toDate || undefined}
         onChange={(newValue) => {
           onSubmit({
             datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || ''
           });
         }}
-        openTo="year"
-        views={['day', 'year']}
       />
       <DatePicker
-        disableFuture
+        {...datePickerProps}
         disabled={loading}
         label="Datum první registrace do"
         minDate={fromDate || undefined}
-        slotProps={{
-          actionBar: {
-            actions: ['clear']
-          }
-        }}
-        format={DateFormat}
         value={toDate}
         onChange={(newValue) => {
           onSubmit({
             datum_prvni_registrace_do: newValue?.toFormat(DateFormat) || ''
           });
         }}
-        openTo="year"
-        views={['day', 'year']}
       />
     </LocalizationProvider>
   );
