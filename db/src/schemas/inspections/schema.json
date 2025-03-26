@@ -1,0 +1,11 @@
+{
+  "pcv": "BIGINT",
+  "typ": "TEXT",
+  "stav": "TEXT",
+  "kod_stk": "TEXT",
+  "nazev_stk": "TEXT",
+  "platnost_od": "DATE",
+  "platnost_do": "DATE",
+  "cislo_protokolu": "TEXT",
+  "aktualni": "BOOLEAN"
+}

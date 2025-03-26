@@ -1,6 +1,11 @@
 const fs = require('fs');
 const client = require('../client');
-const { processRecord, escapeCSVValue, logError } = require('./helpers');
+const {
+  processRecord,
+  escapeCSVValue,
+  logError,
+  getDirs
+} = require('./helpers');
 const { parse } = require('csv-parse');
 const copyFrom = require('pg-copy-streams').from;
 const { PassThrough, pipeline } = require('stream');
@@ -8,12 +13,13 @@ const path = require('path');
 
 async function run() {
   const tableName = process.argv[3];
-  if (!['registrations', 'imports'].includes(tableName)) {
+  const dirs = await getDirs();
+  if (!dirs.includes(tableName)) {
     throw new Error(`Unknown table ${tableName}`);
   }
-
+  const basePath = path.join(__dirname, '..', 'schemas', tableName);
   const fileStream = fs.createReadStream(path.join(process.cwd(), 'data.csv'));
-  const headerMap = require(`../headerMap-${tableName}.json`);
+  const headerMap = require(path.join(basePath, 'headerMap.json'));
   const parser = parse({
     columns: Object.keys(headerMap),
     relaxColumnCount: true,
@@ -30,7 +36,7 @@ async function run() {
     console.log('line', lineNr);
   }, 1000);
 
-  const schema = require(`../schema-${tableName}.json`);
+  const schema = require(path.join(basePath, 'schema.json'));
   await client.connect();
   await client.query('BEGIN');
   await client.query(`TRUNCATE ${tableName}`);

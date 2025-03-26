@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const client = require('../client');
 
 const BATCH_SIZE = 500;
@@ -21,13 +22,22 @@ exports.escapeCSVValue = escapeCSVValue;
 const logError = async function (file, ...data) {
   await fs.promises.appendFile(file, data.map(escapeCSVValue).join(',') + '\n');
 };
+
+const getDirs = () => {
+  const dirPath = path.join(__dirname, '..', 'schemas');
+  return fs.promises.readdir(dirPath);
+};
+exports.getDirs = getDirs;
 exports.logError = logError;
 exports.createTableFromHeaders = async () => {
   const tableName = process.argv[3];
-  if (!['registrations', 'imports'].includes(tableName)) {
+  const dirs = await getDirs();
+  if (!dirs.includes(tableName)) {
     throw new Error(`Unknown table ${tableName}`);
   }
-  const schema = require(`../schema-${tableName}.json`);
+  const schema = require(
+    path.join(__dirname, '..', 'schemas', tableName, 'schema.json')
+  );
   await client.connect();
   await client.query(`DROP TABLE IF EXISTS ${tableName};`);
 

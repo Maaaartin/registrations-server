@@ -1,0 +1,11 @@
+{
+  "PČV": "pcv",
+  "Typ": "typ",
+  "Stav": "stav",
+  "Kód STK": "kod_stk",
+  "Název STK": "nazev_stk",
+  "Platnost od": "platnost_od",
+  "Platnost do": "platnost_do",
+  "Číslo protokolu": "cislo_protokolu",
+  "Aktuální": "aktualni"
+}
