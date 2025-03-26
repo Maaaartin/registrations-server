@@ -1,8 +1,17 @@
 import { GetServerSideProps } from 'next';
 import { DataGrid } from '@mui/x-data-grid';
 import { Tooltip } from '@mui/material';
-import { CellParams, Props, mapVehicle } from '../util/vehicle';
-import { getVehicle, queryDecoder } from '../util/vehicle/server';
+import {
+  CellParams,
+  Props,
+  SerializableImport,
+  mapVehicle
+} from '../util/vehicle';
+import {
+  getImportFromPcv,
+  getVehicle,
+  queryDecoder
+} from '../util/vehicle/server';
 import { gridLocaleText } from '../util/localization';
 
 function AttributeCell({ row: { id, description } }: CellParams) {
@@ -26,14 +35,23 @@ function ValueCell({ row: { value } }: CellParams) {
   return String(value);
 }
 
-/* eslint-disable react-hooks/rules-of-hooks */
-export default function Page({ vehicle }: Props) {
+function ImportData({ country, import_date }: SerializableImport) {
+  return (
+    `Dovezeno z: ${country}` +
+    (import_date
+      ? `, dne ${new Date(import_date.value).toLocaleDateString()}`
+      : '')
+  );
+}
+
+export default function Page({ vehicle, vehicleImport }: Props) {
   const mapped = mapVehicle(vehicle);
   return (
     <>
       <h1>
         {vehicle.tovarni_znacka}, {vehicle.typ} ({vehicle.vin})
       </h1>
+      {vehicleImport && <ImportData {...vehicleImport} />}
       <DataGrid
         localeText={gridLocaleText}
         rowSelection={false}
@@ -68,6 +86,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   if (!id) return { notFound: true };
   const vehicle = await getVehicle(id);
   if (!vehicle) return { notFound: true };
-
-  return { props: { vehicle } };
+  const vehicleImport = await getImportFromPcv(vehicle.pcv);
+  return { props: { vehicle, vehicleImport } };
 };

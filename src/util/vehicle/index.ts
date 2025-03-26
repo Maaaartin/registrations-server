@@ -1,10 +1,14 @@
-import type { registrations } from '../../../prisma/client';
+import type { registrations, imports } from '../../../prisma/client';
 import type { Serialized } from '../data';
 import registrationColumnMap from '../../registrationColumnMap.json';
 import type { GridRenderCellParams } from '@mui/x-data-grid';
 
 export type SerializableRegistration = Serialized<registrations>;
-export type Props = { vehicle: SerializableRegistration };
+export type SerializableImport = Serialized<imports>;
+export type Props = {
+  vehicle: SerializableRegistration;
+  vehicleImport?: SerializableImport | null;
+};
 
 export function mapVehicle(vehicle: SerializableRegistration): {
   id: string;
