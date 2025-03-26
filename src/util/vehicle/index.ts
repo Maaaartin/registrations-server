@@ -1,7 +1,6 @@
 import type { registrations, imports } from '../../../prisma/client';
 import type { Serialized } from '../data';
-import registrationColumnMap from '../../registrationColumnMap.json';
-import type { GridRenderCellParams } from '@mui/x-data-grid';
+import registrationColumnMap from '../../registrationColumnMap';
 
 export type SerializableRegistration = Serialized<registrations>;
 export type SerializableImport = Serialized<imports>;
@@ -10,47 +9,54 @@ export type Props = {
   vehicleImport?: SerializableImport | null;
 };
 
-export function mapVehicle(vehicle: SerializableRegistration): {
-  id: string;
-  value: SerializableRegistration[keyof SerializableRegistration];
-  description: string | null;
-}[] {
-  const excludeFields: (keyof registrations)[] = [
-    'id',
-    'max_vykon',
-    'max_vykon_otacky',
-    'naprav_pohanenych',
-    'kola_a_pneumatiky_naprava_1',
-    'kola_a_pneumatiky_naprava_2',
-    'kola_a_pneumatiky_naprava_3',
-    'kola_a_pneumatiky_naprava_4'
-  ];
+export const valueToString = (
+  value: SerializableRegistration[keyof SerializableRegistration]
+) => {
+  if (typeof value === 'object' && value?.value) {
+    return new Date(value.value).toLocaleDateString();
+  }
+  if (typeof value === 'boolean') {
+    return value ? 'Ano' : 'Ne';
+  }
+  return String(value);
+};
 
-  const filteredEntries = Object.fromEntries(
-    Object.entries(vehicle).filter(([key]) => {
-      return !excludeFields.includes(key as keyof registrations);
-    })
-  );
-  (filteredEntries as Record<string, string>).max_vykon =
-    `${vehicle.max_vykon} / ${vehicle.max_vykon_otacky}`;
-  (filteredEntries as Record<string, string>).pocet_naprav =
-    `${vehicle.pocet_naprav} / ${vehicle.naprav_pohanenych}`;
-  (filteredEntries as Record<string, string>).kola_a_pneumatiky = [
-    vehicle.kola_a_pneumatiky_naprava_1,
-    vehicle.kola_a_pneumatiky_naprava_2,
-    vehicle.kola_a_pneumatiky_naprava_3,
-    vehicle.kola_a_pneumatiky_naprava_4
-  ].join('; ');
-  return Object.entries(filteredEntries).map(([key, value]) => {
-    const typed = registrationColumnMap as Record<
-      string,
-      Record<string, string>
-    >;
-    return {
-      id: typed[key]?.name || key,
-      description: typed[key]?.description || null,
-      value
-    };
-  });
+export function getColumnName(key: keyof SerializableRegistration) {
+  const record =
+    registrationColumnMap[key as keyof typeof registrationColumnMap];
+  return {
+    name: record.name || key,
+    description: 'description' in record ? record.description : null
+  };
 }
-export type CellParams = GridRenderCellParams<ReturnType<typeof mapVehicle>[0]>;
+
+type SectionType = {
+  label: string;
+  key: string;
+  options: (keyof SerializableRegistration)[];
+};
+
+export const sections: SectionType[] = [
+  {
+    label: 'Obecné',
+    key: 'obecne',
+    options: ['tovarni_znacka', 'typ', 'verze', 'varianta']
+  },
+  {
+    label: 'Rozměry',
+    key: 'rozmery',
+    options: ['delka', 'sirka', 'vyska']
+  },
+  {
+    label: 'Motor',
+    key: 'motor',
+    options: [
+      'cislo_motoru',
+      'typ_motoru',
+      'vyrobce_motoru',
+      'palivo',
+      'max_vykon',
+      'max_vykon_otacky'
+    ]
+  }
+];

@@ -1,39 +1,41 @@
 import { GetServerSideProps } from 'next';
-import { DataGrid } from '@mui/x-data-grid';
-import { Tooltip } from '@mui/material';
 import {
-  CellParams,
+  Collapse,
+  List,
+  ListItemButton,
+  ListItemText,
+  ListSubheader,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow
+} from '@mui/material';
+import {
   Props,
   SerializableImport,
-  mapVehicle
+  SerializableRegistration,
+  getColumnName,
+  valueToString,
+  sections
 } from '../util/vehicle';
 import {
   getImportFromPcv,
   getVehicle,
   queryDecoder
 } from '../util/vehicle/server';
-import { gridLocaleText } from '../util/localization';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { ReactNode, useState } from 'react';
 
-function AttributeCell({ row: { id, description } }: CellParams) {
-  if (description) {
-    return (
-      <Tooltip title={description}>
-        <span>{id} *</span>
-      </Tooltip>
-    );
-  }
-  return id;
-}
-
-function ValueCell({ row: { value } }: CellParams) {
-  if (typeof value === 'object' && value?.value) {
-    return new Date(value.value).toLocaleDateString();
-  }
-  if (typeof value === 'boolean') {
-    return value ? 'Ano' : 'Ne';
-  }
-  return String(value);
-}
+// function AttributeCell({ row: { id, description } }: ReactNode) {
+//   if (description) {
+//     return (
+//       <Tooltip title={description}>
+//         <span>{id} *</span>
+//       </Tooltip>
+//     );
+//   }
+//   return id;
+// }
 
 function ImportData({ country, import_date }: SerializableImport) {
   return (
@@ -44,37 +46,73 @@ function ImportData({ country, import_date }: SerializableImport) {
   );
 }
 
-export default function Page({ vehicle, vehicleImport }: Props) {
-  const mapped = mapVehicle(vehicle);
+const Section = ({
+  label,
+  keys,
+  renderSubList
+}: {
+  label: string;
+  keys: readonly (keyof SerializableRegistration)[];
+  renderSubList: (key: keyof SerializableRegistration) => {
+    primary: ReactNode;
+    secondary: ReactNode;
+  };
+}) => {
+  const [open, setOpen] = useState(false);
+  const handleClick = () => setOpen(!open);
   return (
     <>
-      <h1>
-        {vehicle.tovarni_znacka}, {vehicle.typ} ({vehicle.vin})
-      </h1>
-      {vehicleImport && <ImportData {...vehicleImport} />}
-      <DataGrid
-        localeText={gridLocaleText}
-        rowSelection={false}
-        rows={mapped}
-        columns={[
-          {
-            field: 'attribute',
-            headerName: 'Atribut',
-            flex: 0.5,
-            minWidth: 200,
-            renderCell: AttributeCell,
-            sortable: true
-          },
-          {
-            field: 'value',
-            headerName: 'Hodnota',
-            flex: 0.5,
-            minWidth: 300,
-            renderCell: ValueCell,
-            sortable: false
-          }
-        ]}
-      />
+      <ListItemButton onClick={handleClick}>
+        <ListItemText primary={label} />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        <Table>
+          <TableBody>
+            {keys.map((key) => {
+              const { primary, secondary } = renderSubList(key);
+              return (
+                <TableRow>
+                  <TableCell>{primary}</TableCell>
+                  <TableCell>{secondary}</TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Collapse>
+    </>
+  );
+};
+
+export default function Page({ vehicle, vehicleImport }: Props) {
+  return (
+    <>
+      <List
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        subheader={
+          <ListSubheader component="div" id="nested-list-subheader">
+            Údaje o vozidle
+          </ListSubheader>
+        }
+      >
+        {sections.map((section) => {
+          return (
+            <Section
+              label={section.label}
+              keys={section.options}
+              renderSubList={(key) => {
+                return {
+                  primary: getColumnName(key).name,
+                  secondary: valueToString(vehicle[key])
+                };
+              }}
+            />
+          );
+        })}
+      </List>
     </>
   );
 }
