@@ -46,7 +46,7 @@ export const searchImports = unstable_cache(
         import_date: matchingImport?.import_date
       };
     });
-    return vehiclesWithImports.map(serialize<(typeof vehiclesWithImports)[0]>);
+    return vehiclesWithImports.map(serialize);
   },
   ['imports'],
   { revalidate: 3600, tags: ['imports'] }

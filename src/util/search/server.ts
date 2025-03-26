@@ -19,7 +19,7 @@ export const searchVehicles = unstable_cache(
       select: vehicleSelect,
       take: limit
     });
-    return result.map(serialize<(typeof result)[0]>);
+    return result.map(serialize);
   },
 
   ['search'],

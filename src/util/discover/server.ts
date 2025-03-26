@@ -36,7 +36,7 @@ export const discoverVehicles = unstable_cache(
       },
       select: vehicleSelect
     });
-    return result.map(serialize<(typeof result)[0]>);
+    return result.map(serialize);
   },
 
   ['discover'],
