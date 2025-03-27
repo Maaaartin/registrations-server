@@ -8,14 +8,7 @@ import {
   TableRow,
   Tooltip
 } from '@mui/material';
-import {
-  Props,
-  SerializableImport,
-  SerializableRegistration,
-  getColumnName,
-  valueToString,
-  sections
-} from '../util/vehicle';
+import { Props, getColumnName, valueToString, sections } from '../util/vehicle';
 import {
   getImportFromPcv,
   getVehicle,
@@ -41,29 +34,20 @@ function AttributeCell({
   return name;
 }
 
-function ImportData({ country, import_date }: SerializableImport) {
-  return (
-    `Dovezeno z: ${country}` +
-    (import_date
-      ? `, dne ${new Date(import_date.value).toLocaleDateString()}`
-      : '')
-  );
-}
-
-const Section = ({
+function Section<T>({
   label,
   keys,
   renderSubList
 }: {
   label: string;
-  keys: readonly (keyof SerializableRegistration)[];
-  renderSubList: (key: keyof SerializableRegistration) => {
+  keys: T[];
+  renderSubList: (key: T) => {
     name: string;
     description?: string | null;
     value: string;
   };
-}) => {
-  const [open, setOpen] = useState(true);
+}) {
+  const [open, setOpen] = useState(false);
   const onToggle = () => setOpen(!open);
   return (
     <StatCard
@@ -101,9 +85,47 @@ const Section = ({
       </>
     </StatCard>
   );
-};
+}
 
 export default function Page({ vehicle, vehicleImport }: Props) {
+  const gridContent = sections.map((section) => {
+    return (
+      <Grid key={section.key} size={{ xs: 12 }}>
+        <Section
+          label={section.label}
+          keys={section.options}
+          renderSubList={(key) => ({
+            ...getColumnName(key),
+            value: valueToString(vehicle[key])
+          })}
+        />
+      </Grid>
+    );
+  });
+  if (vehicleImport) {
+    const vehicleImportComponent = (
+      <Section
+        label="Info o dovozu"
+        keys={(
+          Object.keys(vehicleImport) as (keyof typeof vehicleImport)[]
+        ).filter((key) => !['id', 'pcv'].includes(key))}
+        renderSubList={(key) => {
+          switch (key) {
+            case 'country':
+              return { name: 'Země', value: vehicleImport[key] || '' };
+            case 'import_date':
+              return {
+                name: 'Datum dovozu',
+                value: valueToString(vehicleImport[key])
+              };
+            default:
+              return { name: '', value: '', description: '' };
+          }
+        }}
+      />
+    );
+    gridContent.unshift(vehicleImportComponent);
+  }
   return (
     <Grid
       container
@@ -111,20 +133,7 @@ export default function Page({ vehicle, vehicleImport }: Props) {
       columns={12}
       sx={{ mb: (theme) => theme.spacing(2) }}
     >
-      {sections.map((section) => {
-        return (
-          <Grid size={{ xs: 12 }}>
-            <Section
-              label={section.label}
-              keys={section.options}
-              renderSubList={(key) => ({
-                ...getColumnName(key),
-                value: valueToString(vehicle[key])
-              })}
-            />
-          </Grid>
-        );
-      })}
+      {gridContent}
     </Grid>
   );
 }
