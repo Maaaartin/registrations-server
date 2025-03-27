@@ -76,7 +76,7 @@ const Section = ({
       <>
         <Collapse
           in={open}
-          timeout="auto"
+          timeout={0}
           unmountOnExit
           sx={{
             width: '100%'
@@ -113,7 +113,7 @@ export default function Page({ vehicle, vehicleImport }: Props) {
     >
       {sections.map((section) => {
         return (
-          <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid size={{ xs: 12 }}>
             <Section
               label={section.label}
               keys={section.options}

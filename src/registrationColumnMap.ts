@@ -131,17 +131,24 @@ export default {
   provozni_hmotnost: {
     name: 'Provozní hmotnost [kg]'
   },
-  'nejvetsi_technicky_pripustna_hmotnost,nejvetsi_povolena_hmotnost': {
-    name: 'Největší technicky přípustná/povolená hmotnost [kg]'
+  nejvetsi_technicky_pripustna_hmotnost: {
+    name: 'Největší technicky přípustná hmotnost [kg]'
   },
-  'nejvetsi_technicky_pripustna_hmotnost_na_napravu,nejvetsi_povolena_hmotnost_na_napravu':
-    {
-      name: 'Největší technicky přípustná/povolená hmotnost na nápravu [kg]'
-    },
-  'nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy,nejvetsi_povolena_hmotnost_jizdni_soupravy':
-    {
-      name: 'Největší technicky přípustná/povolená hmotnost jízdní soupravy [kg]'
-    },
+  nejvetsi_povolena_hmotnost: {
+    name: 'Největší technicky povolená hmotnost [kg]'
+  },
+  nejvetsi_technicky_pripustna_hmotnost_na_napravu: {
+    name: 'Největší technicky přípustná hmotnost na nápravu [kg]'
+  },
+  nejvetsi_povolena_hmotnost_na_napravu: {
+    name: 'Největší technicky povolená hmotnost na nápravu [kg]'
+  },
+  nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy: {
+    name: 'Největší technicky přípustná hmotnost jízdní soupravy [kg]'
+  },
+  nejvetsi_povolena_hmotnost_jizdni_soupravy: {
+    name: 'Největší technicky povolená hmotnost jízdní soupravy [kg]'
+  },
   hmotnosti_vozidla_pri_testu_wltp: {
     name: 'Hmotnosti vozidla při testu WLTP',
     description: 'Hmotnosti vozidla při testu WLTP (zavedeno od 1.11.2024)'
@@ -151,7 +158,8 @@ export default {
     description: 'Průměrná hodnota užitečného zatížení (zavedeno od 1.11.2024)'
   },
   spojovaci_zarizeni: { name: 'Spojovací zařízení - druh' },
-  pocet_naprav: { name: 'Počet náprav / z toho poháněných' },
+  pocet_naprav: { name: 'Počet náprav' },
+  naprav_pohanenych: { name: 'Počet náprav poháněných' },
   kola_a_pneumatiky: {
     name: 'Kola a pneumatiky na nápravě - rozměry/montáž [N.1; N.2; N.3; N.4]'
   },
@@ -295,15 +303,6 @@ export default {
     name: 'Stupeň dokončení',
     description: 'Stupeň dokončení (zavedeno od 1.11.2024)'
   },
-  nejvetsi_technicky_pripustna_hmotnost: {
-    name: 'Největší technicky přípustná hmotnost [kg]'
-  },
-  nejvetsi_technicky_pripustna_hmotnost_na_napravu: {
-    name: 'Největší technicky přípustná hmotnost na nápravu [kg]'
-  },
-  nejvetsi_povolena_hmotnost_na_napravu: {
-    name: 'Největší technicky povolená hmotnost hmotnost na nápravu [kg]'
-  },
   nejvetsi_technicky_pripustna_hmotnost_pripojneho_vozidla_brzden: {
     name: 'Největší technicky přípustná hmotnost přípojného vozidla brzděného [kg]'
   },
@@ -315,12 +314,6 @@ export default {
   },
   nejvetsi_povolena_hmotnost_pripojneho_vozidla_ne_brzdeneho: {
     name: 'Největší technicky povolená hmotnost přípojného vozidla nebrzděného [kg]'
-  },
-  nejvetsi_technicky_pripustna_hmotnost_jizdni_soupravy: {
-    name: 'Největší technicky přípustná hmotnost jízdní soupravy [kg]'
-  },
-  nejvetsi_povolena_hmotnost_jizdni_soupravy: {
-    name: 'Největší technicky povolená hmotnost jízdní soupravy [kg]'
   },
   stupen_plneni_emisni_urovne: { name: 'Stupeň plnění emisní úrovně' }
 } as const;

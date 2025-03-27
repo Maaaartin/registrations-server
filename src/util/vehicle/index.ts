@@ -44,7 +44,19 @@ const baseSections: SectionType[] = [
   {
     label: 'Obecné',
     key: 'obecne',
-    options: ['vyrobce_vozidla', 'tovarni_znacka', 'typ', 'verze', 'varianta']
+    options: [
+      'vyrobce_vozidla',
+      'tovarni_znacka',
+      'typ',
+      'verze',
+      'varianta',
+      'druh_karoserie',
+      'druh_vozidla',
+      'druh_vozidla_2_radek',
+      'obchodni_oznaceni',
+      'rok_vyroby',
+      'nejvyssi_rychlost'
+    ]
   },
   {
     label: 'Rozměry',
@@ -60,6 +72,15 @@ const baseSections: SectionType[] = [
     ]
   },
   {
+    label: 'Hmotnosti',
+    key: 'hmotnost',
+    options: [
+      'provozni_hmotnost',
+      'nejvetsi_povolena_hmotnost',
+      'nejvetsi_povolena_hmotnost_jizdni_soupravy'
+    ]
+  },
+  {
     label: 'Motor',
     key: 'motor',
     options: [
@@ -72,11 +93,27 @@ const baseSections: SectionType[] = [
     ]
   },
   {
+    label: 'Brzdy',
+    key: 'brzdy',
+    options: [
+      'brzdy_nouzova',
+      'brzdy_odlehcovaci',
+      'brzdy_parkovaci',
+      'brzdy_provozni'
+    ]
+  },
+  {
+    label: 'Výbava',
+    key: 'vybava',
+    options: ['abs', 'airbag', 'asr', 'retarder']
+  },
+  {
     label: 'Formální údaje',
     key: 'formalni_udaje',
     options: [
       'datum_1_registrace',
       'datum_1_registrace_v_cr',
+      'vyrobni_cislo_karoserie',
       'cislo_motoru',
       'vin',
       'cislo_orv',
