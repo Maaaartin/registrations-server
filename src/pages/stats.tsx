@@ -19,7 +19,7 @@ import {
 const CountCard = () => {
   const { data, isLoading } = useFetch(countAction);
   const renderValue = isLoading ? <CircularProgress /> : data;
-  return <StatCard title="Celkový počet záznamů" value={renderValue} />;
+  return <StatCard title="Celkový počet záznamů">{renderValue}</StatCard>;
 };
 
 function CardList<T>({
@@ -51,16 +51,13 @@ const BrandsCard = () => {
     secondary: value.count
   });
   return (
-    <StatCard
-      title="Top značky"
-      value={
-        Array.isArray(renderValue) ? (
-          <CardList data={renderValue} render={render}></CardList>
-        ) : (
-          renderValue
-        )
-      }
-    />
+    <StatCard title="Top značky">
+      {Array.isArray(renderValue) ? (
+        <CardList data={renderValue} render={render}></CardList>
+      ) : (
+        renderValue
+      )}
+    </StatCard>
   );
 };
 
@@ -72,16 +69,13 @@ const CategoriesCard = () => {
     secondary: value.count
   });
   return (
-    <StatCard
-      title="Top kategorie"
-      value={
-        Array.isArray(renderValue) ? (
-          <CardList data={renderValue} render={render}></CardList>
-        ) : (
-          renderValue
-        )
-      }
-    />
+    <StatCard title="Top kategorie">
+      {Array.isArray(renderValue) ? (
+        <CardList data={renderValue} render={render}></CardList>
+      ) : (
+        renderValue
+      )}
+    </StatCard>
   );
 };
 
@@ -93,16 +87,13 @@ const KindsCard = () => {
     secondary: value.count
   });
   return (
-    <StatCard
-      title="Top druhy"
-      value={
-        Array.isArray(renderValue) ? (
-          <CardList data={renderValue} render={render}></CardList>
-        ) : (
-          renderValue
-        )
-      }
-    />
+    <StatCard title="Top druhy">
+      {Array.isArray(renderValue) ? (
+        <CardList data={renderValue} render={render}></CardList>
+      ) : (
+        renderValue
+      )}
+    </StatCard>
   );
 };
 
@@ -114,16 +105,13 @@ const ColorsCard = () => {
   });
   const renderValue = isLoading ? <CircularProgress /> : data;
   return (
-    <StatCard
-      title="Top barvy"
-      value={
-        Array.isArray(renderValue) ? (
-          <CardList data={renderValue} render={render}></CardList>
-        ) : (
-          renderValue
-        )
-      }
-    />
+    <StatCard title="Top barvy">
+      {Array.isArray(renderValue) ? (
+        <CardList data={renderValue} render={render}></CardList>
+      ) : (
+        renderValue
+      )}
+    </StatCard>
   );
 };
 
@@ -135,16 +123,13 @@ const FuelsCard = () => {
   });
   const renderValue = isLoading ? <CircularProgress /> : data;
   return (
-    <StatCard
-      title="Top paliva"
-      value={
-        Array.isArray(renderValue) ? (
-          <CardList data={renderValue} render={render}></CardList>
-        ) : (
-          renderValue
-        )
-      }
-    />
+    <StatCard title="Top paliva">
+      {Array.isArray(renderValue) ? (
+        <CardList data={renderValue} render={render}></CardList>
+      ) : (
+        renderValue
+      )}
+    </StatCard>
   );
 };
 
@@ -156,16 +141,13 @@ const CountriesImportsCard = () => {
   });
   const renderValue = isLoading ? <CircularProgress /> : data?.splice(0, 10);
   return (
-    <StatCard
-      title="Top countries"
-      value={
-        Array.isArray(renderValue) ? (
-          <CardList data={renderValue} render={render}></CardList>
-        ) : (
-          renderValue
-        )
-      }
-    />
+    <StatCard title="Top countries">
+      {Array.isArray(renderValue) ? (
+        <CardList data={renderValue} render={render}></CardList>
+      ) : (
+        renderValue
+      )}
+    </StatCard>
   );
 };
 
