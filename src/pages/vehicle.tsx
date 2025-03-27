@@ -1,11 +1,7 @@
 import { GetServerSideProps } from 'next';
 import {
   Collapse,
-  Divider,
-  List,
-  ListItemButton,
-  ListItemText,
-  ListSubheader,
+  Grid2 as Grid,
   Table,
   TableBody,
   TableCell,
@@ -25,8 +21,8 @@ import {
   getVehicle,
   queryDecoder
 } from '../util/vehicle/server';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
+import StatCard from '../components/StatCard';
 
 function AttributeCell({
   name,
@@ -68,50 +64,49 @@ const Section = ({
   };
 }) => {
   const [open, setOpen] = useState(false);
-  const handleClick = () => setOpen(!open);
+  const onToggle = () => setOpen(!open);
   return (
-    <>
-      <ListItemButton onClick={handleClick}>
-        <ListItemText primary={label} />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <Table>
-          <TableBody>
-            {keys.map((key) => {
-              const { name, description, value } = renderSubList(key);
-              return (
-                <TableRow sx={{ borderBottom: 'solid' }}>
-                  <TableCell>
-                    <AttributeCell name={name} description={description} />
-                  </TableCell>
-                  <TableCell>{value}</TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Collapse>
-      <Divider />
-    </>
+    <StatCard
+      title={label}
+      collapse={{
+        open,
+        onToggle
+      }}
+    >
+      <>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <Table>
+            <TableBody>
+              {keys.map((key) => {
+                const { name, description, value } = renderSubList(key);
+                return (
+                  <TableRow sx={{ borderBottom: 'solid' }}>
+                    <TableCell>
+                      <AttributeCell name={name} description={description} />
+                    </TableCell>
+                    <TableCell>{value}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </Collapse>
+      </>
+    </StatCard>
   );
 };
 
 export default function Page({ vehicle, vehicleImport }: Props) {
   return (
-    <>
-      <List
-        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            Údaje o vozidle
-          </ListSubheader>
-        }
-      >
-        {sections.map((section) => {
-          return (
+    <Grid
+      container
+      spacing={2}
+      columns={12}
+      sx={{ mb: (theme) => theme.spacing(2) }}
+    >
+      {sections.map((section) => {
+        return (
+          <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
             <Section
               label={section.label}
               keys={section.options}
@@ -120,10 +115,10 @@ export default function Page({ vehicle, vehicleImport }: Props) {
                 value: valueToString(vehicle[key])
               })}
             />
-          );
-        })}
-      </List>
-    </>
+          </Grid>
+        );
+      })}
+    </Grid>
   );
 }
 
