@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import {
   Collapse,
+  Divider,
   List,
   ListItemButton,
   ListItemText,
@@ -8,7 +9,8 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableRow
+  TableRow,
+  Tooltip
 } from '@mui/material';
 import {
   Props,
@@ -26,16 +28,22 @@ import {
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { ReactNode, useState } from 'react';
 
-// function AttributeCell({ row: { id, description } }: ReactNode) {
-//   if (description) {
-//     return (
-//       <Tooltip title={description}>
-//         <span>{id} *</span>
-//       </Tooltip>
-//     );
-//   }
-//   return id;
-// }
+function AttributeCell({
+  name,
+  description
+}: {
+  name: string;
+  description: string | undefined | null;
+}) {
+  if (description) {
+    return (
+      <Tooltip title={description}>
+        <span>{name} *</span>
+      </Tooltip>
+    );
+  }
+  return name;
+}
 
 function ImportData({ country, import_date }: SerializableImport) {
   return (
@@ -54,8 +62,9 @@ const Section = ({
   label: string;
   keys: readonly (keyof SerializableRegistration)[];
   renderSubList: (key: keyof SerializableRegistration) => {
-    primary: ReactNode;
-    secondary: ReactNode;
+    name: string;
+    description?: string | null;
+    value: string;
   };
 }) => {
   const [open, setOpen] = useState(false);
@@ -70,17 +79,20 @@ const Section = ({
         <Table>
           <TableBody>
             {keys.map((key) => {
-              const { primary, secondary } = renderSubList(key);
+              const { name, description, value } = renderSubList(key);
               return (
-                <TableRow>
-                  <TableCell>{primary}</TableCell>
-                  <TableCell>{secondary}</TableCell>
+                <TableRow sx={{ borderBottom: 'solid' }}>
+                  <TableCell>
+                    <AttributeCell name={name} description={description} />
+                  </TableCell>
+                  <TableCell>{value}</TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
       </Collapse>
+      <Divider />
     </>
   );
 };
@@ -103,12 +115,10 @@ export default function Page({ vehicle, vehicleImport }: Props) {
             <Section
               label={section.label}
               keys={section.options}
-              renderSubList={(key) => {
-                return {
-                  primary: getColumnName(key).name,
-                  secondary: valueToString(vehicle[key])
-                };
-              }}
+              renderSubList={(key) => ({
+                ...getColumnName(key),
+                value: valueToString(vehicle[key])
+              })}
             />
           );
         })}
