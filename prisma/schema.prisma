@@ -16,6 +16,19 @@ model imports {
   import_date DateTime? @db.Date
 }
 
+model inspections {
+  id              Int       @id @default(autoincrement())
+  pcv             BigInt?
+  typ             String?
+  stav            String?
+  kod_stk         String?
+  nazev_stk       String?
+  platnost_od     DateTime? @db.Date
+  platnost_do     DateTime? @db.Date
+  cislo_protokolu String?
+  aktualni        Boolean?
+}
+
 model registrations {
   id                                                              Int       @id @default(autoincrement())
   datum_1_registrace                                              DateTime? @db.Date

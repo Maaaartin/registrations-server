@@ -1,9 +1,10 @@
 import { registrations, imports, Prisma } from '../../../prisma/client';
 import type { Serialized } from '../data';
 import registrationColumnMap from '../../registrationColumnMap';
-Prisma.RegistrationsScalarFieldEnum;
-export type SerializableRegistration = Serialized<registrations>;
-export type SerializableImport = Serialized<imports>;
+
+type SerializableRegistration = Serialized<registrations>;
+type SerializableImport = Serialized<imports>;
+
 export type Props = {
   vehicle: SerializableRegistration;
   vehicleImport?: SerializableImport | null;
