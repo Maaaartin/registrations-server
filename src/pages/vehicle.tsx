@@ -63,7 +63,7 @@ const Section = ({
     value: string;
   };
 }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const onToggle = () => setOpen(!open);
   return (
     <StatCard
@@ -74,7 +74,14 @@ const Section = ({
       }}
     >
       <>
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        <Collapse
+          in={open}
+          timeout="auto"
+          unmountOnExit
+          sx={{
+            width: '100%'
+          }}
+        >
           <Table>
             <TableBody>
               {keys.map((key) => {

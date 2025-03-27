@@ -321,5 +321,6 @@ export default {
   },
   nejvetsi_povolena_hmotnost_jizdni_soupravy: {
     name: 'Největší technicky povolená hmotnost jízdní soupravy [kg]'
-  }
+  },
+  stupen_plneni_emisni_urovne: { name: 'Stupeň plnění emisní úrovně' }
 } as const;

@@ -1,7 +1,7 @@
-import type { registrations, imports } from '../../../prisma/client';
+import { registrations, imports, Prisma } from '../../../prisma/client';
 import type { Serialized } from '../data';
 import registrationColumnMap from '../../registrationColumnMap';
-
+Prisma.RegistrationsScalarFieldEnum;
 export type SerializableRegistration = Serialized<registrations>;
 export type SerializableImport = Serialized<imports>;
 export type Props = {
@@ -22,12 +22,16 @@ export const valueToString = (
 };
 
 export function getColumnName(key: keyof SerializableRegistration) {
-  const record =
-    registrationColumnMap[key as keyof typeof registrationColumnMap];
-  return {
-    name: record.name || key,
-    description: 'description' in record ? record.description : null
-  };
+  if (key in registrationColumnMap) {
+    const record =
+      registrationColumnMap[key as keyof typeof registrationColumnMap];
+
+    return {
+      name: record.name,
+      description: 'description' in record ? record.description : null
+    };
+  }
+  return { name: key };
 }
 
 type SectionType = {
@@ -36,27 +40,63 @@ type SectionType = {
   options: (keyof SerializableRegistration)[];
 };
 
-export const sections: SectionType[] = [
+const baseSections: SectionType[] = [
   {
     label: 'Obecné',
     key: 'obecne',
-    options: ['tovarni_znacka', 'typ', 'verze', 'varianta']
+    options: ['vyrobce_vozidla', 'tovarni_znacka', 'typ', 'verze', 'varianta']
   },
   {
     label: 'Rozměry',
     key: 'rozmery',
-    options: ['delka', 'sirka', 'vyska']
+    options: [
+      'delka',
+      'sirka',
+      'vyska',
+      'rozchod',
+      'rozvor',
+      'lozna_delka',
+      'lozna_sirka'
+    ]
   },
   {
     label: 'Motor',
     key: 'motor',
     options: [
-      'cislo_motoru',
+      'zdvihovy_objem',
       'typ_motoru',
       'vyrobce_motoru',
       'palivo',
       'max_vykon',
       'max_vykon_otacky'
     ]
+  },
+  {
+    label: 'Formální údaje',
+    key: 'formalni_udaje',
+    options: [
+      'datum_1_registrace',
+      'datum_1_registrace_v_cr',
+      'cislo_motoru',
+      'vin',
+      'cislo_orv',
+      'cislo_tp',
+      'doplnkovy_text_na_tp'
+    ]
   }
 ];
+
+const allKeys = Object.keys(
+  Prisma.RegistrationsScalarFieldEnum
+) as (keyof SerializableRegistration)[];
+
+const remainingSection: SectionType = {
+  label: 'Ostatní Údaje',
+  key: 'ostatni_udaje',
+  options: allKeys.filter(
+    (key) =>
+      key !== 'id' && !baseSections.some((sec) => sec.options.includes(key))
+  )
+};
+
+export const sections = baseSections.concat(remainingSection);
