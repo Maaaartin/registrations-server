@@ -183,34 +183,45 @@ export default function Page({
   vehicleImport,
   vehicleInspections
 }: Props) {
-  const gridContent = sections.map((section) => {
-    return (
-      <Section key={section.key} label={section.label}>
-        <DataPairsTable
-          data={(
-            Object.entries(vehicle) as [
-              keyof SerializableRegistration,
-              SerializableRegistration[keyof SerializableRegistration]
-            ][]
-          ).filter(
-            ([key, value]) =>
-              section.options.includes(key) &&
-              includeValue(value) &&
-              shouldIncludeRegistrationField(key)
-          )}
-          renderRow={([key, value]) => {
-            const { bindWith, ...rest } = getColumnName(key);
-            return {
-              ...rest,
-              value:
-                valueToString(value) +
-                (bindWith ? `, ${valueToString(vehicle[bindWith])}` : '')
-            };
-          }}
-        />
-      </Section>
-    );
-  });
+  const gridContent = sections
+    .concat({
+      label: 'Ostatní Údaje',
+      key: 'ostatni_udaje',
+      options: (
+        Object.keys(vehicle) as (keyof SerializableRegistration)[]
+      ).filter(
+        (key) =>
+          key !== 'id' && !sections.some((sec) => sec.options.includes(key))
+      )
+    })
+    .map((section) => {
+      return (
+        <Section key={section.key} label={section.label}>
+          <DataPairsTable
+            data={(
+              Object.entries(vehicle) as [
+                keyof SerializableRegistration,
+                SerializableRegistration[keyof SerializableRegistration]
+              ][]
+            ).filter(
+              ([key, value]) =>
+                section.options.includes(key) &&
+                includeValue(value) &&
+                shouldIncludeRegistrationField(key)
+            )}
+            renderRow={([key, value]) => {
+              const { bindWith, ...rest } = getColumnName(key);
+              return {
+                ...rest,
+                value:
+                  valueToString(value) +
+                  (bindWith ? `, ${valueToString(vehicle[bindWith])}` : '')
+              };
+            }}
+          />
+        </Section>
+      );
+    });
   if (vehicleImport) {
     gridContent.unshift(<VehicleImport vehicleImport={vehicleImport} />);
   }

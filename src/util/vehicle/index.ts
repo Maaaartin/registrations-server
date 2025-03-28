@@ -1,8 +1,7 @@
-import {
+import type {
   registrations,
   imports,
-  inspections,
-  Prisma
+  inspections
 } from '../../../prisma/client';
 import type { Serialized } from '../data';
 import registrationColumnMap from '../../registrationColumnMap';
@@ -60,7 +59,7 @@ type SectionType = {
   options: (keyof SerializableRegistration)[];
 };
 
-const baseSections: SectionType[] = [
+export const sections: SectionType[] = [
   {
     label: 'Obecné',
     key: 'obecne',
@@ -142,21 +141,6 @@ const baseSections: SectionType[] = [
     ]
   }
 ];
-
-const allKeys = Object.keys(
-  Prisma.RegistrationsScalarFieldEnum
-) as (keyof SerializableRegistration)[];
-
-const remainingSection: SectionType = {
-  label: 'Ostatní Údaje',
-  key: 'ostatni_udaje',
-  options: allKeys.filter(
-    (key) =>
-      key !== 'id' && !baseSections.some((sec) => sec.options.includes(key))
-  )
-};
-
-export const sections = baseSections.concat(remainingSection);
 
 export const inspectionHeaderMap: Record<
   Exclude<keyof SerializableInspection, 'pcv' | 'id'>,
