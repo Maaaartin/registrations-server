@@ -1,0 +1,8 @@
+{
+  "pcv": "BIGINT",
+  "datum_od": "DATE",
+  "datum_do": "DATE",
+  "duvod": "TEXT",
+  "rm_kod": "BIGINT",
+  "rm_nazev": "TEXT"
+}
