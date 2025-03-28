@@ -7,14 +7,14 @@ import {
 import type { Serialized } from '../data';
 import registrationColumnMap from '../../registrationColumnMap';
 
-type SerializableRegistration = Serialized<registrations>;
-type SerializableImport = Serialized<imports>;
+export type SerializableRegistration = Serialized<registrations>;
+export type SerializableImport = Serialized<imports>;
 export type SerializableInspection = Serialized<inspections>;
 
 export type Props = {
   vehicle: SerializableRegistration;
   vehicleImport?: SerializableImport | null;
-  // vehicleInspections: SerializableInspection[];
+  vehicleInspections: SerializableInspection[];
 };
 
 export const valueToString = (
@@ -145,3 +145,17 @@ const remainingSection: SectionType = {
 };
 
 export const sections = baseSections.concat(remainingSection);
+
+export const inspectionHeaderMap: Record<
+  Exclude<keyof SerializableInspection, 'pcv' | 'id'>,
+  string
+> = {
+  aktualni: 'Aktuální',
+  cislo_protokolu: 'Čislo protokolu',
+  kod_stk: 'Kód STK',
+  nazev_stk: 'Název STK',
+  platnost_do: 'Platnost do',
+  platnost_od: 'Platnost od',
+  stav: 'Stav',
+  typ: 'Typ'
+};

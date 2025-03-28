@@ -27,7 +27,8 @@ export async function getImportFromPcv(pcv: number | null) {
 export async function getInspectionsFromPcv(pcv: number | null) {
   if (pcv == null) return [];
   const result = await prisma.inspections.findMany({
-    where: { pcv }
+    where: { pcv },
+    orderBy: { platnost_do: 'desc' }
   });
   return result.map(serialize);
 }

@@ -5,16 +5,27 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TableRow,
   Tooltip
 } from '@mui/material';
-import { Props, getColumnName, valueToString, sections } from '../util/vehicle';
+import {
+  Props,
+  getColumnName,
+  valueToString,
+  sections,
+  SerializableRegistration,
+  SerializableImport,
+  SerializableInspection,
+  inspectionHeaderMap
+} from '../util/vehicle';
 import {
   getImportFromPcv,
+  getInspectionsFromPcv,
   getVehicle,
   queryDecoder
 } from '../util/vehicle/server';
-import { useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import StatCard from '../components/StatCard';
 
 function AttributeCell({
@@ -34,19 +45,42 @@ function AttributeCell({
   return name;
 }
 
-function Section<T extends string>({
-  label,
-  keys,
-  renderSubList
+function DataPairsTable<T>({
+  data,
+  renderRow
 }: {
-  label: string;
-  keys: T[];
-  renderSubList: (key: T) => {
+  data: T[];
+  renderRow: (object: T) => {
     name: string;
     description?: string | null;
     value: string;
   };
 }) {
+  return (
+    <Table>
+      <TableBody>
+        {data.map((object, index) => {
+          const { name, description, value } = renderRow(object);
+          return (
+            <TableRow key={index} sx={{ borderBottom: 'solid' }}>
+              <TableCell>
+                <AttributeCell name={name} description={description} />
+              </TableCell>
+              <TableCell>{value}</TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
+  );
+}
+
+function Section({
+  label,
+  children
+}: PropsWithChildren<{
+  label: string;
+}>) {
   const [open, setOpen] = useState(false);
   const onToggle = () => setOpen(!open);
   return (
@@ -66,65 +100,110 @@ function Section<T extends string>({
             width: '100%'
           }}
         >
-          <Table>
-            <TableBody>
-              {keys.map((key) => {
-                const { name, description, value } = renderSubList(key);
-                return (
-                  <TableRow key={key} sx={{ borderBottom: 'solid' }}>
-                    <TableCell>
-                      <AttributeCell name={name} description={description} />
-                    </TableCell>
-                    <TableCell>{value}</TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+          {children}
         </Collapse>
       </>
     </StatCard>
   );
 }
 
-export default function Page({ vehicle, vehicleImport }: Props) {
-  const gridContent = sections.map((section) => {
-    return (
-      <Grid key={section.key} size={{ xs: 12 }}>
-        <Section
-          label={section.label}
-          keys={section.options}
-          renderSubList={(key) => ({
-            ...getColumnName(key),
-            value: valueToString(vehicle[key])
-          })}
-        />
-      </Grid>
-    );
-  });
-  if (vehicleImport) {
-    const vehicleImportComponent = (
-      <Section
-        label="Info o dovozu"
-        keys={(
-          Object.keys(vehicleImport) as (keyof typeof vehicleImport)[]
-        ).filter((key) => !['id', 'pcv'].includes(key))}
-        renderSubList={(key) => {
+function VehicleImport({
+  vehicleImport
+}: {
+  vehicleImport: SerializableImport;
+}) {
+  return (
+    <Section label="Info o dovozu">
+      <DataPairsTable
+        data={(
+          Object.entries(vehicleImport) as [
+            keyof SerializableImport,
+            SerializableImport[keyof SerializableImport]
+          ][]
+        ).filter(([key]) => !['id', 'pcv'].includes(key))}
+        renderRow={([key, value]) => {
           switch (key) {
             case 'country':
               return { name: 'Země', value: vehicleImport[key] || '' };
             case 'import_date':
               return {
                 name: 'Datum dovozu',
-                value: valueToString(vehicleImport[key])
+                value: valueToString(value)
               };
             default:
               return { name: '', value: '', description: '' };
           }
         }}
       />
+    </Section>
+  );
+}
+
+function VehicleInspections({
+  vehicleInspections
+}: {
+  vehicleInspections: SerializableInspection[];
+}) {
+  return (
+    <Section label="Technické prohlídky">
+      <Table>
+        <TableHead>
+          <TableRow>
+            {Object.values(inspectionHeaderMap).map((value) => (
+              <TableCell key={value}>{value}</TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {vehicleInspections.map((inspection) => (
+            <TableRow key={inspection.id}>
+              {(
+                Object.keys(
+                  inspectionHeaderMap
+                ) as (keyof typeof inspectionHeaderMap)[]
+              ).map((key) => (
+                <TableCell key={key}>
+                  {valueToString(inspection[key])}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Section>
+  );
+}
+
+export default function Page({
+  vehicle,
+  vehicleImport,
+  vehicleInspections
+}: Props) {
+  const gridContent = sections.map((section) => {
+    return (
+      <Section key={section.key} label={section.label}>
+        <DataPairsTable
+          data={(
+            Object.entries(vehicle) as [
+              keyof SerializableRegistration,
+              SerializableRegistration[keyof SerializableRegistration]
+            ][]
+          ).filter(([key]) => section.options.includes(key))}
+          renderRow={([key, value]) => ({
+            ...getColumnName(key),
+            value: valueToString(value)
+          })}
+        />
+      </Section>
     );
-    gridContent.unshift(vehicleImportComponent);
+  });
+  if (vehicleImport) {
+    gridContent.unshift(<VehicleImport vehicleImport={vehicleImport} />);
+  }
+  if (vehicleInspections.length) {
+    gridContent.unshift(
+      <VehicleInspections vehicleInspections={vehicleInspections} />
+    );
   }
   return (
     <Grid
@@ -133,7 +212,11 @@ export default function Page({ vehicle, vehicleImport }: Props) {
       columns={12}
       sx={{ mb: (theme) => theme.spacing(2) }}
     >
-      {gridContent}
+      {gridContent.map((Component, index) => (
+        <Grid key={index} size={{ xs: 12 }}>
+          {Component}
+        </Grid>
+      ))}
     </Grid>
   );
 }
@@ -145,6 +228,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   if (!id) return { notFound: true };
   const vehicle = await getVehicle(id);
   if (!vehicle) return { notFound: true };
-  const vehicleImport = await getImportFromPcv(vehicle.pcv);
-  return { props: { vehicle, vehicleImport } };
+  const [vehicleImport, vehicleInspections] = await Promise.all([
+    getImportFromPcv(vehicle.pcv),
+    getInspectionsFromPcv(vehicle.pcv)
+  ]);
+  return { props: { vehicle, vehicleImport, vehicleInspections } };
 };
