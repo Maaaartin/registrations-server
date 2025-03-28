@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import {
   Collapse,
+  Divider,
   Grid2 as Grid,
   Table,
   TableBody,
@@ -17,7 +18,8 @@ import {
   SerializableRegistration,
   SerializableImport,
   SerializableInspection,
-  inspectionHeaderMap
+  inspectionHeaderMap,
+  includeValue
 } from '../util/vehicle';
 import {
   getImportFromPcv,
@@ -62,7 +64,7 @@ function DataPairsTable<T>({
         {data.map((object, index) => {
           const { name, description, value } = renderRow(object);
           return (
-            <TableRow key={index} sx={{ borderBottom: 'solid' }}>
+            <TableRow key={index}>
               <TableCell>
                 <AttributeCell name={name} description={description} />
               </TableCell>
@@ -91,18 +93,17 @@ function Section({
         onToggle
       }}
     >
-      <>
-        <Collapse
-          in={open}
-          timeout={0}
-          unmountOnExit
-          sx={{
-            width: '100%'
-          }}
-        >
-          {children}
-        </Collapse>
-      </>
+      <Collapse
+        in={open}
+        timeout={0}
+        unmountOnExit
+        sx={{
+          width: '100%'
+        }}
+      >
+        <Divider />
+        {children}
+      </Collapse>
     </StatCard>
   );
 }
@@ -120,7 +121,9 @@ function VehicleImport({
             keyof SerializableImport,
             SerializableImport[keyof SerializableImport]
           ][]
-        ).filter(([key]) => !['id', 'pcv'].includes(key))}
+        ).filter(
+          ([key, value]) => !['id', 'pcv'].includes(key) && includeValue(value)
+        )}
         renderRow={([key, value]) => {
           switch (key) {
             case 'country':
@@ -188,7 +191,10 @@ export default function Page({
               keyof SerializableRegistration,
               SerializableRegistration[keyof SerializableRegistration]
             ][]
-          ).filter(([key]) => section.options.includes(key))}
+          ).filter(
+            ([key, value]) =>
+              section.options.includes(key) && includeValue(value)
+          )}
           renderRow={([key, value]) => ({
             ...getColumnName(key),
             value: valueToString(value)
@@ -200,11 +206,7 @@ export default function Page({
   if (vehicleImport) {
     gridContent.unshift(<VehicleImport vehicleImport={vehicleImport} />);
   }
-  if (vehicleInspections.length) {
-    gridContent.unshift(
-      <VehicleInspections vehicleInspections={vehicleInspections} />
-    );
-  }
+
   return (
     <Grid
       container
@@ -212,8 +214,13 @@ export default function Page({
       columns={12}
       sx={{ mb: (theme) => theme.spacing(2) }}
     >
+      {Boolean(vehicleInspections.length) && (
+        <Grid size={{ xs: 12 }}>
+          <VehicleInspections vehicleInspections={vehicleInspections} />{' '}
+        </Grid>
+      )}
       {gridContent.map((Component, index) => (
-        <Grid key={index} size={{ xs: 12 }}>
+        <Grid key={index} size={{ xs: 12, md: 6 }}>
           {Component}
         </Grid>
       ))}

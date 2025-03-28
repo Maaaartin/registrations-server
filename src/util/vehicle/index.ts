@@ -26,6 +26,9 @@ export const valueToString = (
   if (typeof value === 'boolean') {
     return value ? 'Ano' : 'Ne';
   }
+  if (value === null || value === undefined) {
+    return '';
+  }
   return String(value);
 };
 
@@ -159,3 +162,15 @@ export const inspectionHeaderMap: Record<
   stav: 'Stav',
   typ: 'Typ'
 };
+
+export function includeValue<T extends Record<string, unknown>>(
+  value: Serialized<T>[keyof Serialized<T>]
+) {
+  if (typeof value === 'object' && value && 'value' in value) {
+    return Boolean(value.value);
+  }
+  if (typeof value === 'boolean') {
+    return true;
+  }
+  return Boolean(value);
+}

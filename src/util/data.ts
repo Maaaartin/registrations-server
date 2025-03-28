@@ -1,4 +1,4 @@
-export type Serialized<T> = {
+export type Serialized<T extends Record<string, unknown>> = {
   [K in keyof T]: T[K] extends Date | null
     ? { type: 'Date'; value: string } | null
     : T[K] extends bigint | null
