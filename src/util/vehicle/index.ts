@@ -1,7 +1,8 @@
 import type {
   registrations,
   imports,
-  inspections
+  inspections,
+  removed_vehicles
 } from '../../../prisma/client';
 import type { Serialized } from '../data';
 import registrationColumnMap from './registrationColumnMap';
@@ -9,11 +10,13 @@ import registrationColumnMap from './registrationColumnMap';
 export type SerializableRegistration = Serialized<registrations>;
 export type SerializableImport = Serialized<imports>;
 export type SerializableInspection = Serialized<inspections>;
+export type SerializableRemoval = Serialized<removed_vehicles>;
 
 export type Props = {
   vehicle: SerializableRegistration;
-  vehicleImport?: SerializableImport | null;
+  vehicleImport: SerializableImport | null;
   vehicleInspections: SerializableInspection[];
+  vehicleRemoval: SerializableRemoval | null;
 };
 
 export const valueToString = (

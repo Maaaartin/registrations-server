@@ -19,12 +19,14 @@ import {
   SerializableImport,
   SerializableInspection,
   includeValue,
-  shouldIncludeRegistrationField
+  shouldIncludeRegistrationField,
+  SerializableRemoval
 } from '../util/vehicle';
 import {
   getImportFromPcv,
   getInspectionsFromPcv,
   getVehicle,
+  getVehicleRemoval,
   queryDecoder
 } from '../util/vehicle/server';
 import { PropsWithChildren, useState } from 'react';
@@ -183,10 +185,61 @@ function VehicleInspections({
   );
 }
 
+function VehicleRemoval({
+  vehicleRemoval
+}: {
+  vehicleRemoval: SerializableRemoval;
+}) {
+  return (
+    <Section label="Info o vyřazení z provozu">
+      <DataPairsTable
+        data={(
+          Object.entries(vehicleRemoval) as [
+            keyof SerializableRemoval,
+            SerializableRemoval[keyof SerializableRemoval]
+          ][]
+        ).filter(
+          ([key, value]) => !['id', 'pcv'].includes(key) && includeValue(value)
+        )}
+        renderRow={([key, value]) => {
+          switch (key) {
+            case 'duvod':
+              return { name: 'Důvod', value: valueToString(value) };
+
+            case 'datum_od':
+              return {
+                name: 'Datum od',
+                value: valueToString(value)
+              };
+            case 'datum_do':
+              return {
+                name: 'Datum do',
+                value: valueToString(value)
+              };
+            case 'rm_kod':
+              return {
+                name: 'RM Kód',
+                value: valueToString(value)
+              };
+            case 'rm_nazev':
+              return {
+                name: 'RM Název',
+                value: valueToString(value)
+              };
+            default:
+              return { name: '', value: '', description: '' };
+          }
+        }}
+      />
+    </Section>
+  );
+}
+
 export default function Page({
   vehicle,
   vehicleImport,
-  vehicleInspections
+  vehicleInspections,
+  vehicleRemoval
 }: Props) {
   const gridContent = sections
     .concat({
@@ -230,6 +283,9 @@ export default function Page({
   if (vehicleImport) {
     gridContent.unshift(<VehicleImport vehicleImport={vehicleImport} />);
   }
+  if (vehicleRemoval) {
+    gridContent.unshift(<VehicleRemoval vehicleRemoval={vehicleRemoval} />);
+  }
 
   return (
     <Grid
@@ -259,9 +315,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   if (!id) return { notFound: true };
   const vehicle = await getVehicle(id);
   if (!vehicle) return { notFound: true };
-  const [vehicleImport, vehicleInspections] = await Promise.all([
-    getImportFromPcv(vehicle.pcv),
-    getInspectionsFromPcv(vehicle.pcv)
-  ]);
-  return { props: { vehicle, vehicleImport, vehicleInspections } };
+  const [vehicleImport, vehicleInspections, vehicleRemoval] = await Promise.all(
+    [
+      getImportFromPcv(vehicle.pcv),
+      getInspectionsFromPcv(vehicle.pcv),
+      getVehicleRemoval(vehicle.pcv)
+    ]
+  );
+  return {
+    props: { vehicle, vehicleImport, vehicleInspections, vehicleRemoval }
+  };
 };

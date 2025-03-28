@@ -32,3 +32,11 @@ export async function getInspectionsFromPcv(pcv: number | null) {
   });
   return result.map(serialize);
 }
+
+export async function getVehicleRemoval(pcv: number | null) {
+  if (pcv == null) return null;
+  const result = await prisma.removed_vehicles.findFirst({
+    where: { pcv }
+  });
+  return result ? serialize(result) : null;
+}

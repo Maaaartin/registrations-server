@@ -148,3 +148,13 @@ model registrations {
   typ_kod                                                         String?
   rm_zaniku                                                       String?
 }
+
+model removed_vehicles {
+  id       Int       @id @default(autoincrement())
+  pcv      BigInt?
+  datum_od DateTime? @db.Date
+  datum_do DateTime? @db.Date
+  duvod    String?
+  rm_kod   BigInt?
+  rm_nazev String?
+}

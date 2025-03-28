@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS removed_vehicles_pcv_idx;
