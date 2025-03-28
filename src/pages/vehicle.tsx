@@ -19,7 +19,8 @@ import {
   SerializableImport,
   SerializableInspection,
   inspectionHeaderMap,
-  includeValue
+  includeValue,
+  shouldIncludeRegistrationField
 } from '../util/vehicle';
 import {
   getImportFromPcv,
@@ -193,12 +194,19 @@ export default function Page({
             ][]
           ).filter(
             ([key, value]) =>
-              section.options.includes(key) && includeValue(value)
+              section.options.includes(key) &&
+              includeValue(value) &&
+              shouldIncludeRegistrationField(key)
           )}
-          renderRow={([key, value]) => ({
-            ...getColumnName(key),
-            value: valueToString(value)
-          })}
+          renderRow={([key, value]) => {
+            const { bindWith, ...rest } = getColumnName(key);
+            return {
+              ...rest,
+              value:
+                valueToString(value) +
+                (bindWith ? `, ${valueToString(vehicle[bindWith])}` : '')
+            };
+          }}
         />
       </Section>
     );

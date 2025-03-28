@@ -39,10 +39,19 @@ export function getColumnName(key: keyof SerializableRegistration) {
 
     return {
       name: record.name,
-      description: 'description' in record ? record.description : null
+      description: 'description' in record ? record.description : null,
+      dependsOn: 'dependsOn' in record ? record.dependsOn : null,
+      bindWith: 'bindWith' in record ? record.bindWith : null
     };
   }
   return { name: key };
+}
+
+export function shouldIncludeRegistrationField(
+  key: keyof SerializableRegistration
+) {
+  const record = getColumnName(key);
+  return !Boolean(record.dependsOn);
 }
 
 type SectionType = {
@@ -171,6 +180,9 @@ export function includeValue<T extends Record<string, unknown>>(
   }
   if (typeof value === 'boolean') {
     return true;
+  }
+  if (value === '/') {
+    return false;
   }
   return Boolean(value);
 }

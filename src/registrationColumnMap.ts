@@ -18,11 +18,13 @@ export default {
   },
   druh_vozidla: {
     name: 'Druh vozidla',
-    description: 'Druh vozidla, např. osobní automobil'
+    description: 'Druh vozidla, např. osobní automobil',
+    bindWith: 'druh_vozidla_2_radek'
   },
   druh_vozidla_2_radek: {
     name: 'Druh vozidla 2. ř.',
-    description: 'Upřesnění předchozího bodu, např. AA SEDAN'
+    description: 'Upřesnění předchozího bodu, např. AA SEDAN',
+    dependsOn: 'druh_vozidla'
   },
   kategorie_vozidla: {
     name: 'Kategorie vozidla',
@@ -162,6 +164,18 @@ export default {
   naprav_pohanenych: { name: 'Počet náprav poháněných' },
   kola_a_pneumatiky: {
     name: 'Kola a pneumatiky na nápravě - rozměry/montáž [N.1; N.2; N.3; N.4]'
+  },
+  kola_a_pneumatiky_naprava_1: {
+    name: 'Kola a pneumatiky na nápravě - rozměry/montáž [N.1]'
+  },
+  kola_a_pneumatiky_naprava_2: {
+    name: 'Kola a pneumatiky na nápravě - rozměry/montáž [N.2]'
+  },
+  kola_a_pneumatiky_naprava_3: {
+    name: 'Kola a pneumatiky na nápravě - rozměry/montáž [N.3]'
+  },
+  kola_a_pneumatiky_naprava_4: {
+    name: 'Kola a pneumatiky na nápravě - rozměry/montáž [N.4]'
   },
   vnejsi_hluk_vozidla_stojici: {
     name: 'Vnější hluk vozidla [dB(A)] - stojícího při ot. [min⁻¹]',
