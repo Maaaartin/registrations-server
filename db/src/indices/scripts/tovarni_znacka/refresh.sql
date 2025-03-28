@@ -1,0 +1,1 @@
+REINDEX INDEX registrations_tovarni_znacka_idx;

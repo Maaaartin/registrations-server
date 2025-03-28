@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS registrations_tovarni_znacka_idx;
