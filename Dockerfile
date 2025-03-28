@@ -5,8 +5,10 @@ WORKDIR /app
 
 COPY temp ./
 
+RUN rm -rf db
 RUN yarn --frozen-lockfile
 RUN yarn build
+RUN rm -rf src
 EXPOSE 3000
 
 
