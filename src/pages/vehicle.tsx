@@ -18,7 +18,6 @@ import {
   SerializableRegistration,
   SerializableImport,
   SerializableInspection,
-  inspectionHeaderMap,
   includeValue,
   shouldIncludeRegistrationField
 } from '../util/vehicle';
@@ -30,6 +29,7 @@ import {
 } from '../util/vehicle/server';
 import { PropsWithChildren, useState } from 'react';
 import StatCard from '../components/StatCard';
+import inspectionsColumnMap from '../util/vehicle/inspectionsColumnMap';
 
 function AttributeCell({
   name,
@@ -153,8 +153,13 @@ function VehicleInspections({
       <Table>
         <TableHead>
           <TableRow>
-            {Object.values(inspectionHeaderMap).map((value) => (
-              <TableCell key={value}>{value}</TableCell>
+            {Object.values(inspectionsColumnMap).map((value) => (
+              <TableCell key={value.name}>
+                <AttributeCell
+                  name={value.name}
+                  description={value.description}
+                />
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -163,8 +168,8 @@ function VehicleInspections({
             <TableRow key={inspection.id}>
               {(
                 Object.keys(
-                  inspectionHeaderMap
-                ) as (keyof typeof inspectionHeaderMap)[]
+                  inspectionsColumnMap
+                ) as (keyof typeof inspectionsColumnMap)[]
               ).map((key) => (
                 <TableCell key={key}>
                   {valueToString(inspection[key])}

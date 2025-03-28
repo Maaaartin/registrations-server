@@ -4,7 +4,7 @@ import type {
   inspections
 } from '../../../prisma/client';
 import type { Serialized } from '../data';
-import registrationColumnMap from '../../registrationColumnMap';
+import registrationColumnMap from './registrationColumnMap';
 
 export type SerializableRegistration = Serialized<registrations>;
 export type SerializableImport = Serialized<imports>;
@@ -141,20 +141,6 @@ export const sections: SectionType[] = [
     ]
   }
 ];
-
-export const inspectionHeaderMap: Record<
-  Exclude<keyof SerializableInspection, 'pcv' | 'id'>,
-  string
-> = {
-  aktualni: 'Aktuální',
-  cislo_protokolu: 'Čislo protokolu',
-  kod_stk: 'Kód STK',
-  nazev_stk: 'Název STK',
-  platnost_do: 'Platnost do',
-  platnost_od: 'Platnost od',
-  stav: 'Stav',
-  typ: 'Typ'
-};
 
 export function includeValue<T extends Record<string, unknown>>(
   value: Serialized<T>[keyof Serialized<T>]
