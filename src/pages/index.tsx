@@ -1,3 +1,4 @@
+import { TextField } from '@mui/material';
 import Link from 'next/link';
 
 export default function HomePage() {
@@ -19,6 +20,18 @@ export default function HomePage() {
         jsou viditelná například ve <Link href="/stats">Statistikách</Link> (Top
         listy)
       </p>
+      <p>Rychlé vyhledávání VIN </p>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const form = e.currentTarget as HTMLFormElement;
+          const formData = new FormData(form);
+          const vin = formData.get('vin') as string;
+          window.location.assign(`/search?vin=${vin}`);
+        }}
+      >
+        <TextField name="vin" label="VIN" autoFocus />
+      </form>
     </>
   );
 }
