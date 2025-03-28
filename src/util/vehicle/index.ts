@@ -1,13 +1,20 @@
-import { registrations, imports, Prisma } from '../../../prisma/client';
+import {
+  registrations,
+  imports,
+  inspections,
+  Prisma
+} from '../../../prisma/client';
 import type { Serialized } from '../data';
 import registrationColumnMap from '../../registrationColumnMap';
 
 type SerializableRegistration = Serialized<registrations>;
 type SerializableImport = Serialized<imports>;
+export type SerializableInspection = Serialized<inspections>;
 
 export type Props = {
   vehicle: SerializableRegistration;
   vehicleImport?: SerializableImport | null;
+  // vehicleInspections: SerializableInspection[];
 };
 
 export const valueToString = (

@@ -17,8 +17,17 @@ export async function getVehicle(id: number) {
 }
 
 export async function getImportFromPcv(pcv: number | null) {
+  if (pcv == null) return null;
   const result = await prisma.imports.findFirst({
     where: { pcv }
   });
   return result ? serialize(result) : null;
+}
+
+export async function getInspectionsFromPcv(pcv: number | null) {
+  if (pcv == null) return [];
+  const result = await prisma.inspections.findMany({
+    where: { pcv }
+  });
+  return result.map(serialize);
 }

@@ -34,7 +34,7 @@ function AttributeCell({
   return name;
 }
 
-function Section<T>({
+function Section<T extends string>({
   label,
   keys,
   renderSubList
@@ -71,7 +71,7 @@ function Section<T>({
               {keys.map((key) => {
                 const { name, description, value } = renderSubList(key);
                 return (
-                  <TableRow sx={{ borderBottom: 'solid' }}>
+                  <TableRow key={key} sx={{ borderBottom: 'solid' }}>
                     <TableCell>
                       <AttributeCell name={name} description={description} />
                     </TableCell>
