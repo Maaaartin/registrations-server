@@ -32,6 +32,7 @@ import {
 import { PropsWithChildren, useState } from 'react';
 import StatCard from '../components/StatCard';
 import inspectionsColumnMap from '../util/vehicle/inspectionsColumnMap';
+import VehicleTimeline from '../components/VehicleTimeline';
 
 function AttributeCell({
   name,
@@ -235,13 +236,14 @@ function VehicleRemoval({
   );
 }
 
-export default function Page({
-  vehicle,
-  vehicleImport,
-  vehicleInspections,
-  vehicleRemoval
-}: Props) {
+export default function Page(props: Props) {
+  const { vehicle, vehicleImport, vehicleInspections, vehicleRemoval } = props;
   const gridContent = sections
+    .map((section) => ({
+      ...section,
+      options: section.options.filter((option) => includeValue(vehicle[option]))
+    }))
+    .filter((section) => Boolean(section.options.length))
     .concat({
       label: 'Ostatní Údaje',
       key: 'ostatni_udaje',
@@ -294,9 +296,15 @@ export default function Page({
       columns={12}
       sx={{ mb: (theme) => theme.spacing(2) }}
     >
+      <Grid size={{ xs: 12 }}>
+        <Section label="Časová osa">
+          <VehicleTimeline {...props} />
+        </Section>
+      </Grid>
+
       {Boolean(vehicleInspections.length) && (
         <Grid size={{ xs: 12 }}>
-          <VehicleInspections vehicleInspections={vehicleInspections} />{' '}
+          <VehicleInspections vehicleInspections={vehicleInspections} />
         </Grid>
       )}
       {gridContent.map((Component, index) => (
