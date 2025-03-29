@@ -8,9 +8,10 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent, {
   timelineOppositeContentClasses
 } from '@mui/lab/TimelineOppositeContent';
-import { Props } from '../util/vehicle';
+import { displayDateFormat, Props } from '../util/vehicle';
+import { DateTime } from 'luxon';
 
-type TimelineObject = { date: Date; component: React.ReactNode };
+type TimelineObject = { date: DateTime; component: React.ReactNode };
 
 function getTimelineObjects({
   vehicle,
@@ -21,32 +22,32 @@ function getTimelineObjects({
   const data: TimelineObject[] = [];
   if (vehicle.datum_1_registrace) {
     data.push({
-      date: new Date(vehicle.datum_1_registrace.value),
+      date: DateTime.fromObject(vehicle.datum_1_registrace),
       component: 'Datum první registrace'
     });
   }
   if (vehicle.datum_1_registrace_v_cr) {
     data.push({
-      date: new Date(vehicle.datum_1_registrace_v_cr.value),
+      date: DateTime.fromObject(vehicle.datum_1_registrace_v_cr),
       component: 'Datum první registrace v ČR'
     });
   }
   if (vehicleImport?.import_date) {
     data.push({
-      date: new Date(vehicleImport.import_date.value),
+      date: DateTime.fromObject(vehicleImport.import_date),
       component: 'Import do ČR'
     });
   }
   if (vehicleRemoval) {
     if (vehicleRemoval.datum_do) {
       data.push({
-        date: new Date(vehicleRemoval.datum_do.value),
+        date: DateTime.fromObject(vehicleRemoval.datum_do),
         component: 'Vyřazeno z provozy'
       });
     }
     if (vehicleRemoval.datum_od) {
       data.push({
-        date: new Date(vehicleRemoval.datum_od.value),
+        date: DateTime.fromObject(vehicleRemoval.datum_od),
         component: 'Vyřazeno z provozy'
       });
     }
@@ -54,18 +55,18 @@ function getTimelineObjects({
   vehicleInspections.forEach((inspection) => {
     if (inspection.platnost_od) {
       data.push({
-        date: new Date(inspection.platnost_od.value),
+        date: DateTime.fromObject(inspection.platnost_od),
         component: `Začátek platnosti techniceké kontroly ${inspection.typ}`
       });
     }
     if (inspection.platnost_do) {
       data.push({
-        date: new Date(inspection.platnost_do.value),
+        date: DateTime.fromObject(inspection.platnost_do),
         component: `Konec platnosti techniceké kontroly ${inspection.typ}`
       });
     }
   });
-  return data.sort((a, b) => a.date.getTime() - b.date.getTime());
+  return data.sort((a, b) => a.date.toMillis() - b.date.toMillis());
 }
 
 export default function VehicleTimeline(props: Props) {
@@ -82,7 +83,7 @@ export default function VehicleTimeline(props: Props) {
         return (
           <TimelineItem key={index}>
             <TimelineOppositeContent color="textSecondary">
-              {date.toLocaleDateString()}
+              {date.toFormat(displayDateFormat)}
             </TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot />

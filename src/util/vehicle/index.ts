@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import type {
   registrations,
   imports,
@@ -19,11 +20,13 @@ export type Props = {
   vehicleRemoval: SerializableRemoval | null;
 };
 
+export const displayDateFormat = 'dd-MM-yyyy';
+
 export const valueToString = (
   value: SerializableRegistration[keyof SerializableRegistration]
 ) => {
-  if (typeof value === 'object' && value?.value) {
-    return new Date(value.value).toLocaleDateString();
+  if (typeof value === 'object' && value) {
+    return DateTime.fromObject(value).toFormat(displayDateFormat);
   }
   if (typeof value === 'boolean') {
     return value ? 'Ano' : 'Ne';

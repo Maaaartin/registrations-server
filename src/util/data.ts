@@ -1,6 +1,8 @@
+import { DateObjectUnits, DateTime } from 'luxon';
+
 export type Serialized<T extends Record<string, unknown>> = {
   [K in keyof T]: T[K] extends Date | null
-    ? { type: 'Date'; value: string } | null
+    ? DateObjectUnits | null
     : T[K] extends bigint | null
       ? number | null
       : T[K] extends undefined
@@ -16,7 +18,7 @@ export function serialize<T extends Record<string, unknown>>(
       return [
         key,
         value instanceof Date
-          ? { type: 'Date', value: value.toISOString() }
+          ? DateTime.fromJSDate(value).toObject()
           : typeof value === 'bigint'
             ? Number(value)
             : (value ?? null)
