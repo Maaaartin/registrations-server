@@ -141,15 +141,22 @@ function VehicleInspections({
         <TableBody>
           {vehicleInspections.map((inspection, index) => (
             <TableRow key={index}>
-              {(
-                Object.keys(
-                  inspectionsColumnMap
-                ) as (keyof typeof inspectionsColumnMap)[]
-              ).map((key) => (
-                <TableCell key={key}>
-                  {valueToString(inspection[key])}
-                </TableCell>
-              ))}
+              {toTypedEntries(inspectionsColumnMap).map(([key]) => {
+                const value = inspection[key];
+                if (key === 'kod_stk' && value) {
+                  return (
+                    <TableCell key={key}>
+                      <a
+                        href={`https://stk.opendatalab.cz/stations/${value}`}
+                        target="_blank"
+                      >
+                        {valueToString(value)}
+                      </a>
+                    </TableCell>
+                  );
+                }
+                return <TableCell key={key}>{valueToString(value)}</TableCell>;
+              })}
             </TableRow>
           ))}
         </TableBody>
