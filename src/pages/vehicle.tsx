@@ -110,7 +110,7 @@ function VehicleImport({
             keyof SerializableImport,
             SerializableImport[keyof SerializableImport]
           ][]
-        ).filter(([key, value]) => includeValue(value))}
+        ).filter(([, value]) => includeValue(value))}
         renderRow={([key, value]) => ({
           ...importsColumnMap[key],
           value: valueToString(value)
