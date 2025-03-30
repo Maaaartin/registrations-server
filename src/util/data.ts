@@ -39,3 +39,7 @@ export const vehicleSelect = {
   cislo_orv: true,
   pcv: true
 } as const;
+
+export function toTypedEntries<T extends Record<string, unknown>>(object: T) {
+  return Object.entries(object) as [keyof T, T[keyof T]][];
+}

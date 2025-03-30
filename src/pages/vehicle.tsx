@@ -35,6 +35,7 @@ import VehicleTimeline from '../components/VehicleTimeline';
 import TextWithDescription from '../components/TextWithDescription';
 import removalColumnsMap from '../util/vehicle/removalColumnsMap';
 import importsColumnMap from '../util/vehicle/importsColumnMap';
+import { toTypedEntries } from '../util/data';
 
 function DataPairsTable<T>({
   data,
@@ -105,12 +106,9 @@ function VehicleImport({
   return (
     <Section label="Info o dovozu">
       <DataPairsTable
-        data={(
-          Object.entries(vehicleImport) as [
-            keyof SerializableImport,
-            SerializableImport[keyof SerializableImport]
-          ][]
-        ).filter(([, value]) => includeValue(value))}
+        data={toTypedEntries(vehicleImport).filter(([, value]) =>
+          includeValue(value)
+        )}
         renderRow={([key, value]) => ({
           ...importsColumnMap[key],
           value: valueToString(value)
@@ -168,12 +166,9 @@ function VehicleRemoval({
   return (
     <Section label="Info o vyřazení z provozu">
       <DataPairsTable
-        data={(
-          Object.entries(vehicleRemoval) as [
-            keyof SerializableRemoval,
-            SerializableRemoval[keyof SerializableRemoval]
-          ][]
-        ).filter(([, value]) => includeValue(value))}
+        data={toTypedEntries(vehicleRemoval).filter(([, value]) =>
+          includeValue(value)
+        )}
         renderRow={([key, value]) => ({
           ...removalColumnsMap[key],
           value: valueToString(value)
@@ -205,12 +200,7 @@ export default function Page(props: Props) {
       return (
         <Section key={section.key} label={section.label}>
           <DataPairsTable
-            data={(
-              Object.entries(vehicle) as [
-                keyof SerializableRegistration,
-                SerializableRegistration[keyof SerializableRegistration]
-              ][]
-            ).filter(
+            data={toTypedEntries(vehicle).filter(
               ([key, value]) =>
                 section.options.includes(key) &&
                 includeValue(value) &&
