@@ -10,6 +10,10 @@ import TimelineOppositeContent, {
 } from '@mui/lab/TimelineOppositeContent';
 import { displayDateFormat, Props } from '../util/vehicle';
 import { DateTime } from 'luxon';
+import inspectionsColumnMap from '../util/vehicle/inspectionsColumnMap';
+import registrationColumnMap from '../util/vehicle/registrationColumnMap';
+import removalColumnsMap from '../util/vehicle/removalColumnsMap';
+import importsColumnMap from '../util/vehicle/importsColumnMap';
 
 type TimelineObject = { date: DateTime; component: React.ReactNode };
 
@@ -23,32 +27,32 @@ function getTimelineObjects({
   if (vehicle.datum_1_registrace) {
     data.push({
       date: DateTime.fromObject(vehicle.datum_1_registrace),
-      component: 'Datum první registrace'
+      component: registrationColumnMap.datum_1_registrace.name
     });
   }
   if (vehicle.datum_1_registrace_v_cr) {
     data.push({
       date: DateTime.fromObject(vehicle.datum_1_registrace_v_cr),
-      component: 'Datum první registrace v ČR'
+      component: registrationColumnMap.datum_1_registrace_v_cr.name
     });
   }
   if (vehicleImport?.import_date) {
     data.push({
       date: DateTime.fromObject(vehicleImport.import_date),
-      component: 'Import do ČR'
+      component: importsColumnMap.import_date.name
     });
   }
   if (vehicleRemoval) {
     if (vehicleRemoval.datum_do) {
       data.push({
         date: DateTime.fromObject(vehicleRemoval.datum_do),
-        component: 'Vyřazeno z provozy'
+        component: removalColumnsMap.datum_do.name
       });
     }
     if (vehicleRemoval.datum_od) {
       data.push({
         date: DateTime.fromObject(vehicleRemoval.datum_od),
-        component: 'Vyřazeno z provozy'
+        component: removalColumnsMap.datum_od.name
       });
     }
   }
@@ -56,13 +60,13 @@ function getTimelineObjects({
     if (inspection.platnost_od) {
       data.push({
         date: DateTime.fromObject(inspection.platnost_od),
-        component: `Začátek platnosti techniceké kontroly ${inspection.typ}`
+        component: inspectionsColumnMap.platnost_od.description
       });
     }
     if (inspection.platnost_do) {
       data.push({
         date: DateTime.fromObject(inspection.platnost_do),
-        component: `Konec platnosti techniceké kontroly ${inspection.typ}`
+        component: inspectionsColumnMap.platnost_do.description
       });
     }
   });
