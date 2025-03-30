@@ -33,6 +33,8 @@ import StatCard from '../components/StatCard';
 import inspectionsColumnMap from '../util/vehicle/inspectionsColumnMap';
 import VehicleTimeline from '../components/VehicleTimeline';
 import TextWithDescription from '../components/TextWithDescription';
+import removalColumnsMap from '../util/vehicle/removalColumnsMap';
+import importsColumnMap from '../util/vehicle/importsColumnMap';
 
 function DataPairsTable<T>({
   data,
@@ -108,22 +110,11 @@ function VehicleImport({
             keyof SerializableImport,
             SerializableImport[keyof SerializableImport]
           ][]
-        ).filter(
-          ([key, value]) => !['id', 'pcv'].includes(key) && includeValue(value)
-        )}
-        renderRow={([key, value]) => {
-          switch (key) {
-            case 'country':
-              return { name: 'Země', value: vehicleImport[key] || '' };
-            case 'import_date':
-              return {
-                name: 'Datum dovozu',
-                value: valueToString(value)
-              };
-            default:
-              return { name: '', value: '', description: '' };
-          }
-        }}
+        ).filter(([key, value]) => includeValue(value))}
+        renderRow={([key, value]) => ({
+          ...importsColumnMap[key],
+          value: valueToString(value)
+        })}
       />
     </Section>
   );
@@ -150,8 +141,8 @@ function VehicleInspections({
           </TableRow>
         </TableHead>
         <TableBody>
-          {vehicleInspections.map((inspection) => (
-            <TableRow key={inspection.id}>
+          {vehicleInspections.map((inspection, index) => (
+            <TableRow key={index}>
               {(
                 Object.keys(
                   inspectionsColumnMap
@@ -182,38 +173,11 @@ function VehicleRemoval({
             keyof SerializableRemoval,
             SerializableRemoval[keyof SerializableRemoval]
           ][]
-        ).filter(
-          ([key, value]) => !['id', 'pcv'].includes(key) && includeValue(value)
-        )}
-        renderRow={([key, value]) => {
-          switch (key) {
-            case 'duvod':
-              return { name: 'Důvod', value: valueToString(value) };
-
-            case 'datum_od':
-              return {
-                name: 'Datum od',
-                value: valueToString(value)
-              };
-            case 'datum_do':
-              return {
-                name: 'Datum do',
-                value: valueToString(value)
-              };
-            case 'rm_kod':
-              return {
-                name: 'RM Kód',
-                value: valueToString(value)
-              };
-            case 'rm_nazev':
-              return {
-                name: 'RM Název',
-                value: valueToString(value)
-              };
-            default:
-              return { name: '', value: '', description: '' };
-          }
-        }}
+        ).filter(([, value]) => includeValue(value))}
+        renderRow={([key, value]) => ({
+          ...removalColumnsMap[key],
+          value: valueToString(value)
+        })}
       />
     </Section>
   );

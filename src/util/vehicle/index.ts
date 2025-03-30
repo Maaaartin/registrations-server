@@ -1,17 +1,17 @@
 import { DateTime } from 'luxon';
-import type {
-  registrations,
-  imports,
-  inspections,
-  removed_vehicles
-} from '../../../prisma/client';
+import type { registrations } from '../../../prisma/client';
 import type { Serialized } from '../data';
 import registrationColumnMap from './registrationColumnMap';
+import type {
+  VehicleRemovalFromPcv,
+  VehicleInspectionFromPcv,
+  VehicleImportFromPcv
+} from './server';
 
 export type SerializableRegistration = Serialized<registrations>;
-export type SerializableImport = Serialized<imports>;
-export type SerializableInspection = Serialized<inspections>;
-export type SerializableRemoval = Serialized<removed_vehicles>;
+export type SerializableImport = VehicleImportFromPcv;
+export type SerializableInspection = VehicleInspectionFromPcv;
+export type SerializableRemoval = VehicleRemovalFromPcv;
 
 export type Props = {
   vehicle: SerializableRegistration;
