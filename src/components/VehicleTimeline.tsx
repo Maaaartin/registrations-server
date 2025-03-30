@@ -8,14 +8,67 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent, {
   timelineOppositeContentClasses
 } from '@mui/lab/TimelineOppositeContent';
-import { displayDateFormat, Props } from '../util/vehicle';
+import {
+  displayDateFormat,
+  Props,
+  SerializableInspection
+} from '../util/vehicle';
 import { DateTime } from 'luxon';
 import inspectionsColumnMap from '../util/vehicle/inspectionsColumnMap';
 import registrationColumnMap from '../util/vehicle/registrationColumnMap';
 import removalColumnsMap from '../util/vehicle/removalColumnsMap';
 import importsColumnMap from '../util/vehicle/importsColumnMap';
+import TextWithDescription from './TextWithDescription';
+import {
+  Card,
+  CardContent,
+  List,
+  ListItem,
+  Stack,
+  Typography
+} from '@mui/material';
 
 type TimelineObject = { date: DateTime; component: React.ReactNode };
+
+const inspectionDisplayKeys = [
+  'typ',
+  'stav',
+  'cislo_protokolu',
+  'nazev_stk',
+  'kod_stk'
+] as const;
+function InspectionView({
+  vehicleInspection
+}: {
+  vehicleInspection: SerializableInspection;
+}) {
+  return (
+    <Card variant="outlined" sx={{ height: '100%', flexGrow: 1 }}>
+      <CardContent>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <Typography variant="caption" gutterBottom>
+            Techinická prohlídka
+          </Typography>
+        </Stack>
+        <Stack direction="column" sx={{ flexGrow: 1, gap: 1 }}>
+          <List>
+            {inspectionDisplayKeys
+              .filter((key) => vehicleInspection[key])
+              .map((key) => (
+                <ListItem key={key}>
+                  {`${inspectionsColumnMap[key].name}: ${vehicleInspection[key]}`}
+                </ListItem>
+              ))}
+          </List>
+        </Stack>
+      </CardContent>
+    </Card>
+  );
+}
 
 function getTimelineObjects({
   vehicle,
@@ -27,13 +80,19 @@ function getTimelineObjects({
   if (vehicle.datum_1_registrace) {
     data.push({
       date: DateTime.fromObject(vehicle.datum_1_registrace),
-      component: registrationColumnMap.datum_1_registrace.name
+      component: (
+        <TextWithDescription {...registrationColumnMap.datum_1_registrace} />
+      )
     });
   }
   if (vehicle.datum_1_registrace_v_cr) {
     data.push({
       date: DateTime.fromObject(vehicle.datum_1_registrace_v_cr),
-      component: registrationColumnMap.datum_1_registrace_v_cr.name
+      component: (
+        <TextWithDescription
+          {...registrationColumnMap.datum_1_registrace_v_cr}
+        />
+      )
     });
   }
   if (vehicleImport?.import_date) {
@@ -60,13 +119,17 @@ function getTimelineObjects({
     if (inspection.platnost_od) {
       data.push({
         date: DateTime.fromObject(inspection.platnost_od),
-        component: inspectionsColumnMap.platnost_od.description
+        component: <InspectionView vehicleInspection={inspection} />
       });
     }
     if (inspection.platnost_do) {
       data.push({
         date: DateTime.fromObject(inspection.platnost_do),
-        component: inspectionsColumnMap.platnost_do.description
+        component:
+          inspectionsColumnMap.platnost_do.description +
+          (inspection.platnost_od
+            ? ` z ${DateTime.fromObject(inspection.platnost_od).toFormat(displayDateFormat)}`
+            : '')
       });
     }
   });

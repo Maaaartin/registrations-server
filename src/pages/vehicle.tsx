@@ -7,8 +7,7 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
-  Tooltip
+  TableRow
 } from '@mui/material';
 import {
   Props,
@@ -33,23 +32,7 @@ import { PropsWithChildren, useState } from 'react';
 import StatCard from '../components/StatCard';
 import inspectionsColumnMap from '../util/vehicle/inspectionsColumnMap';
 import VehicleTimeline from '../components/VehicleTimeline';
-
-function AttributeCell({
-  name,
-  description
-}: {
-  name: string;
-  description: string | undefined | null;
-}) {
-  if (description) {
-    return (
-      <Tooltip title={description}>
-        <span>{name} *</span>
-      </Tooltip>
-    );
-  }
-  return name;
-}
+import TextWithDescription from '../components/TextWithDescription';
 
 function DataPairsTable<T>({
   data,
@@ -70,7 +53,7 @@ function DataPairsTable<T>({
           return (
             <TableRow key={index}>
               <TableCell>
-                <AttributeCell name={name} description={description} />
+                <TextWithDescription name={name} description={description} />
               </TableCell>
               <TableCell>{value}</TableCell>
             </TableRow>
@@ -158,7 +141,7 @@ function VehicleInspections({
           <TableRow>
             {Object.values(inspectionsColumnMap).map((value) => (
               <TableCell key={value.name}>
-                <AttributeCell
+                <TextWithDescription
                   name={value.name}
                   description={value.description}
                 />

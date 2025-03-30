@@ -11,4 +11,4 @@ export default {
     description:
       'Název registračního místa, kde bylo vozidlo vyřazeno z provozu'
   }
-};
+} as const;
