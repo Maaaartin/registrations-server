@@ -1,0 +1,11 @@
+{
+  "pcv": "BIGINT",
+  "typ_subjektu": "INTEGER",
+  "vztah_k_vozidlu": "INTEGER",
+  "aktualni": "BOOLEAN",
+  "ico": "TEXT",
+  "nazev": "TEXT",
+  "adresa": "TEXT",
+  "datum_od": "DATE",
+  "datum_do": "DATE"
+}

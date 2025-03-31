@@ -1,0 +1,11 @@
+{
+  "PČV": "pcv",
+  "Typ subjektu": "typ_subjektu",
+  "Vztah k vozidlu": "vztah_k_vozidlu",
+  "Aktuální": "aktualni",
+  "IČO": "ico",
+  "Název": "nazev",
+  "Adresa": "adresa",
+  "Datum od": "datum_od",
+  "Datum do": "datum_do"
+}
