@@ -29,6 +29,19 @@ model inspections {
   aktualni        Boolean?
 }
 
+model owners {
+  id              Int       @id @default(autoincrement())
+  pcv             BigInt?
+  typ_subjektu    Int?
+  vztah_k_vozidlu Int?
+  aktualni        Boolean?
+  ico             String?
+  nazev           String?
+  adresa          String?
+  datum_od        DateTime? @db.Date
+  datum_do        DateTime? @db.Date
+}
+
 model registrations {
   id                                                              Int       @id @default(autoincrement())
   datum_1_registrace                                              DateTime? @db.Date
