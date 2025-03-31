@@ -58,3 +58,16 @@ export type VehicleRemovalFromPcv = Exclude<
   Awaited<ReturnType<typeof getVehicleRemoval>>,
   null
 >;
+
+export async function getVehicleOwnerFromPcv(pcv: number | null) {
+  if (pcv == null) return [];
+  const result = await prisma.owners.findMany({
+    where: { pcv },
+    omit
+  });
+  return result.map(serialize);
+}
+
+export type VehicleOwnerFromPcv = Awaited<
+  ReturnType<typeof getVehicleOwnerFromPcv>
+>[0];

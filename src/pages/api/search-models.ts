@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { searchModels_ } from '../../../prisma/queries';
-import { DBrandModel } from '../../util/decoders';
+import { DBrandModel } from '../../content/decoders';
 
 export default async function handler(
   req: NextApiRequest,

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { DBrand } from '../../util/decoders';
+import { DBrand } from '../../content/decoders';
 import { topTypesForBrand_ } from '../../../prisma/queries';
 
 export default async function handler(

@@ -4,7 +4,7 @@ import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { GridSlotProps } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
-import { DateFormat, DiscoverProps, pageSize } from '../util/discover';
+import { DateFormat, DiscoverProps, pageSize } from '../content/discover';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import {
@@ -13,8 +13,8 @@ import {
   LocalizationProvider
 } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { discoverVehicles, queryDecoder } from '../util/discover/server';
-import { datePickerLocaleText } from '../util/localization';
+import { discoverVehicles, queryDecoder } from '../content/discover/server';
+import { datePickerLocaleText } from '../content/localization';
 
 type AutocompleteParams = {
   tovarni_znacka: string;

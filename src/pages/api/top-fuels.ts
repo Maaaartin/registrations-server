@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ValueCountPairs } from '../../util/data';
+import { ValueCountPairs } from '../../content/data';
 import { topFuels_ } from '../../../prisma/queries';
 
 export default async function handler(

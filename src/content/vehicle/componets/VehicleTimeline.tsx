@@ -8,17 +8,13 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent, {
   timelineOppositeContentClasses
 } from '@mui/lab/TimelineOppositeContent';
-import {
-  displayDateFormat,
-  Props,
-  SerializableInspection
-} from '../util/vehicle';
+import { displayDateFormat, Props, SerializableInspection } from '..';
 import { DateTime } from 'luxon';
-import inspectionsColumnMap from '../util/vehicle/inspectionsColumnMap';
-import registrationColumnMap from '../util/vehicle/registrationColumnMap';
-import removalColumnsMap from '../util/vehicle/removalColumnsMap';
-import importsColumnMap from '../util/vehicle/importsColumnMap';
-import TextWithDescription from './TextWithDescription';
+import inspectionsColumnMap from '../inspectionsColumnMap';
+import registrationColumnMap from '../registrationColumnMap';
+import removalColumnsMap from '../removalColumnsMap';
+import importsColumnMap from '../importsColumnMap';
+import TextWithDescription from '../../../components/TextWithDescription';
 import {
   Card,
   CardContent,

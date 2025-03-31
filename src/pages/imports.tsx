@@ -1,8 +1,8 @@
 import { Stack } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { GridSlotProps } from '@mui/x-data-grid';
-import { pageSize, ImportsProps } from '../util/imports';
-import { searchImports, queryDecoder } from '../util/imports/server';
+import { pageSize, ImportsProps } from '../content/imports';
+import { searchImports, queryDecoder } from '../content/imports/server';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import useFetch from '../hooks/useFetch';

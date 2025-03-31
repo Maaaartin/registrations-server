@@ -1,7 +1,7 @@
 import React from 'react';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
-import { gridLocaleText } from '../util/localization';
+import { gridLocaleText } from '../content/localization';
 
 type Props = Omit<DataGridProps, 'columns'>;
 

@@ -18,7 +18,7 @@ export function serialize<T extends Record<string, unknown>>(
       return [
         key,
         value instanceof Date
-          ? DateTime.fromJSDate(value).toObject()
+          ? DateTime.fromJSDate(value).startOf('day').toObject()
           : typeof value === 'bigint'
             ? Number(value)
             : (value ?? null)

@@ -2,8 +2,13 @@ import { useReducer } from 'react';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { GridSlotProps } from '@mui/x-data-grid';
-import { SearchProps, SearchState, formReducer, limit } from '../util/search';
-import { searchVehicles, queryDecoder } from '../util/search/server';
+import {
+  SearchProps,
+  SearchState,
+  formReducer,
+  limit
+} from '../content/search';
+import { searchVehicles, queryDecoder } from '../content/search/server';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
 

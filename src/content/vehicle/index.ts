@@ -5,19 +5,22 @@ import registrationColumnMap from './registrationColumnMap';
 import type {
   VehicleRemovalFromPcv,
   VehicleInspectionFromPcv,
-  VehicleImportFromPcv
+  VehicleImportFromPcv,
+  VehicleOwnerFromPcv
 } from './server';
 
 export type SerializableRegistration = Serialized<registrations>;
 export type SerializableImport = VehicleImportFromPcv;
 export type SerializableInspection = VehicleInspectionFromPcv;
 export type SerializableRemoval = VehicleRemovalFromPcv;
+export type SerializableOwner = VehicleOwnerFromPcv;
 
 export type Props = {
   vehicle: SerializableRegistration;
   vehicleImport: SerializableImport | null;
   vehicleInspections: SerializableInspection[];
   vehicleRemoval: SerializableRemoval | null;
+  vehicleOwners: VehicleOwnerFromPcv[];
 };
 
 export const displayDateFormat = 'dd-MM-yyyy';
