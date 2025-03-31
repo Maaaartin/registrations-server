@@ -15,6 +15,9 @@ import {
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { discoverVehicles, queryDecoder } from '../content/discover/server';
 import { datePickerLocaleText } from '../content/localization';
+import useFetch from '../hooks/useFetch';
+import { DNumber } from '../content/decoders';
+import { filterQuery } from '../content/data';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
@@ -165,9 +168,23 @@ export default function Discover({
     datum_prvni_registrace_od,
     datum_prvni_registrace_do
   });
+  const { data: fetchedRowCount } = useFetch({
+    url: `/api/discover-count?${new URLSearchParams(
+      filterQuery(
+        Object.entries({
+          tovarni_znacka,
+          typ,
+          datum_prvni_registrace_od: datum_prvni_registrace_od || '',
+          datum_prvni_registrace_do: datum_prvni_registrace_do || ''
+        })
+      )
+    )}`,
+    decoder: DNumber
+  });
 
   const rowCount =
-    vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1;
+    fetchedRowCount ??
+    (vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1);
 
   return (
     <>
@@ -217,13 +234,13 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     datum_prvni_registrace_do
   } = queryDecoder.parse(context.query);
 
-  const vehicles = await discoverVehicles(
+  const vehicles = await discoverVehicles({
     page,
     tovarni_znacka,
     typ,
     datum_prvni_registrace_od,
     datum_prvni_registrace_do
-  );
+  });
 
   return {
     props: {

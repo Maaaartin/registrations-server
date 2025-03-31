@@ -31,3 +31,10 @@ export const DPage = zod.object({
     .default('0')
     .transform((val) => Number(val) || 0)
 });
+
+export const DDiscover = zod
+  .object({
+    datum_prvni_registrace_od: DDate,
+    datum_prvni_registrace_do: DDate
+  })
+  .merge(DBrandModel);

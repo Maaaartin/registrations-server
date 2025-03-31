@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { filterQuery } from '../content/data';
 
 export default function useDataGridSubmit<
   T extends Record<string, string | number | null>
@@ -12,11 +13,7 @@ export default function useDataGridSubmit<
       key,
       params[key] ?? value
     ]);
-    const query = Object.fromEntries(
-      entries.filter(([, value]) =>
-        ['', null, undefined].every((val) => value !== val)
-      )
-    );
+    const query = filterQuery(entries as [string, (typeof entries)[0][1]][]);
     return router
       .push(
         {

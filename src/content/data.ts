@@ -43,3 +43,11 @@ export const vehicleSelect = {
 export function toTypedEntries<T extends Record<string, unknown>>(object: T) {
   return Object.entries(object) as [keyof T, T[keyof T]][];
 }
+
+export function filterQuery<T>(entries: [string, T][]) {
+  return Object.fromEntries(
+    entries.filter(([, value]) =>
+      ['', null, undefined].every((val) => value !== val)
+    )
+  );
+}

@@ -149,7 +149,6 @@ export default function Search({
 export const getServerSideProps: GetServerSideProps<SearchProps> = async (
   context
 ) => {
-  console.log(context.params);
   const parsed = queryDecoder.parse(context.query);
   const { vin, cislo_tp, cislo_orv } = parsed;
   const values = Object.values(parsed);

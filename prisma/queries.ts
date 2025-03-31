@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import prisma from '.';
 import queries from './client/sql';
 
@@ -86,3 +87,44 @@ export async function countriesImports_() {
     count: Number(value.count)
   }));
 }
+
+export type DiscoverVehiclesParams = {
+  tovarni_znacka: string;
+  typ: string;
+  datum_prvni_registrace_od: Date | null;
+  datum_prvni_registrace_do: Date | null;
+};
+export function discoverVehiclesBaseQuery({
+  tovarni_znacka,
+  typ,
+  datum_prvni_registrace_od,
+  datum_prvni_registrace_do
+}: DiscoverVehiclesParams) {
+  const query = [
+    {
+      key: 'datum_1_registrace',
+      value: { gte: datum_prvni_registrace_od }
+    },
+    {
+      key: 'datum_1_registrace',
+      value: { lte: datum_prvni_registrace_do }
+    }
+  ]
+    .filter(({ value }) => Object.values(value).filter(Boolean).length)
+    .map(({ key, value }) => ({ [key]: value }));
+
+  return {
+    where: {
+      tovarni_znacka: tovarni_znacka || undefined,
+      typ: typ || undefined,
+      AND: query
+    }
+  };
+}
+
+export const discoverCount = unstable_cache(
+  (params: DiscoverVehiclesParams) =>
+    prisma.registrations.count(discoverVehiclesBaseQuery(params)),
+  ['discover_count'],
+  { revalidate: 3600, tags: ['discover_count'] }
+);
