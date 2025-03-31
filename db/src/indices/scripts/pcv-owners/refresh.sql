@@ -1,0 +1,1 @@
+REINDEX INDEX owners_pcv_idx;

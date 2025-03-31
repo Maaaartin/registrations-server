@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS owners_pcv_idx;
