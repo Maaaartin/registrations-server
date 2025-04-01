@@ -1,6 +1,7 @@
 import { Vehicles } from '../search';
 
-export const pageSize = 20;
+export const defaultPageSize = 20;
+export const maxPageSize = 100;
 
 export const DateFormat = 'yyyy-MM-dd';
 
@@ -11,4 +12,5 @@ export type DiscoverProps = {
   vehicles: Vehicles;
   datum_prvni_registrace_od: string | null;
   datum_prvni_registrace_do: string | null;
+  pageSize: number;
 };

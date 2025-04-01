@@ -4,7 +4,12 @@ import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { GridSlotProps } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
-import { DateFormat, DiscoverProps, pageSize } from '../content/discover';
+import {
+  DateFormat,
+  DiscoverProps,
+  defaultPageSize,
+  maxPageSize
+} from '../content/discover';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import {
@@ -32,6 +37,7 @@ type DateSearchParams = {
 type SearchParams = AutocompleteParams &
   DateSearchParams & {
     page: number;
+    pageSize: number;
   };
 
 type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
@@ -159,14 +165,16 @@ export default function Discover({
   tovarni_znacka,
   typ,
   datum_prvni_registrace_od,
-  datum_prvni_registrace_do
+  datum_prvni_registrace_do,
+  pageSize
 }: DiscoverProps) {
   const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
     tovarni_znacka,
     typ,
     datum_prvni_registrace_od,
-    datum_prvni_registrace_do
+    datum_prvni_registrace_do,
+    pageSize
   });
   const { data: fetchedRowCount } = useFetch({
     url: `/api/discover-count?${new URLSearchParams(
@@ -185,7 +193,6 @@ export default function Discover({
   const rowCount =
     fetchedRowCount ??
     (vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1);
-
   return (
     <>
       <VehicleDataGrid
@@ -193,15 +200,14 @@ export default function Discover({
         filterMode="server"
         loading={loading}
         rows={vehicles}
-        initialState={{
-          pagination: {
-            paginationModel: { page: currentPage, pageSize },
-            meta: { hasNextPage: true }
-          }
-        }}
         paginationModel={{ page: currentPage, pageSize }}
-        pageSizeOptions={[pageSize]}
-        onPaginationModelChange={(params) => onSubmit({ page: params.page })}
+        pageSizeOptions={[10, defaultPageSize, 50, maxPageSize]}
+        onPaginationModelChange={(params) => {
+          onSubmit({
+            ...params,
+            page: pageSize !== params.pageSize ? 0 : params.page
+          });
+        }}
         rowCount={rowCount}
         slots={{
           toolbar: Toolbar as React.JSXElementConstructor<
@@ -231,23 +237,25 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     tovarni_znacka,
     typ,
     datum_prvni_registrace_od,
-    datum_prvni_registrace_do
+    datum_prvni_registrace_do,
+    pageSize
   } = queryDecoder.parse(context.query);
 
   const vehicles = await discoverVehicles({
     page,
+    pageSize,
     tovarni_znacka,
     typ,
     datum_prvni_registrace_od,
     datum_prvni_registrace_do
   });
-
   return {
     props: {
       vehicles,
       currentPage: page,
       tovarni_znacka,
       typ,
+      pageSize,
       datum_prvni_registrace_od: datum_prvni_registrace_od
         ? DateTime.fromJSDate(datum_prvni_registrace_od).toFormat(DateFormat)
         : null,

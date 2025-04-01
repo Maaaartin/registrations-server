@@ -1,6 +1,7 @@
 import { unstable_cache } from 'next/cache';
+import zod from 'zod';
 import prisma from '../../../prisma';
-import { pageSize } from './index';
+import { defaultPageSize, maxPageSize } from './index';
 import { serialize, vehicleSelect } from '../data';
 import {
   discoverVehiclesBaseQuery,
@@ -9,7 +10,11 @@ import {
 import { DDiscover, DPage } from '../decoders';
 
 export const discoverVehicles = unstable_cache(
-  async ({ page, ...rest }: DiscoverVehiclesParams & { page: number }) => {
+  async ({
+    page,
+    pageSize,
+    ...rest
+  }: DiscoverVehiclesParams & { page: number; pageSize: number }) => {
     const result = await prisma.registrations.findMany({
       ...discoverVehiclesBaseQuery(rest),
       skip: page * pageSize,
@@ -23,4 +28,20 @@ export const discoverVehicles = unstable_cache(
   { revalidate: 3600, tags: ['discover'] }
 );
 
-export const queryDecoder = DDiscover.merge(DPage);
+const pageSizeDecoder = zod.object({
+  pageSize: zod
+    .string()
+    .default(String(defaultPageSize))
+    .transform((val) => {
+      const valNr = parseInt(val, 10);
+      if (!valNr) {
+        return defaultPageSize;
+      }
+      if (valNr >= maxPageSize) {
+        return maxPageSize;
+      }
+      return valNr;
+    })
+});
+
+export const queryDecoder = DDiscover.merge(DPage).merge(pageSizeDecoder);
