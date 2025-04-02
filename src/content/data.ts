@@ -44,10 +44,13 @@ export function toTypedEntries<T extends Record<string, unknown>>(object: T) {
   return Object.entries(object) as [keyof T, T[keyof T]][];
 }
 
-export function filterQuery<T>(entries: [string, T][]) {
+export function filterQuery<T>(
+  entries: [string, T | null | undefined][]
+): Record<string, NonNullable<T>> {
   return Object.fromEntries(
-    entries.filter(([, value]) =>
-      ['', null, undefined].every((val) => value !== val)
+    entries.filter(
+      (entry): entry is [string, NonNullable<T>] =>
+        entry[1] !== '' && entry[1] !== null && entry[1] !== undefined
     )
   );
 }
