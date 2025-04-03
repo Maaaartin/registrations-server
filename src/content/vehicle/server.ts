@@ -36,7 +36,8 @@ export async function getInspectionsFromPcv(pcv: number | null) {
   if (pcv == null) return [];
   const result = await prisma.inspections.findMany({
     where: { pcv },
-    omit
+    omit: { ...omit, aktualni: true },
+    orderBy: { platnost_do: 'asc' }
   });
   return result.map(serialize);
 }
@@ -63,7 +64,8 @@ export async function getVehicleOwnerFromPcv(pcv: number | null) {
   if (pcv == null) return [];
   const result = await prisma.owners.findMany({
     where: { pcv },
-    omit
+    omit: { ...omit, aktualni: true },
+    orderBy: { datum_do: 'asc' }
   });
   return result.map(serialize);
 }

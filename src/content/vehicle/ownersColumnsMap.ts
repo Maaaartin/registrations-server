@@ -27,10 +27,10 @@ export default {
       }
     }
   },
-  aktualni: {
-    name: 'Aktuální',
-    description: 'Informace, zda je daný subjekt veden na vozidle jako aktuální'
-  },
+  // aktualni: {
+  //   name: 'Aktuální',
+  //   description: 'Informace, zda je daný subjekt veden na vozidle jako aktuální'
+  // },
   ico: { name: 'IČO', description: 'IČ subjektu, jen pro právnické osoby' },
   nazev: {
     name: 'Název',

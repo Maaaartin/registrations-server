@@ -1,9 +1,9 @@
 export default {
-  aktualni: {
-    name: 'Aktuální',
-    description:
-      'Informace, zda je prohlídka uvedeného typu je na vozidle vedena jako aktuální'
-  },
+  // aktualni: {
+  //   name: 'Aktuální',
+  //   description:
+  //     'Informace, zda je prohlídka uvedeného typu je na vozidle vedena jako aktuální'
+  // },
   cislo_protokolu: {
     name: 'Čislo protokolu',
     description: 'Číslo protokolu p technické prohlídce'
