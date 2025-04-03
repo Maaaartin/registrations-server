@@ -2,6 +2,7 @@ const indices = require('./indices/createIndices');
 const runImport = require('./dataImport/index');
 const helpers = require('./dataImport/helpers');
 const runQuery = require('./query/index');
+const runDownload = require('./download');
 
 async function run() {
   try {
@@ -17,6 +18,8 @@ async function run() {
       await helpers.createTableFromHeaders();
     } else if (command === 'query') {
       await runQuery();
+    } else if (command === 'download') {
+      await runDownload();
     } else {
       console.error(`unknown command ${command}`);
     }

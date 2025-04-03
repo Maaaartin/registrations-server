@@ -1,0 +1,7 @@
+{
+  "registrations": "https://download.dataovozidlech.cz/vypiszregistru/vypisvozidel",
+  "inspections": "https://download.dataovozidlech.cz/vypiszregistru/technickeprohlidky",
+  "owners": "https://download.dataovozidlech.cz/vypiszregistru/vlastnikprovozovatelvozidla",
+  "imports": "https://download.dataovozidlech.cz/vypiszregistru/vozidladovoz",
+  "removed_vehicles": "https://download.dataovozidlech.cz/vypiszregistru/vozidlavyrazenazprovozu"
+}
