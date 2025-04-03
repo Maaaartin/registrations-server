@@ -217,17 +217,20 @@ export default function Discover({
     pohon
   });
   const { data: fetchedRowCount } = useFetch({
-    url: `/api/discover-count?${new URLSearchParams(
-      filterQuery(
-        Object.entries({
-          tovarni_znacka,
-          typ,
-          datum_prvni_registrace_od: datum_prvni_registrace_od,
-          datum_prvni_registrace_do: datum_prvni_registrace_do,
-          pohon
-        })
-      )
-    )}`,
+    url:
+      vehicles.length < pageSize
+        ? null
+        : `/api/discover-count?${new URLSearchParams(
+            filterQuery(
+              Object.entries({
+                tovarni_znacka,
+                typ,
+                datum_prvni_registrace_od: datum_prvni_registrace_od,
+                datum_prvni_registrace_do: datum_prvni_registrace_do,
+                pohon
+              })
+            )
+          )}`,
     decoder: DNumber
   });
 
