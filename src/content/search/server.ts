@@ -1,5 +1,5 @@
 import { unstable_cache } from 'next/cache';
-import zod from 'zod';
+import { z } from 'zod';
 import prisma from '../../../prisma';
 import { limit } from '.';
 import { serialize, vehicleSelect } from '../data';
@@ -26,8 +26,8 @@ export const searchVehicles = unstable_cache(
   { revalidate: 3600, tags: ['search'] }
 );
 
-export const queryDecoder = zod.object({
-  vin: zod.string().default(''),
-  cislo_tp: zod.string().default(''),
-  cislo_orv: zod.string().default('')
+export const queryDecoder = z.object({
+  vin: z.string().default(''),
+  cislo_tp: z.string().default(''),
+  cislo_orv: z.string().default('')
 });

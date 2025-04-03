@@ -1,5 +1,5 @@
 import { unstable_cache } from 'next/cache';
-import zod from 'zod';
+import { z } from 'zod';
 import prisma from '../../../prisma';
 import { defaultPageSize, maxPageSize } from './index';
 import { serialize, vehicleSelect } from '../data';
@@ -28,8 +28,8 @@ export const discoverVehicles = unstable_cache(
   { revalidate: 3600, tags: ['discover'] }
 );
 
-const pageSizeDecoder = zod.object({
-  pageSize: zod
+const pageSizeDecoder = z.object({
+  pageSize: z
     .string()
     .default(String(defaultPageSize))
     .transform((val) => {

@@ -1,4 +1,4 @@
-import zod from 'zod';
+import { z } from 'zod';
 import { DPage, DStringDefault } from '../decoders';
 import { unstable_cache } from 'next/cache';
 import prisma from '../../../prisma';
@@ -6,7 +6,7 @@ import { importsWithMatchingVehicle } from '../../../prisma/client/sql';
 import { serialize, vehicleSelect } from '../data';
 import { pageSize } from '.';
 
-export const queryDecoder = zod
+export const queryDecoder = z
   .object({
     country: DStringDefault
   })

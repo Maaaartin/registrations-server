@@ -1,12 +1,12 @@
 import useSWR from 'swr/immutable';
-import type zod from 'zod';
+import type { ZodType } from 'zod';
 
-type Decoder<T> = zod.ZodType<T>;
+type Decoder<T> = ZodType<T>;
 
 export type FetchAction<T> =
   | {
       url: string;
-      decoder: zod.ZodType<T>;
+      decoder: ZodType<T>;
     }
   | { url: null };
 

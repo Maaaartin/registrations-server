@@ -1,16 +1,15 @@
-import zod from 'zod';
-
-export const DStringArray = zod.string().array();
-export const DStringDefault = zod.string().default('');
-export const DNumber = zod.number();
-export const DValueCountPairs = zod
+import { z } from 'zod';
+export const DStringArray = z.string().array();
+export const DStringDefault = z.string().default('');
+export const DNumber = z.number();
+export const DValueCountPairs = z
   .object({
-    value: zod.string(),
-    count: zod.number()
+    value: z.string(),
+    count: z.number()
   })
   .array();
 
-export const DBrand = zod.object({
+export const DBrand = z.object({
   tovarni_znacka: DStringDefault
 });
 
@@ -19,20 +18,20 @@ export const DBrandModel = DBrand.extend({
   typ: DStringDefault
 });
 
-export const DDate = zod
+export const DDate = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/)
   .optional()
   .transform((val) => (val ? new Date(val) : null));
 
-export const DPage = zod.object({
-  page: zod
+export const DPage = z.object({
+  page: z
     .string()
     .default('0')
     .transform((val) => Number(val) || 0)
 });
 
-export const DDiscover = zod
+export const DDiscover = z
   .object({
     datum_prvni_registrace_od: DDate,
     datum_prvni_registrace_do: DDate

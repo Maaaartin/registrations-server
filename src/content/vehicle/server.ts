@@ -1,9 +1,9 @@
-import zod from 'zod';
+import { z } from 'zod';
 import prisma from '../../../prisma';
 import { serialize } from '../data';
 
-export const queryDecoder = zod.object({
-  id: zod
+export const queryDecoder = z.object({
+  id: z
     .string()
     .default('')
     .transform((value) => parseInt(value))
