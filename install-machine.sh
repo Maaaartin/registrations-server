@@ -32,3 +32,11 @@ sudo usermod -aG docker $USER
 echo "Installation complete!"
 echo "You may need to log out and log back in to apply Docker group changes."
 echo "Test Docker with: docker run hello-world"
+
+sudo apt update && sudo apt install certbot
+sudo apt install python3-certbot-nginx
+
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw reload
+mkdir -p ./nginx/html/.well-known/acme-challenge/
