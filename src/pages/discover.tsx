@@ -43,7 +43,10 @@ type SearchParams = AutocompleteParams &
     pohon: Pohon | '';
   };
 
-type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
+type SubmitProps = Omit<
+  ReturnType<typeof useDataGridSubmit<SearchParams>>,
+  'submitParams'
+>;
 
 type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<DiscoverProps, 'vehicles'> &
@@ -166,7 +169,6 @@ function PohonSelector({
           id: 'pohon'
         }}
         onChange={(e) => {
-          console.log(e.target.value);
           onSubmit({ pohon: stringToPohon(e.target.value) || '' });
         }}
       >
@@ -207,7 +209,7 @@ export default function Discover({
   pageSize,
   pohon
 }: DiscoverProps) {
-  const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
+  const { loading, onSubmit, submitParams } = useDataGridSubmit<SearchParams>({
     page: currentPage,
     tovarni_znacka,
     typ,
@@ -216,20 +218,13 @@ export default function Discover({
     pageSize,
     pohon
   });
+
   const { data: fetchedRowCount } = useFetch({
     url:
       vehicles.length < pageSize
         ? null
         : `/api/discover-count?${new URLSearchParams(
-            filterQuery(
-              Object.entries({
-                tovarni_znacka,
-                typ,
-                datum_prvni_registrace_od: datum_prvni_registrace_od,
-                datum_prvni_registrace_do: datum_prvni_registrace_do,
-                pohon
-              })
-            )
+            filterQuery(Object.entries(submitParams as Record<string, string>))
           )}`,
     decoder: DNumber
   });
