@@ -141,7 +141,7 @@ const CountriesImportsCard = () => {
   });
   const renderValue = isLoading ? <CircularProgress /> : data?.splice(0, 10);
   return (
-    <StatCard title="Top countries">
+    <StatCard title="Top země dovozu">
       {Array.isArray(renderValue) ? (
         <CardList data={renderValue} render={render}></CardList>
       ) : (
