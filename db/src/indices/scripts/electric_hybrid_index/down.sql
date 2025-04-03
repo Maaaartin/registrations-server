@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS registrations_electric_hybrid_idx;
