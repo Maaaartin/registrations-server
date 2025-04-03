@@ -1,8 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-const { spawn } = require('child_process');
+const { spawn, exec } = require('child_process');
 const mapping = require('./mapping.json');
 
+const projectRoot = path.resolve(__dirname, '..', '..');
 async function downloadFile(url, outputPath) {
   const response = await fetch(url);
 
@@ -42,8 +43,6 @@ async function downloadFile(url, outputPath) {
 
 function runChildImport(tableName) {
   return new Promise((resolve, reject) => {
-    const projectRoot = path.resolve(__dirname, '..', '..'); // Navigate 2 directories up
-
     const child = spawn('yarn', ['start', 'import', tableName], {
       cwd: projectRoot,
       stdio: 'inherit',
@@ -79,7 +78,34 @@ function runChildImport(tableName) {
   });
 }
 
-const outputDir = path.join('..', '..', 'data');
+function runRefreshIndices() {
+  return new Promise((resolve, reject) => {
+    const child = exec('yarn start indices refresh', { cwd: projectRoot });
+
+    child.stdout.on('data', (data) => {
+      process.stdout.write(data);
+    });
+
+    child.stderr.on('data', (data) => {
+      process.stderr.write(data);
+    });
+
+    child.on('exit', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`Process exited with code ${code}`));
+      }
+    });
+
+    child.on('error', (err) => {
+      console.error(`Error executing command: ${err.message}`);
+      reject(err);
+    });
+  });
+}
+
+const outputDir = path.join(projectRoot, 'data');
 module.exports = async () => {
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
@@ -94,7 +120,19 @@ module.exports = async () => {
     }
   );
 
-  await Promise.allSettled(downloadPromises).then((results) => {
-    results.forEach(console.log);
-  });
+  const results = await Promise.allSettled(downloadPromises);
+  fs.writeFileSync(
+    path.join(outputDir, `results-${new Date()}.json`),
+    JSON.stringify(results)
+  );
+  if (results.every((res) => res.status === 'fulfilled')) {
+    try {
+      await runRefreshIndices();
+    } catch (error) {
+      fs.writeFileSync(
+        path.join(outputDir, `errors-${new Date()}.json`),
+        JSON.stringify(error)
+      );
+    }
+  }
 };
