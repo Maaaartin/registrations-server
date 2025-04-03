@@ -9,7 +9,8 @@ RUN rm -rf db
 RUN yarn --frozen-lockfile
 RUN yarn build
 RUN rm -rf src
-EXPOSE 3000
+RUN apk add --no-cache curl
 
+EXPOSE 3000
 
 CMD ["sh", "-c", "yarn start"]
