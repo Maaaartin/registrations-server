@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import useSWR from 'swr/immutable';
 import type { ZodType } from 'zod';
 
@@ -10,21 +11,33 @@ export type FetchAction<T> =
     }
   | { url: null };
 
-const fetcher = <T>(decoder: Decoder<T> | void) => {
+const fetcher = <T>(decoder: Decoder<T> | void, signal: AbortSignal) => {
   return (url: string): Promise<T> => {
     if (!decoder) return Promise.resolve(undefined!);
-    return fetch(url).then((res) => {
-      if (!res.ok) {
-        return res.text().then((msg) => Promise.reject(new Error(msg)));
-      }
-      return res.json().then(decoder.parse);
-    });
+    return fetch(url, { signal })
+      .then((res) => {
+        if (!res.ok) {
+          return res.text().then((msg) => Promise.reject(new Error(msg)));
+        }
+        return res.json().then(decoder.parse);
+      })
+      .catch((error) => {
+        if (error?.name === 'AbortError') return undefined!;
+        throw error;
+      });
   };
 };
 
 export default function useFetch<T>(props: FetchAction<T>) {
+  const abortController = new AbortController();
+  useEffect(() => {
+    return () => abortController.abort();
+  }, [props.url]);
   return useSWR<T, Error>(
     props.url,
-    fetcher('decoder' in props ? props.decoder : undefined)
+    fetcher(
+      'decoder' in props ? props.decoder : undefined,
+      abortController.signal
+    )
   );
 }
