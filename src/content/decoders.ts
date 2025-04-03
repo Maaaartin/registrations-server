@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { stringToPohon } from './discover';
 export const DStringArray = z.string().array();
 export const DStringDefault = z.string().default('');
 export const DNumber = z.number();
@@ -34,6 +35,7 @@ export const DPage = z.object({
 export const DDiscover = z
   .object({
     datum_prvni_registrace_od: DDate,
-    datum_prvni_registrace_do: DDate
+    datum_prvni_registrace_do: DDate,
+    pohon: z.string().default('').transform(stringToPohon)
   })
   .merge(DBrandModel);

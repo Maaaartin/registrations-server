@@ -1,6 +1,8 @@
 import { unstable_cache } from 'next/cache';
 import prisma from '.';
+import type { Prisma } from './client/default';
 import queries from './client/sql';
+import type { Pohon } from '../src/content/discover';
 
 export async function count_() {
   const [result] = await prisma.$queryRawTyped(queries.count());
@@ -93,13 +95,16 @@ export type DiscoverVehiclesParams = {
   typ: string;
   datum_prvni_registrace_od: Date | null;
   datum_prvni_registrace_do: Date | null;
+  pohon: Pohon;
 };
+
 export function discoverVehiclesBaseQuery({
   tovarni_znacka,
   typ,
   datum_prvni_registrace_od,
-  datum_prvni_registrace_do
-}: DiscoverVehiclesParams) {
+  datum_prvni_registrace_do,
+  pohon
+}: DiscoverVehiclesParams): { where: Prisma.registrationsWhereInput } {
   const query = [
     {
       key: 'datum_1_registrace',
@@ -112,12 +117,13 @@ export function discoverVehiclesBaseQuery({
   ]
     .filter(({ value }) => Object.values(value).filter(Boolean).length)
     .map(({ key, value }) => ({ [key]: value }));
-
   return {
     where: {
       tovarni_znacka: tovarni_znacka || undefined,
       typ: typ || undefined,
-      AND: query
+      AND: query,
+      ...(pohon === 'electric' && { plne_elektricke_vozidlo: true }),
+      ...(pohon === 'hybrid' && { hybridni_vozidlo: true })
     }
   };
 }

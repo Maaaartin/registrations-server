@@ -5,6 +5,11 @@ export const maxPageSize = 100;
 
 export const DateFormat = 'yyyy-MM-dd';
 
+export type Pohon = 'electric' | 'hybrid' | null;
+
+export const stringToPohon = (val: string): Pohon =>
+  val === 'hybrid' || val === 'electric' ? val : null;
+
 export type DiscoverProps = {
   currentPage: number;
   tovarni_znacka: string;
@@ -13,4 +18,5 @@ export type DiscoverProps = {
   datum_prvni_registrace_od: string | null;
   datum_prvni_registrace_do: string | null;
   pageSize: number;
+  pohon: Pohon;
 };

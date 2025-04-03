@@ -1,7 +1,7 @@
 import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
 import prisma from '../../../prisma';
-import { defaultPageSize, maxPageSize } from './index';
+import { defaultPageSize, maxPageSize, stringToPohon } from './index';
 import { serialize, vehicleSelect } from '../data';
 import {
   discoverVehiclesBaseQuery,
@@ -44,4 +44,10 @@ const pageSizeDecoder = z.object({
     })
 });
 
-export const queryDecoder = DDiscover.merge(DPage).merge(pageSizeDecoder);
+const pohonDecoder = z.object({
+  pohon: z.string().default('').transform(stringToPohon)
+});
+
+export const queryDecoder = DDiscover.merge(DPage)
+  .merge(pageSizeDecoder)
+  .merge(pohonDecoder);

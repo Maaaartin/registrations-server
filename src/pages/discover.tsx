@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Stack, NativeSelect, FormControl, InputLabel } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
@@ -7,8 +7,10 @@ import { DateTime } from 'luxon';
 import {
   DateFormat,
   DiscoverProps,
+  Pohon,
   defaultPageSize,
-  maxPageSize
+  maxPageSize,
+  stringToPohon
 } from '../content/discover';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
@@ -38,6 +40,7 @@ type SearchParams = AutocompleteParams &
   DateSearchParams & {
     page: number;
     pageSize: number;
+    pohon: Pohon | '';
   };
 
 type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
@@ -145,6 +148,36 @@ const DateSearch = ({
   );
 };
 
+function PohonSelector({
+  pohon,
+  onSubmit,
+  loading
+}: SubmitProps & { pohon: Pohon }) {
+  return (
+    <FormControl fullWidth>
+      <InputLabel variant="standard" htmlFor="pohon">
+        Pohon
+      </InputLabel>
+      <NativeSelect
+        disabled={loading}
+        defaultValue={pohon}
+        inputProps={{
+          name: 'pohon',
+          id: 'pohon'
+        }}
+        onChange={(e) => {
+          console.log(e.target.value);
+          onSubmit({ pohon: stringToPohon(e.target.value) || '' });
+        }}
+      >
+        <option></option>
+        <option value={'electric'}>Elektrický</option>
+        <option value={'hybrid'}>Hybridní</option>
+      </NativeSelect>
+    </FormControl>
+  );
+}
+
 const Toolbar = (props: ToolbarProps) => {
   const onSubmit_ = (params: Partial<SearchParams>) =>
     props.onSubmit({
@@ -155,6 +188,11 @@ const Toolbar = (props: ToolbarProps) => {
     <Stack direction="row" spacing={2} padding={2}>
       <AutocompleteSearchForm {...props} onSubmit={onSubmit_} />
       <DateSearch {...props} onSubmit={onSubmit_} />
+      <PohonSelector
+        pohon={props.pohon}
+        onSubmit={onSubmit_}
+        loading={props.loading}
+      />
     </Stack>
   );
 };
@@ -166,7 +204,8 @@ export default function Discover({
   typ,
   datum_prvni_registrace_od,
   datum_prvni_registrace_do,
-  pageSize
+  pageSize,
+  pohon
 }: DiscoverProps) {
   const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
@@ -174,7 +213,8 @@ export default function Discover({
     typ,
     datum_prvni_registrace_od,
     datum_prvni_registrace_do,
-    pageSize
+    pageSize,
+    pohon
   });
   const { data: fetchedRowCount } = useFetch({
     url: `/api/discover-count?${new URLSearchParams(
@@ -182,8 +222,9 @@ export default function Discover({
         Object.entries({
           tovarni_znacka,
           typ,
-          datum_prvni_registrace_od: datum_prvni_registrace_od || '',
-          datum_prvni_registrace_do: datum_prvni_registrace_do || ''
+          datum_prvni_registrace_od: datum_prvni_registrace_od,
+          datum_prvni_registrace_do: datum_prvni_registrace_do,
+          pohon
         })
       )
     )}`,
@@ -221,7 +262,8 @@ export default function Discover({
             datum_prvni_registrace_od,
             datum_prvni_registrace_do,
             onSubmit,
-            loading
+            loading,
+            pohon
           } as ToolbarProps
         }}
       />
@@ -238,7 +280,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     typ,
     datum_prvni_registrace_od,
     datum_prvni_registrace_do,
-    pageSize
+    pageSize,
+    pohon
   } = queryDecoder.parse(context.query);
 
   const vehicles = await discoverVehicles({
@@ -247,7 +290,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     tovarni_znacka,
     typ,
     datum_prvni_registrace_od,
-    datum_prvni_registrace_do
+    datum_prvni_registrace_do,
+    pohon
   });
   return {
     props: {
@@ -256,6 +300,7 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
       tovarni_znacka,
       typ,
       pageSize,
+      pohon,
       datum_prvni_registrace_od: datum_prvni_registrace_od
         ? DateTime.fromJSDate(datum_prvni_registrace_od).toFormat(DateFormat)
         : null,
