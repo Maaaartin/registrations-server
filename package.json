@@ -8,13 +8,14 @@
     "url": "https://github.com/Maaaartin/registrations-server.git"
   },
   "scripts": {
-    "generate:sql": "npx prisma generate --sql",
+    "generate:sql": "prisma generate --sql",
     "dev": "sh entrypoint.sh dev",
     "build": "next build",
     "start": "sh entrypoint.sh start",
     "lint": "next lint",
     "build:image": "sh build-image.sh",
-    "query": "ts-node src/scripts/index.ts"
+    "query": "ts-node src/scripts/index.ts",
+    "postinstall": "next telemetry disable"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
