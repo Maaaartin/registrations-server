@@ -14,7 +14,6 @@
     "start": "sh entrypoint.sh start",
     "lint": "next lint",
     "build:image": "sh build-image.sh",
-    "query": "ts-node src/scripts/index.ts",
     "postinstall": "next telemetry disable"
   },
   "dependencies": {
@@ -47,7 +46,6 @@
     "eslint-plugin-prettier": "^5.2.3",
     "prettier": "^3.5.2",
     "prisma": "^6.3.1",
-    "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   }
 }
