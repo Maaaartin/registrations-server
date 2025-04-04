@@ -13,6 +13,7 @@ import {
   getImportFromPcv,
   getInspectionsFromPcv,
   getVehicle,
+  getVehicleEquipmentFromPcv,
   getVehicleOwnerFromPcv,
   getVehicleRemoval,
   queryDecoder
@@ -25,6 +26,7 @@ import VehicleImport from '../content/vehicle/componets/VehicleImports';
 import VehicleRemoval from '../content/vehicle/componets/VehicleRemoval';
 import VehicleInspections from '../content/vehicle/componets/VehicleInspections';
 import VehicleOwners from '../content/vehicle/componets/VehicleOwners';
+import VehicleEquipment from '../content/vehicle/componets/VehicleEquipment';
 
 export default function Vehicle(props: Props) {
   const {
@@ -32,7 +34,8 @@ export default function Vehicle(props: Props) {
     vehicleImport,
     vehicleInspections,
     vehicleRemoval,
-    vehicleOwners
+    vehicleOwners,
+    vehicleEquipment
   } = props;
   const gridContent = sections
     .map((section) => ({
@@ -79,6 +82,9 @@ export default function Vehicle(props: Props) {
   if (vehicleRemoval) {
     gridContent.unshift(<VehicleRemoval vehicleRemoval={vehicleRemoval} />);
   }
+  if (vehicleEquipment.length) {
+    gridContent.push(<VehicleEquipment vehicleEquipment={vehicleEquipment} />);
+  }
 
   return (
     <Grid
@@ -119,20 +125,27 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   if (!id) return { notFound: true };
   const vehicle = await getVehicle(id);
   if (!vehicle) return { notFound: true };
-  const [vehicleImport, vehicleInspections, vehicleRemoval, vehicleOwners] =
-    await Promise.all([
-      getImportFromPcv(vehicle.pcv),
-      getInspectionsFromPcv(vehicle.pcv),
-      getVehicleRemoval(vehicle.pcv),
-      getVehicleOwnerFromPcv(vehicle.pcv)
-    ]);
+  const [
+    vehicleImport,
+    vehicleInspections,
+    vehicleRemoval,
+    vehicleOwners,
+    vehicleEquipment
+  ] = await Promise.all([
+    getImportFromPcv(vehicle.pcv),
+    getInspectionsFromPcv(vehicle.pcv),
+    getVehicleRemoval(vehicle.pcv),
+    getVehicleOwnerFromPcv(vehicle.pcv),
+    getVehicleEquipmentFromPcv(vehicle.pcv)
+  ]);
   return {
     props: {
       vehicle,
       vehicleImport,
       vehicleInspections,
       vehicleRemoval,
-      vehicleOwners
+      vehicleOwners,
+      vehicleEquipment
     }
   };
 };

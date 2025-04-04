@@ -6,7 +6,8 @@ import type {
   VehicleRemovalFromPcv,
   VehicleInspectionFromPcv,
   VehicleImportFromPcv,
-  VehicleOwnerFromPcv
+  VehicleOwnerFromPcv,
+  VehicleEquipmentFromPcv
 } from './server';
 
 export type SerializableRegistration = Serialized<registrations>;
@@ -14,6 +15,7 @@ export type SerializableImport = VehicleImportFromPcv;
 export type SerializableInspection = VehicleInspectionFromPcv;
 export type SerializableRemoval = VehicleRemovalFromPcv;
 export type SerializableOwner = VehicleOwnerFromPcv;
+export type SerializableEquipment = VehicleEquipmentFromPcv;
 
 export type Props = {
   vehicle: SerializableRegistration;
@@ -21,6 +23,7 @@ export type Props = {
   vehicleInspections: SerializableInspection[];
   vehicleRemoval: SerializableRemoval | null;
   vehicleOwners: VehicleOwnerFromPcv[];
+  vehicleEquipment: VehicleEquipmentFromPcv[];
 };
 
 export const displayDateFormat = 'dd-MM-yyyy';

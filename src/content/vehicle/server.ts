@@ -73,3 +73,17 @@ export async function getVehicleOwnerFromPcv(pcv: number | null) {
 export type VehicleOwnerFromPcv = Awaited<
   ReturnType<typeof getVehicleOwnerFromPcv>
 >[0];
+
+export async function getVehicleEquipmentFromPcv(pcv: number | null) {
+  if (pcv == null) return [];
+  const result = await prisma.equipment.findMany({
+    where: { pcv },
+    omit: { ...omit, datum_do: true, datum_od: true },
+    orderBy: { datum_do: 'asc' }
+  });
+  return result.map(serialize);
+}
+
+export type VehicleEquipmentFromPcv = Awaited<
+  ReturnType<typeof getVehicleEquipmentFromPcv>
+>[0];
