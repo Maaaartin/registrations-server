@@ -25,6 +25,7 @@ import { datePickerLocaleText } from '../content/localization';
 import useFetch from '../hooks/useFetch';
 import { DNumber } from '../content/decoders';
 import { filterQuery } from '../content/data';
+import { useEffect, useState } from 'react';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
@@ -43,10 +44,7 @@ type SearchParams = AutocompleteParams &
     pohon: Pohon | '';
   };
 
-type SubmitProps = Omit<
-  ReturnType<typeof useDataGridSubmit<SearchParams>>,
-  'submitParams'
->;
+type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
 
 type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<DiscoverProps, 'vehicles'> &
@@ -199,17 +197,18 @@ const Toolbar = (props: ToolbarProps) => {
   );
 };
 
-export default function Discover({
-  vehicles,
-  currentPage,
-  tovarni_znacka,
-  typ,
-  datum_prvni_registrace_od,
-  datum_prvni_registrace_do,
-  pageSize,
-  pohon
-}: DiscoverProps) {
-  const { loading, onSubmit, submitParams } = useDataGridSubmit<SearchParams>({
+export default function Discover(props: DiscoverProps) {
+  const {
+    vehicles,
+    currentPage,
+    tovarni_znacka,
+    typ,
+    datum_prvni_registrace_od,
+    datum_prvni_registrace_do,
+    pageSize,
+    pohon
+  } = props;
+  const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
     tovarni_znacka,
     typ,
@@ -218,16 +217,39 @@ export default function Discover({
     pageSize,
     pohon
   });
+  const searchProps = {
+    tovarni_znacka,
+    typ,
+    datum_prvni_registrace_od,
+    datum_prvni_registrace_do,
+    pohon
+  };
+  const [countParams, setCountParams] =
+    useState<Partial<SearchParams>>(searchProps);
+
+  useEffect(() => {
+    setCountParams(searchProps);
+  }, [props]);
 
   const { data: fetchedRowCount } = useFetch({
     url:
       vehicles.length < pageSize
         ? null
         : `/api/discover-count?${new URLSearchParams(
-            filterQuery(Object.entries(submitParams as Record<string, string>))
+            filterQuery(Object.entries(countParams as Record<string, string>))
           )}`,
     decoder: DNumber
   });
+  const onSubmit_: typeof onSubmit = (params) => {
+    setCountParams({
+      tovarni_znacka: params.tovarni_znacka,
+      typ: params.typ,
+      datum_prvni_registrace_od: params.datum_prvni_registrace_od,
+      datum_prvni_registrace_do: params.datum_prvni_registrace_do,
+      pohon: params.pohon
+    });
+    return onSubmit(params);
+  };
 
   const rowCount =
     fetchedRowCount ??
@@ -242,7 +264,7 @@ export default function Discover({
         paginationModel={{ page: currentPage, pageSize }}
         pageSizeOptions={[10, defaultPageSize, 50, maxPageSize]}
         onPaginationModelChange={(params) => {
-          onSubmit({
+          onSubmit_({
             ...params,
             page: pageSize !== params.pageSize ? 0 : params.page
           });
@@ -259,7 +281,7 @@ export default function Discover({
             typ,
             datum_prvni_registrace_od,
             datum_prvni_registrace_do,
-            onSubmit,
+            onSubmit: onSubmit_,
             loading,
             pohon
           } as ToolbarProps

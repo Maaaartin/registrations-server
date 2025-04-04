@@ -7,10 +7,8 @@ export default function useDataGridSubmit<
 >(initParams: T) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [submitParams, setSubmitParams] = useState<Partial<T>>(initParams);
   const onSubmit = (params: Partial<T>) => {
     setLoading(true);
-    setSubmitParams(params);
     const entries = Object.entries(initParams).map(([key, value]) => [
       key,
       params[key] ?? value
@@ -30,5 +28,5 @@ export default function useDataGridSubmit<
       });
   };
 
-  return { onSubmit, loading, submitParams };
+  return { onSubmit, loading };
 }
