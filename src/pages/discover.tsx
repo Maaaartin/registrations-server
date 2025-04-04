@@ -263,12 +263,7 @@ export default function Discover(props: DiscoverProps) {
         rows={vehicles}
         paginationModel={{ page: currentPage, pageSize }}
         pageSizeOptions={[10, defaultPageSize, 50, maxPageSize]}
-        onPaginationModelChange={(params) => {
-          onSubmit_({
-            ...params,
-            page: pageSize !== params.pageSize ? 0 : params.page
-          });
-        }}
+        onPaginationModelChange={onSubmit}
         rowCount={rowCount}
         slots={{
           toolbar: Toolbar as React.JSXElementConstructor<
