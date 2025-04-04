@@ -3,5 +3,6 @@
   "inspections": "https://download.dataovozidlech.cz/vypiszregistru/technickeprohlidky",
   "owners": "https://download.dataovozidlech.cz/vypiszregistru/vlastnikprovozovatelvozidla",
   "imports": "https://download.dataovozidlech.cz/vypiszregistru/vozidladovoz",
-  "removed_vehicles": "https://download.dataovozidlech.cz/vypiszregistru/vozidlavyrazenazprovozu"
+  "removed_vehicles": "https://download.dataovozidlech.cz/vypiszregistru/vozidlavyrazenazprovozu",
+  "equipment": "https://download.dataovozidlech.cz/vypiszregistru/vozidladoplnkovevybaveni"
 }

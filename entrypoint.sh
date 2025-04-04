@@ -13,4 +13,4 @@ fi
 
 export DATABASE_URL="postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$HOST/$POSTGRES_DB?schema=public"
 
-exec npx next $1
+exec "$@"

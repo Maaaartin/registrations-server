@@ -18,7 +18,10 @@ async function run() {
     throw new Error(`Unknown table ${tableName}`);
   }
   const basePath = path.join(__dirname, '..', 'schemas', tableName);
-  const fileStream = fs.createReadStream(path.join(process.cwd(), 'data.csv'));
+  const fileStream = fs.createReadStream(
+    path.join(process.cwd(), 'data', tableName + '.csv')
+  );
+  console.log(path.join(process.cwd(), 'data', tableName + '.csv'));
   const headerMap = require(path.join(basePath, 'headerMap.json'));
   const parser = parse({
     columns: Object.keys(headerMap),
