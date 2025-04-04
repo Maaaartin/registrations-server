@@ -4,6 +4,7 @@ import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { GridSlotProps } from '@mui/x-data-grid';
 import { DateTime } from 'luxon';
+import { mergeLeft, pick } from 'ramda';
 import {
   DateFormat,
   DiscoverProps,
@@ -197,6 +198,14 @@ const Toolbar = (props: ToolbarProps) => {
   );
 };
 
+const searchKeys = [
+  'tovarni_znacka',
+  'typ',
+  'datum_prvni_registrace_od',
+  'datum_prvni_registrace_do',
+  'pohon'
+] as const;
+
 export default function Discover(props: DiscoverProps) {
   const {
     vehicles,
@@ -217,13 +226,7 @@ export default function Discover(props: DiscoverProps) {
     pageSize,
     pohon
   });
-  const searchProps = {
-    tovarni_znacka,
-    typ,
-    datum_prvni_registrace_od,
-    datum_prvni_registrace_do,
-    pohon
-  };
+  const searchProps = pick(searchKeys, props);
   const [countParams, setCountParams] =
     useState<Partial<SearchParams>>(searchProps);
 
@@ -241,13 +244,9 @@ export default function Discover(props: DiscoverProps) {
     decoder: DNumber
   });
   const onSubmit_: typeof onSubmit = (params) => {
-    setCountParams({
-      tovarni_znacka: params.tovarni_znacka,
-      typ: params.typ,
-      datum_prvni_registrace_od: params.datum_prvni_registrace_od,
-      datum_prvni_registrace_do: params.datum_prvni_registrace_do,
-      pohon: params.pohon
-    });
+    const merged = mergeLeft(params, searchProps);
+    const picked = pick(searchKeys, merged);
+    setCountParams(picked);
     return onSubmit(params);
   };
 
