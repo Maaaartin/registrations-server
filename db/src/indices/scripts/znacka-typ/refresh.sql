@@ -1,1 +1,0 @@
-REINDEX INDEX idx_znacka_typ;

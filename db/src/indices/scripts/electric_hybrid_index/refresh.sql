@@ -1,1 +1,0 @@
-REINDEX INDEX registrations_electric_hybrid_idx;

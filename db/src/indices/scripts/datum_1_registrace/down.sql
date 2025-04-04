@@ -1,1 +1,0 @@
-DROP INDEX IF EXISTS registrations_datum_1_registrace_idx;
