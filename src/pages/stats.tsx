@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import Grid from '@mui/material/Grid2';
-// import Copyright from '../components/Copyright';
 import StatCard from '../components/StatCard';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import RegistrationsChart from '../components/RegistrationsChart';
@@ -182,10 +181,10 @@ export default function Stats() {
           <CountriesImportsCard></CountriesImportsCard>
         </Grid>
       </Grid>
+      s
       <Grid size={{ xs: 12, md: 6 }}>
         <RegistrationsChart />
       </Grid>
-      {/* <Copyright sx={{ my: 4 }} /> */}
     </>
   );
 }
