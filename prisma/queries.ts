@@ -119,8 +119,8 @@ export function discoverVehiclesBaseQuery({
     .map(({ key, value }) => ({ [key]: value }));
   return {
     where: {
-      tovarni_znacka: tovarni_znacka || undefined,
-      typ: typ || undefined,
+      ...(tovarni_znacka && { tovarni_znacka }),
+      ...(typ && { typ }),
       AND: query,
       ...(pohon === 'electric' && { plne_elektricke_vozidlo: true }),
       ...(pohon === 'hybrid' && { hybridni_vozidlo: true })
