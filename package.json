@@ -12,7 +12,7 @@
     "prisma:pull": "sh entrypoint.sh prisma db pull --force",
     "dev": "sh entrypoint.sh npx next dev",
     "build": "next build",
-    "start": "sh entrypoint.sh npx next dev",
+    "start": "sh entrypoint.sh npx next start",
     "lint": "next lint",
     "build:image": "sh build-image.sh",
     "postinstall": "next telemetry disable"
