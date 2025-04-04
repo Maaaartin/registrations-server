@@ -9,6 +9,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model equipment {
+  id       Int       @id @default(autoincrement())
+  pcv      BigInt?
+  typ      String?
+  datum_od DateTime? @db.Date
+  datum_do DateTime? @db.Date
+}
+
 model imports {
   id          Int       @id @default(autoincrement())
   pcv         BigInt?
@@ -160,6 +168,8 @@ model registrations {
   vyska_do                                                        BigInt?
   typ_kod                                                         String?
   rm_zaniku                                                       String?
+
+  @@index([tovarni_znacka, typ, datum_1_registrace], map: "idx_vehicle_search_base")
 }
 
 model removed_vehicles {
