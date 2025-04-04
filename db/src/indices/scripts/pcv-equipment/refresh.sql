@@ -1,0 +1,1 @@
+REINDEX INDEX equipment_pcv_idx;
