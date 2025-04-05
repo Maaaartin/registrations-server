@@ -1,4 +1,5 @@
 const fs = require('fs');
+const Timers = require('timers/promises');
 const client = require('../client');
 const {
   processRecord,
@@ -51,14 +52,19 @@ async function run() {
   );
 
   const passThrough = new PassThrough();
-  parser.on('readable', function () {
-    let data;
-    while ((data = parser.read()) !== null) {
+  (async () => {
+    for await (const data of parser.iterator()) {
       lineNr++;
       const values = processRecord(headerMap, schema, data.record);
-      passThrough.write(values.map(escapeCSVValue).join(',') + '\n');
+      const canWrite = passThrough.write(
+        values.map(escapeCSVValue).join(',') + '\n'
+      );
+      if (!canWrite) {
+        await Timers.setTimeout(1000);
+        console.log('waiting');
+      }
     }
-  });
+  })();
 
   const end = (msg) => async (err) => {
     console.log(msg);
