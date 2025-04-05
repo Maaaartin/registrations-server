@@ -76,14 +76,14 @@ function parseNumber(value = '') {
   return value.replaceAll(',', '.').replaceAll(' ', '');
 }
 function parseBoolean(value = '') {
-  if (!value) {
-    return null;
-  }
   const valueLower = value.toLowerCase().trim();
   if (['false', 'ne'].includes(valueLower)) {
     return false;
   }
-  return true;
+  if (['true', 'ano'].includes(valueLower)) {
+    return true;
+  }
+  return null;
 }
 
 function parseValue(value, type) {

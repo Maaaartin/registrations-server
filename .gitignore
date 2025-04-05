@@ -140,3 +140,4 @@ nginx/certs/*
 !nginx/certs/.gitkeep
 src/**/*.sql
 data
+images
