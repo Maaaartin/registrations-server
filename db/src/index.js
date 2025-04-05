@@ -15,7 +15,8 @@ async function run() {
       await indices();
     } else if (command === 'table') {
       console.log('running table');
-      await helpers.createTableFromHeaders();
+      const tableName = process.argv[3];
+      await helpers.createTableFromHeaders(tableName);
     } else if (command === 'query') {
       await runQuery();
     } else if (command === 'download') {

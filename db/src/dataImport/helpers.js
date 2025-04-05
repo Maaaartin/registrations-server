@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const client = require('../client');
 
 const BATCH_SIZE = 500;
 exports.BATCH_SIZE = BATCH_SIZE;
@@ -29,15 +28,16 @@ const getDirs = () => {
 };
 exports.getDirs = getDirs;
 exports.logError = logError;
-exports.createTableFromHeaders = async () => {
-  const tableName = process.argv[3];
+exports.createTableFromHeaders = async (tableName) => {
+  const originalTableName = tableName.replace('temp_', '');
   const dirs = await getDirs();
-  if (!dirs.includes(tableName)) {
-    throw new Error(`Unknown table ${tableName}`);
+  if (!dirs.includes(originalTableName)) {
+    throw new Error(`Unknown table ${originalTableName}`);
   }
   const schema = require(
-    path.join(__dirname, '..', 'schemas', tableName, 'schema.json')
+    path.join(__dirname, '..', 'schemas', originalTableName, 'schema.json')
   );
+  const client = require('../client')();
   await client.connect();
   await client.query(`DROP TABLE IF EXISTS ${tableName};`);
 

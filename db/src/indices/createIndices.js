@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const client = require('../client');
 
 const dirPath = path.resolve(__dirname, './scripts/');
 const readFolders = () => fs.promises.readdir(dirPath);
@@ -46,7 +45,7 @@ async function refresh() {
 
 async function run() {
   const [, , , action] = process.argv;
-
+  const client = require('../client')();
   try {
     await client.connect();
     if (action === 'create') {
