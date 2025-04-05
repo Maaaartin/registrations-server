@@ -181,7 +181,6 @@ export default function Stats() {
           <CountriesImportsCard></CountriesImportsCard>
         </Grid>
       </Grid>
-      s
       <Grid size={{ xs: 12, md: 6 }}>
         <RegistrationsChart />
       </Grid>
