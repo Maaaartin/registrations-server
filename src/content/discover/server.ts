@@ -23,8 +23,7 @@ export const discoverVehicles = unstable_cache(
       ...rest
     });
     const result = await prisma.registrations.findMany({
-      where: { id: { in: ids } },
-      omit: { pcv: true }
+      where: { id: { in: ids } }
     });
     return result.map(serialize);
   },
