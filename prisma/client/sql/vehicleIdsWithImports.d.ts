@@ -16,6 +16,5 @@ export namespace vehicleIdsWithImports {
   export type Parameters = [brand: string | null, model: string | null, datum_1_registrace_od: Date | null, datum_1_registrace_do: Date | null, plne_elektricke_vozidlo: boolean | null, hybridni_vozidlo: boolean | null, limit: number | null, offset: number | null]
   export type Result = {
     id: number
-    pcv: bigint | null
   }
 }

@@ -7,8 +7,7 @@
 -- @param {Int} $7:limit?
 -- @param {Int} $8:offset?
 SELECT DISTINCT
-    r.id,
-    r.pcv
+    r.id
 FROM
     registrations r
     JOIN imports i ON r.pcv = i.pcv
