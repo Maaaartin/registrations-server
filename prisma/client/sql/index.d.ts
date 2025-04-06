@@ -21,3 +21,5 @@ export * from "./topFuels"
 export * from "./topKinds"
 
 export * from "./topTypesForBrand"
+
+export * from "./vehicleIdsWithImports"

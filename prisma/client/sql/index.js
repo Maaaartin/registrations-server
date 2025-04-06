@@ -11,3 +11,4 @@ exports.topCountriesImports = require("./topCountriesImports.js").topCountriesIm
 exports.topFuels = require("./topFuels.js").topFuels
 exports.topKinds = require("./topKinds.js").topKinds
 exports.topTypesForBrand = require("./topTypesForBrand.js").topTypesForBrand
+exports.vehicleIdsWithImports = require("./vehicleIdsWithImports.js").vehicleIdsWithImports

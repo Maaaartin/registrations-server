@@ -96,41 +96,35 @@ export type DiscoverVehiclesParams = {
   datum_prvni_registrace_od: Date | null;
   datum_prvni_registrace_do: Date | null;
   pohon: Pohon;
+  pagination?: {
+    page: number;
+    pageSize: number;
+  };
 };
 
-export function discoverVehiclesBaseQuery({
-  tovarni_znacka,
-  typ,
-  datum_prvni_registrace_od,
-  datum_prvni_registrace_do,
-  pohon
-}: DiscoverVehiclesParams): { where: Prisma.registrationsWhereInput } {
-  const query = [
-    {
-      key: 'datum_1_registrace',
-      value: { gte: datum_prvni_registrace_od }
-    },
-    {
-      key: 'datum_1_registrace',
-      value: { lte: datum_prvni_registrace_do }
-    }
-  ]
-    .filter(({ value }) => Object.values(value).filter(Boolean).length)
-    .map(({ key, value }) => ({ [key]: value }));
-  return {
-    where: {
-      ...(tovarni_znacka && { tovarni_znacka }),
-      ...(typ && { typ }),
-      AND: query,
-      ...(pohon === 'electric' && { plne_elektricke_vozidlo: true }),
-      ...(pohon === 'hybrid' && { hybridni_vozidlo: true })
-    }
-  };
-}
-
-export const discoverCount = unstable_cache(
-  (params: DiscoverVehiclesParams) =>
-    prisma.registrations.count(discoverVehiclesBaseQuery(params)),
-  ['discover_count'],
-  { revalidate: 3600, tags: ['discover_count'] }
+export const vehicleIdsWithImports_ = unstable_cache(
+  async ({
+    tovarni_znacka,
+    typ,
+    datum_prvni_registrace_do,
+    datum_prvni_registrace_od,
+    pohon,
+    pagination
+  }: DiscoverVehiclesParams) => {
+    const result = await prisma.$queryRawTyped(
+      queries.vehicleIdsWithImports(
+        tovarni_znacka || null,
+        typ || null,
+        datum_prvni_registrace_od || null,
+        datum_prvni_registrace_do || null,
+        pohon === 'electric' || null,
+        pohon === 'hybrid' || null,
+        pagination ? pagination.pageSize : null,
+        pagination ? pagination.pageSize * pagination.page : null
+      )
+    );
+    return result.map((res) => res.id);
+  },
+  ['vehicleIdsWithImports'],
+  { revalidate: 3600, tags: ['vehicleIdsWithImports'] }
 );
