@@ -53,14 +53,6 @@ function runRefreshIndices() {
   return new Promise((resolve, reject) => {
     const child = exec('yarn start indices refresh', { cwd: projectRoot });
 
-    child.stdout.on('data', (data) => {
-      process.stdout.write(data);
-    });
-
-    child.stderr.on('data', (data) => {
-      process.stderr.write(data);
-    });
-
     child.on('exit', (code) => {
       if (code === 0) {
         resolve();
@@ -94,7 +86,7 @@ module.exports = async () => {
         .then(() => {
           results.push({ name: 'import', tableName });
           const outputPath = path.join(outputDir, tableName + '.csv');
-          fs.rmSync(outputPath);
+          return fs.promises.rm(outputPath);
         })
         .catch((error) => {
           results.push({ name: 'import', tableName, error });
