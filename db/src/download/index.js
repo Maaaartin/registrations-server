@@ -34,16 +34,6 @@ function runChildImport(tableName) {
       shell: true
     });
 
-    child.stdout.on('data', (data) => {
-      process.stdout.write(`[Worker ${tableName}] ${data}`);
-    });
-
-    let stderrOutput = '';
-    child.stderr.on('data', (data) => {
-      process.stderr.write(`[Worker ${tableName} ERROR] ${data}`);
-      stderrOutput += data.toString();
-    });
-
     child.on('error', (err) => {
       reject(new Error(`Worker ${tableName} failed to start: ${err.message}`));
     });
@@ -53,11 +43,7 @@ function runChildImport(tableName) {
       if (code === 0) {
         resolve();
       } else {
-        reject(
-          new Error(
-            `Worker ${tableName} exited with code ${code}: ${stderrOutput}`.trim()
-          )
-        );
+        reject(new Error(`Worker ${tableName} exited with code ${code}`));
       }
     });
   });

@@ -87,7 +87,7 @@ async function copyFromCsv(tableName) {
       }
       clearInterval(interval);
       await client.query('COMMIT');
-      console.log('all done');
+      console.log(tableName, 'all done');
       resolve();
     });
   });
@@ -97,11 +97,11 @@ async function copyToTable(tableName) {
   try {
     await client.query('BEGIN');
     await client.query(`TRUNCATE ${tableName}`);
-    console.log('copying table');
+    console.log(tableName, 'copying table');
     await client.query(`INSERT INTO ${tableName}
   SELECT * FROM temp_${tableName};`);
     await client.query('COMMIT');
-    console.log('copied table');
+    console.log(tableName, 'copied table');
     await client.query(`DROP TABLE temp_${tableName};`);
   } catch (error) {
     console.log(error);
