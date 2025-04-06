@@ -6,7 +6,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<number>
 ) {
-  console.log(req.query);
   const params = DDiscover.parse(req.query);
   const result = await discoverCount(params);
   res.send(result);
