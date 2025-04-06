@@ -36,8 +36,8 @@ async function copyFromCsv(tableName) {
   fileStream.pipe(parser);
   let lineNr = 0;
   const interval = setInterval(() => {
-    console.log('line', lineNr);
-  }, 1000);
+    console.log(tableName, 'line', lineNr);
+  }, 10000);
   const tempTableName = 'temp_' + tableName;
   const schema = require(path.join(basePath, 'schema.json'));
 

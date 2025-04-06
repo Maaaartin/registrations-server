@@ -2,43 +2,28 @@ const fs = require('fs');
 const path = require('path');
 const { spawn, exec } = require('child_process');
 const mapping = require('./mapping.json');
+const { Readable } = require('stream');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
-async function downloadFile(url, outputPath) {
+async function downloadFile(tableName, url, outputPath) {
   const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error(`Failed to download ${url}: ${response.statusText}`);
   }
 
-  const totalBytes = response.headers.get('content-length');
-  if (!totalBytes) {
-    console.warn(
-      `No content-length for ${url}, progress tracking may be inaccurate.`
-    );
-  }
-
   const fileStream = fs.createWriteStream(outputPath);
-  let downloadedBytes = 0;
+  const interval = setInterval(() => {
+    const gb = fileStream.bytesWritten / 1_000_000_000;
+    console.log(`Download ${tableName}`, gb.toFixed(2));
+  }, 10000);
+  const readable = Readable.fromWeb(response.body);
+
+  readable.pipe(fileStream);
 
   await new Promise((resolve, reject) => {
-    response.body.on('data', (chunk) => {
-      downloadedBytes += chunk.length;
-      if (totalBytes) {
-        const progress = ((downloadedBytes / totalBytes) * 100).toFixed(2);
-        process.stdout.write(`Downloading ${url}: ${progress}%\r`);
-      } else {
-        process.stdout.write(`Downloading ${url}: ${downloadedBytes} bytes\r`);
-      }
-    });
-
-    response.body.pipe(fileStream);
-    response.body.on('end', () => {
-      console.log(`\nDownload completed: ${outputPath}`);
-      resolve();
-    });
-    response.body.on('error', reject);
-  });
+    readable.on('end', resolve).on('error', reject);
+  }).finally(() => clearInterval(interval));
 }
 
 function runChildImport(tableName) {
@@ -111,21 +96,37 @@ module.exports = async () => {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  const downloadPromises = Object.entries(mapping).map(
-    async ([tableName, url]) => {
-      const outputPath = path.join(outputDir, tableName + '.csv');
-      await downloadFile(url, outputPath);
-      await runChildImport(tableName);
-      return tableName;
-    }
-  );
+  const results = [];
+  const importPromises = [];
 
-  const results = await Promise.allSettled(downloadPromises);
+  for (const { tableName, url } of mapping) {
+    try {
+      const outputPath = path.join(outputDir, tableName + '.csv');
+      await downloadFile(tableName, url, outputPath);
+      results.push({ name: 'download', tableName });
+      const importPromise = runChildImport(tableName)
+        .then(() => {
+          results.push({ name: 'import', tableName });
+          const outputPath = path.join(outputDir, tableName + '.csv');
+          fs.rmSync(outputPath);
+        })
+        .catch((error) => {
+          results.push({ name: 'import', tableName, error });
+        });
+      importPromises.push(importPromise);
+    } catch (error) {
+      console.log(error);
+      results.push({ name: 'download', tableName, error });
+    }
+  }
+  await Promise.allSettled(importPromises);
+
   fs.writeFileSync(
     path.join(outputDir, `results-${new Date()}.json`),
     JSON.stringify(results)
   );
-  if (results.every((res) => res.status === 'fulfilled')) {
+
+  if (results.every((res) => !res.error)) {
     try {
       await runRefreshIndices();
     } catch (error) {

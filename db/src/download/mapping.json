@@ -1,8 +1,26 @@
-{
-  "registrations": "https://download.dataovozidlech.cz/vypiszregistru/vypisvozidel",
-  "inspections": "https://download.dataovozidlech.cz/vypiszregistru/technickeprohlidky",
-  "owners": "https://download.dataovozidlech.cz/vypiszregistru/vlastnikprovozovatelvozidla",
-  "imports": "https://download.dataovozidlech.cz/vypiszregistru/vozidladovoz",
-  "removed_vehicles": "https://download.dataovozidlech.cz/vypiszregistru/vozidlavyrazenazprovozu",
-  "equipment": "https://download.dataovozidlech.cz/vypiszregistru/vozidladoplnkovevybaveni"
-}
+[
+  {
+    "tableName": "imports",
+    "url": "https://download.dataovozidlech.cz/vypiszregistru/vozidladovoz"
+  },
+  {
+    "tableName": "removed_vehicles",
+    "url": "https://download.dataovozidlech.cz/vypiszregistru/vozidlavyrazenazprovozu"
+  },
+  {
+    "tableName": "equipment",
+    "url": "https://download.dataovozidlech.cz/vypiszregistru/vozidladoplnkovevybaveni"
+  },
+  {
+    "tableName": "owners",
+    "url": "https://download.dataovozidlech.cz/vypiszregistru/vlastnikprovozovatelvozidla"
+  },
+  {
+    "tableName": "inspections",
+    "url": "https://download.dataovozidlech.cz/vypiszregistru/technickeprohlidky"
+  },
+  {
+    "tableName": "registrations",
+    "url": "https://download.dataovozidlech.cz/vypiszregistru/vypisvozidel"
+  }
+]
