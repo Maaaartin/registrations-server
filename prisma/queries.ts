@@ -102,6 +102,36 @@ export type DiscoverVehiclesParams = {
   };
 };
 
+export function discoverVehiclesBaseQuery({
+  tovarni_znacka,
+  typ,
+  datum_prvni_registrace_od,
+  datum_prvni_registrace_do,
+  pohon
+}: DiscoverVehiclesParams): { where: Prisma.registrationsWhereInput } {
+  const query = [
+    {
+      key: 'datum_1_registrace',
+      value: { gte: datum_prvni_registrace_od }
+    },
+    {
+      key: 'datum_1_registrace',
+      value: { lte: datum_prvni_registrace_do }
+    }
+  ]
+    .filter(({ value }) => Object.values(value).filter(Boolean).length)
+    .map(({ key, value }) => ({ [key]: value }));
+  return {
+    where: {
+      ...(tovarni_znacka && { tovarni_znacka }),
+      ...(typ && { typ }),
+      AND: query,
+      ...(pohon === 'electric' && { plne_elektricke_vozidlo: true }),
+      ...(pohon === 'hybrid' && { hybridni_vozidlo: true })
+    }
+  };
+}
+
 export const vehicleIdsWithImports_ = unstable_cache(
   async ({
     tovarni_znacka,
@@ -127,4 +157,11 @@ export const vehicleIdsWithImports_ = unstable_cache(
   },
   ['vehicleIdsWithImports'],
   { revalidate: 3600, tags: ['vehicleIdsWithImports'] }
+);
+
+export const discoverCount = unstable_cache(
+  (params: DiscoverVehiclesParams) =>
+    prisma.registrations.count(discoverVehiclesBaseQuery(params)),
+  ['discoverCount'],
+  { revalidate: 3600, tags: ['discoverCount'] }
 );

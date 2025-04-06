@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { filterQuery } from '../content/data';
 
 export default function useDataGridSubmit<
-  T extends Record<string, string | number | null>
+  T extends Record<string, string | number | null | boolean>
 >(initParams: T) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();

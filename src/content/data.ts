@@ -50,7 +50,10 @@ export function filterQuery<T>(
   return Object.fromEntries(
     entries.filter(
       (entry): entry is [string, NonNullable<T>] =>
-        entry[1] !== '' && entry[1] !== null && entry[1] !== undefined
+        entry[1] !== '' &&
+        entry[1] !== null &&
+        entry[1] !== undefined &&
+        entry[1] !== false
     )
   );
 }

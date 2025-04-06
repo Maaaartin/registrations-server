@@ -1,4 +1,11 @@
-import { Stack, NativeSelect, FormControl, InputLabel } from '@mui/material';
+import {
+  Stack,
+  NativeSelect,
+  FormControl,
+  InputLabel,
+  Checkbox,
+  FormControlLabel
+} from '@mui/material';
 import { GetServerSideProps } from 'next';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
@@ -43,6 +50,7 @@ type SearchParams = AutocompleteParams &
     page: number;
     pageSize: number;
     pohon: Pohon | '';
+    imported: boolean;
   };
 
 type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
@@ -194,6 +202,16 @@ const Toolbar = (props: ToolbarProps) => {
         onSubmit={onSubmit_}
         loading={props.loading}
       />
+      <FormControlLabel
+        checked={props.imported}
+        control={
+          <Checkbox
+            checked={props.imported}
+            onChange={(e) => onSubmit_({ imported: e.target.checked })}
+          />
+        }
+        label="Dovezeno"
+      />
     </Stack>
   );
 };
@@ -203,7 +221,8 @@ const searchKeys = [
   'typ',
   'datum_prvni_registrace_od',
   'datum_prvni_registrace_do',
-  'pohon'
+  'pohon',
+  'imported'
 ] as const;
 
 export default function Discover(props: DiscoverProps) {
@@ -215,7 +234,8 @@ export default function Discover(props: DiscoverProps) {
     datum_prvni_registrace_od,
     datum_prvni_registrace_do,
     pageSize,
-    pohon
+    pohon,
+    imported
   } = props;
   const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
@@ -224,7 +244,8 @@ export default function Discover(props: DiscoverProps) {
     datum_prvni_registrace_od,
     datum_prvni_registrace_do,
     pageSize,
-    pohon
+    pohon,
+    imported
   });
   const searchProps = pick(searchKeys, props);
   const [countParams, setCountParams] =
@@ -277,7 +298,8 @@ export default function Discover(props: DiscoverProps) {
             datum_prvni_registrace_do,
             onSubmit: onSubmit_,
             loading,
-            pohon
+            pohon,
+            imported
           } as ToolbarProps
         }}
       />
@@ -295,7 +317,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     datum_prvni_registrace_od,
     datum_prvni_registrace_do,
     pageSize,
-    pohon
+    pohon,
+    imported
   } = queryDecoder.parse(context.query);
 
   const vehicles = await discoverVehicles({
@@ -305,7 +328,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     typ,
     datum_prvni_registrace_od,
     datum_prvni_registrace_do,
-    pohon
+    pohon,
+    imported
   });
   return {
     props: {
@@ -315,6 +339,7 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
       typ,
       pageSize,
       pohon,
+      imported,
       datum_prvni_registrace_od: datum_prvni_registrace_od
         ? DateTime.fromJSDate(datum_prvni_registrace_od).toFormat(DateFormat)
         : null,
