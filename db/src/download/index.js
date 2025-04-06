@@ -6,24 +6,32 @@ const { Readable } = require('stream');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
 async function downloadFile(tableName, url, outputPath) {
-  const response = await fetch(url);
+  let interval;
+  try {
+    const response = await fetch(url);
 
-  if (!response.ok) {
-    throw new Error(`Failed to download ${url}: ${response.statusText}`);
+    if (!response.ok) {
+      throw new Error(`Failed to download ${url}: ${response.statusText}`);
+    }
+
+    const fileStream = fs.createWriteStream(outputPath);
+    interval = setInterval(() => {
+      const gb = fileStream.bytesWritten / 1_000_000_000;
+      console.log(`Download ${tableName}`, gb.toFixed(2));
+    }, 10000);
+    const readable = Readable.fromWeb(response.clone().body);
+
+    readable.pipe(fileStream);
+
+    await new Promise((resolve, reject) => {
+      readable.on('end', resolve).on('error', reject);
+    });
+    clearInterval(interval);
+  } catch (error) {
+    console.log(tableName, 'download failed', error);
+    clearInterval(interval);
+    return downloadFile(tableName, url, outputPath);
   }
-
-  const fileStream = fs.createWriteStream(outputPath);
-  const interval = setInterval(() => {
-    const gb = fileStream.bytesWritten / 1_000_000_000;
-    console.log(`Download ${tableName}`, gb.toFixed(2));
-  }, 10000);
-  const readable = Readable.fromWeb(response.body);
-
-  readable.pipe(fileStream);
-
-  await new Promise((resolve, reject) => {
-    readable.on('end', resolve).on('error', reject);
-  }).finally(() => clearInterval(interval));
 }
 
 function runChildImport(tableName) {
