@@ -11,4 +11,3 @@ exports.topCountriesImports = require("./topCountriesImports.edge.js").topCountr
 exports.topFuels = require("./topFuels.edge.js").topFuels
 exports.topKinds = require("./topKinds.edge.js").topKinds
 exports.topTypesForBrand = require("./topTypesForBrand.edge.js").topTypesForBrand
-exports.vehicleIdsWithImports = require("./vehicleIdsWithImports.edge.js").vehicleIdsWithImports

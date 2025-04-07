@@ -5,8 +5,7 @@ import { defaultPageSize, maxPageSize, stringToPohon } from './index';
 import { serialize } from '../data';
 import {
   discoverVehiclesBaseQuery,
-  DiscoverVehiclesParams,
-  vehicleIdsWithImports_
+  DiscoverVehiclesParams
 } from '../../../prisma/queries';
 import { DDiscover, DPage } from '../decoders';
 
@@ -14,31 +13,15 @@ export const discoverVehicles = unstable_cache(
   async ({
     page,
     pageSize,
-    imported,
     ...rest
   }: DiscoverVehiclesParams & {
     page: number;
     pageSize: number;
-    imported: boolean;
   }) => {
-    if (!imported) {
-      const res = await prisma.registrations.findMany({
-        ...discoverVehiclesBaseQuery(rest),
-        take: pageSize,
-        skip: pageSize * page
-      });
-      return res.map(serialize);
-    }
-    const vehiclesWithImports = await vehicleIdsWithImports_({
-      pagination: {
-        page,
-        pageSize
-      },
-      ...rest
-    });
-    const ids = vehiclesWithImports.map((v) => v.id) as number[];
     const result = await prisma.registrations.findMany({
-      where: { id: { in: ids } }
+      ...discoverVehiclesBaseQuery(rest),
+      skip: pageSize * page,
+      take: pageSize
     });
     return result.map(serialize);
   },
@@ -64,14 +47,7 @@ const pageSizeDecoder = z.object({
 });
 
 const additionalDecoder = z.object({
-  pohon: z.string().default('').transform(stringToPohon),
-  imported: z
-    .string()
-    .default('')
-    .transform((val) => {
-      if (val === 'true') return true;
-      return false;
-    })
+  pohon: z.string().default('').transform(stringToPohon)
 });
 
 export const queryDecoder = DDiscover.merge(DPage)

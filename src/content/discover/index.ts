@@ -19,5 +19,4 @@ export type DiscoverProps = {
   datum_prvni_registrace_do: string | null;
   pageSize: number;
   pohon: Pohon;
-  imported: boolean;
 };

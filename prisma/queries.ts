@@ -133,35 +133,6 @@ export function discoverVehiclesBaseQuery({
   };
 }
 
-export const vehicleIdsWithImports_ = unstable_cache(
-  async ({
-    tovarni_znacka,
-    typ,
-    datum_prvni_registrace_do,
-    datum_prvni_registrace_od,
-    pohon,
-    pagination
-  }: DiscoverVehiclesParams) => {
-    const result = await prisma.$queryRawTyped(
-      queries.vehicleIdsWithImports(
-        tovarni_znacka || null,
-        typ || null,
-        datum_prvni_registrace_od || null,
-        datum_prvni_registrace_do || null,
-        pohon === 'electric' || null,
-        pohon === 'hybrid' || null,
-        pagination?.pageSize ?? null,
-        pagination ? pagination.pageSize * pagination.page : null,
-        !pagination
-      )
-    );
-
-    return result.map(serialize);
-  },
-  ['vehicleIdsWithImports'],
-  { revalidate: 3600, tags: ['vehicleIdsWithImports'] }
-);
-
 export const discoverCount = unstable_cache(
   (params: DiscoverVehiclesParams) =>
     prisma.registrations.count(discoverVehiclesBaseQuery(params)),
