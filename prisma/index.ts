@@ -17,5 +17,5 @@ const prismaExtended = prisma.$extends({
       }
     }
   }
-}) as typeof prisma;
+});
 export default prismaExtended;
