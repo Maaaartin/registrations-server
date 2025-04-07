@@ -1,7 +1,8 @@
 import Timers from 'timers/promises';
 import { PrismaClient } from './client/default';
 
-const prisma = new PrismaClient().$extends({
+const prisma = new PrismaClient();
+prisma.$extends({
   query: {
     $allModels: {
       async $allOperations({ args, query }) {
