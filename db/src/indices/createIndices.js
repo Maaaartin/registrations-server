@@ -4,6 +4,7 @@ const path = require('path');
 const dirPath = path.resolve(__dirname, './scripts/');
 const readFolders = () => fs.promises.readdir(dirPath);
 
+let client;
 async function runDownAndUp(dirName) {
   const [downCode, upCode] = await Promise.all(
     ['down.sql', 'up.sql'].map((script) =>
@@ -45,7 +46,7 @@ async function refresh() {
 
 async function run() {
   const [, , , action] = process.argv;
-  const client = require('../client')();
+  client = require('../client')();
   try {
     await client.connect();
     if (action === 'create') {
