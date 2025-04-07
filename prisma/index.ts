@@ -2,7 +2,7 @@ import Timers from 'timers/promises';
 import { PrismaClient } from './client/default';
 
 const prisma = new PrismaClient();
-prisma.$extends({
+const prismaExtended = prisma.$extends({
   query: {
     $allModels: {
       async $allOperations({ args, query }) {
@@ -17,5 +17,5 @@ prisma.$extends({
       }
     }
   }
-});
-export default prisma;
+}) as typeof prisma;
+export default prismaExtended;
