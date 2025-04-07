@@ -7,10 +7,10 @@ const prisma = new PrismaClient().$extends({
       async $allOperations({ args, query }) {
         const res = await Promise.race([
           query(args),
-          Timers.setTimeout(30 * 1000)
+          Timers.setTimeout(30 * 1000, new Error('Query timeout'))
         ]);
-        if (!res) {
-          throw new Error('Query timeout');
+        if (res instanceof Error) {
+          throw res;
         }
         return res;
       }

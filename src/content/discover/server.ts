@@ -29,13 +29,14 @@ export const discoverVehicles = unstable_cache(
       });
       return res.map(serialize);
     }
-    const ids = await vehicleIdsWithImports_({
+    const vehiclesWithImports = await vehicleIdsWithImports_({
       pagination: {
         page,
         pageSize
       },
       ...rest
     });
+    const ids = vehiclesWithImports.map((v) => v.id) as number[];
     const result = await prisma.registrations.findMany({
       where: { id: { in: ids } }
     });

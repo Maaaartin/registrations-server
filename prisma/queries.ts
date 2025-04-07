@@ -3,6 +3,7 @@ import prisma from '.';
 import type { Prisma } from './client/default';
 import queries from './client/sql';
 import type { Pohon } from '../src/content/discover';
+import { serialize } from '../src/content/data';
 
 export async function count_() {
   const [result] = await prisma.$queryRawTyped(queries.count());
@@ -149,11 +150,13 @@ export const vehicleIdsWithImports_ = unstable_cache(
         datum_prvni_registrace_do || null,
         pohon === 'electric' || null,
         pohon === 'hybrid' || null,
-        pagination ? pagination.pageSize : null,
-        pagination ? pagination.pageSize * pagination.page : null
+        pagination?.pageSize ?? null,
+        pagination ? pagination.pageSize * pagination.page : null,
+        !pagination
       )
     );
-    return result.map((res) => res.id);
+
+    return result.map(serialize);
   },
   ['vehicleIdsWithImports'],
   { revalidate: 3600, tags: ['vehicleIdsWithImports'] }
