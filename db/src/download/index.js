@@ -2,36 +2,37 @@ const fs = require('fs');
 const path = require('path');
 const { spawn, exec } = require('child_process');
 const mapping = require('./mapping.json');
-const { Readable } = require('stream');
 
 const projectRoot = path.resolve(__dirname, '..', '..');
 async function downloadFile(tableName, url, outputPath) {
-  let interval;
-  try {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Failed to download ${url}: ${response.statusText}`);
-    }
-
-    const fileStream = fs.createWriteStream(outputPath);
-    interval = setInterval(() => {
-      const gb = fileStream.bytesWritten / 1_000_000_000;
-      console.log(`Download ${tableName}`, gb.toFixed(2));
-    }, 10000);
-    const readable = Readable.fromWeb(response.clone().body);
-
-    readable.pipe(fileStream);
-
-    await new Promise((resolve, reject) => {
-      readable.on('end', resolve).on('error', reject);
+  return new Promise((resolve, reject) => {
+    // Use shell: true so we can use shell features like `>>`
+    const curl = spawn(`curl "${url}" >> "${outputPath}"`, {
+      shell: true
     });
-    clearInterval(interval);
-  } catch (error) {
-    console.log(tableName, 'download failed', error);
-    clearInterval(interval);
-    return downloadFile(tableName, url, outputPath);
-  }
+
+    // Live logging
+    curl.stdout.on('data', (data) => {
+      process.stdout.write(`[curl ${tableName}] ${data}`);
+    });
+
+    curl.stderr.on('data', (data) => {
+      process.stderr.write(`[curl ${tableName} ERROR] ${data}`);
+    });
+
+    curl.on('error', (err) => {
+      reject(new Error(`[curl ${tableName}] Failed to start: ${err.message}`));
+    });
+
+    curl.on('close', (code) => {
+      if (code === 0) {
+        console.log(`[curl ${tableName}] Download complete.`);
+        resolve();
+      } else {
+        reject(new Error(`[curl ${tableName}] curl exited with code ${code}`));
+      }
+    });
+  });
 }
 
 function runChildImport(tableName) {
