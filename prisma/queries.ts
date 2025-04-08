@@ -109,7 +109,10 @@ export function discoverVehiclesBaseQuery({
   datum_prvni_registrace_od,
   datum_prvni_registrace_do,
   pohon
-}: DiscoverVehiclesParams): { where: Prisma.registrationsWhereInput } {
+}: DiscoverVehiclesParams): {
+  where: Prisma.registrationsWhereInput;
+  orderBy: Prisma.registrationsOrderByWithRelationInput;
+} {
   const query = [
     {
       key: 'datum_1_registrace',
@@ -129,6 +132,9 @@ export function discoverVehiclesBaseQuery({
       AND: query,
       ...(pohon === 'electric' && { plne_elektricke_vozidlo: true }),
       ...(pohon === 'hybrid' && { hybridni_vozidlo: true })
+    },
+    orderBy: {
+      id: 'asc'
     }
   };
 }
