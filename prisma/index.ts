@@ -18,4 +18,4 @@ const prismaExtended = prisma.$extends({
     }
   }
 });
-export default prismaExtended;
+export default prismaExtended as typeof prisma;
