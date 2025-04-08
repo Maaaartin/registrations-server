@@ -3,7 +3,6 @@ import prisma from '.';
 import type { Prisma } from './client/default';
 import queries from './client/sql';
 import type { Pohon } from '../src/content/discover';
-import { serialize } from '../src/content/data';
 
 export async function count_() {
   const [result] = await prisma.$queryRawTyped(queries.count());

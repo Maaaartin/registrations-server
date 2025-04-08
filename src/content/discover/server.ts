@@ -2,7 +2,7 @@ import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
 import prisma from '../../../prisma';
 import { defaultPageSize, maxPageSize, stringToPohon } from './index';
-import { serialize } from '../data';
+import { serialize, vehicleSelect } from '../data';
 import {
   discoverVehiclesBaseQuery,
   DiscoverVehiclesParams
@@ -21,7 +21,8 @@ export const discoverVehicles = unstable_cache(
     const result = await prisma.registrations.findMany({
       ...discoverVehiclesBaseQuery(rest),
       skip: pageSize * page,
-      take: pageSize
+      take: pageSize,
+      select: vehicleSelect
     });
     return result.map(serialize);
   },

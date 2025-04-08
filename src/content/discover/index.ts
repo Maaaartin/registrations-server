@@ -1,4 +1,4 @@
-import { Vehicles } from '../search';
+import { discoverVehicles } from './server';
 
 export const defaultPageSize = 20;
 export const maxPageSize = 100;
@@ -9,6 +9,8 @@ export type Pohon = 'electric' | 'hybrid' | null;
 
 export const stringToPohon = (val: string): Pohon =>
   val === 'hybrid' || val === 'electric' ? val : null;
+
+export type Vehicles = Awaited<ReturnType<typeof discoverVehicles>>;
 
 export type DiscoverProps = {
   currentPage: number;
