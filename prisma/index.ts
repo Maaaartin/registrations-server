@@ -1,5 +1,5 @@
 import Timers from 'timers/promises';
-import { PrismaClient } from './client';
+import { PrismaClient } from './client/default';
 
 const prisma = new PrismaClient();
 const prismaExtended = prisma.$extends({
@@ -17,5 +17,5 @@ const prismaExtended = prisma.$extends({
       }
     }
   }
-});
-export default prismaExtended as typeof prisma;
+}) as typeof prisma;
+export default prismaExtended;
