@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { count_ } from '../../../prisma/queries';
+import * as db from '../../api/db';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<number>
 ) {
-  const result = await count_();
-  res.send(result);
+  const result = await db.getIdCount();
+  const count = result?.data?.[0].count || 0;
+  res.send(count);
 }

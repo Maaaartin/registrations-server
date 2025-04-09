@@ -141,3 +141,4 @@ nginx/certs/*
 src/**/*.sql
 data
 images
+src/api/*
