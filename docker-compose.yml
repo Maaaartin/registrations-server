@@ -44,6 +44,22 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d
+    networks:
+      - app_network
+
+  postgrest:
+    image: postgrest/postgrest:latest
+    container_name: postgrest
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      PGRST_DB_URI: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: web_anon
+      PGRST_SERVER_PORT: 5000
+      PGRST_OPENAPI_SERVER_PROXY_URI: http://localhost:5000
     networks:
       - app_network
 

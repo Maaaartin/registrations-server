@@ -1,0 +1,9 @@
+CREATE ROLE web_anon NOLOGIN;
+
+GRANT USAGE ON SCHEMA public TO web_anon;
+
+GRANT
+SELECT
+    ON ALL TABLES IN SCHEMA public TO web_anon;
+
+GRANT web_anon TO admin;
