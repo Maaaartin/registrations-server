@@ -4,4 +4,8 @@ DROP INDEX IF EXISTS idx_vehicle_search_electric;
 
 DROP INDEX IF EXISTS idx_vehicle_search_hybrid;
 
-DROP INDEX IF EXISTS idx_vehicle_search_id
+DROP INDEX IF EXISTS idx_vehicle_search_id;
+
+DROP INDEX IF EXISTS idx_registrations_paginated;
+
+DROP INDEX IF EXISTS idx_vehicle_search_id;

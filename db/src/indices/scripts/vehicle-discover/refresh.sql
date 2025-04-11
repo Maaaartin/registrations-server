@@ -1,0 +1,3 @@
+REINDEX INDEX idx_registrations_paginated;
+
+REINDEX INDEX idx_vehicle_search_id;
