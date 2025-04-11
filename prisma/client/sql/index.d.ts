@@ -1,5 +1,9 @@
 export * from "./count"
 
+export * from "./discoverVehicles"
+
+export * from "./discoverVehiclesCount"
+
 export * from "./importsWithMatchingVehicle"
 
 export * from "./registrationCountsByYear"

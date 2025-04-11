@@ -1,5 +1,7 @@
 "use strict"
 exports.count = require("./count.js").count
+exports.discoverVehicles = require("./discoverVehicles.js").discoverVehicles
+exports.discoverVehiclesCount = require("./discoverVehiclesCount.js").discoverVehiclesCount
 exports.importsWithMatchingVehicle = require("./importsWithMatchingVehicle.js").importsWithMatchingVehicle
 exports.registrationCountsByYear = require("./registrationCountsByYear.js").registrationCountsByYear
 exports.searchBrands = require("./searchBrands.js").searchBrands

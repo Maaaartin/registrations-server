@@ -1,4 +1,6 @@
 export * from "./count.edge.mjs"
+export * from "./discoverVehicles.edge.mjs"
+export * from "./discoverVehiclesCount.edge.mjs"
 export * from "./importsWithMatchingVehicle.edge.mjs"
 export * from "./registrationCountsByYear.edge.mjs"
 export * from "./searchBrands.edge.mjs"
