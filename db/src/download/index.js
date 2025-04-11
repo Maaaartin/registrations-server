@@ -101,6 +101,7 @@ module.exports = async () => {
           results.push({ name: 'import', tableName, error });
         });
       importPromises.push(importPromise);
+      await importPromise;
     } catch (error) {
       console.log(error);
       results.push({ name: 'download', tableName, error });
