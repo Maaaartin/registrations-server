@@ -7,12 +7,12 @@ const prisma = prismaBase.$extends({
     $allModels: {
       async $allOperations({ args, query }) {
         const res = await Promise.race([
-          query(args)
-          // Timers.setTimeout(30 * 1000, new Error('Query timeout'))
+          query(args),
+          Timers.setTimeout(30 * 1000, new Error('Query timeout'))
         ]);
-        // if (res instanceof Error) {
-        //   throw res;
-        // }
+        if (res instanceof Error) {
+          throw res;
+        }
         return res;
       }
     }
