@@ -10,9 +10,9 @@
   "scripts": {
     "prisma:generate": "sh entrypoint.sh prisma generate --sql",
     "prisma:pull": "sh entrypoint.sh prisma db pull --force",
-    "dev": "sh entrypoint.sh npx next dev",
+    "dev": "rm -rf ./.next/cache && sh entrypoint.sh yarn next dev",
     "build": "next build",
-    "start": "sh entrypoint.sh npx next start",
+    "start": "sh entrypoint.sh yarn next start",
     "lint": "next lint",
     "build:image": "sh build-image.sh",
     "postinstall": "next telemetry disable"
