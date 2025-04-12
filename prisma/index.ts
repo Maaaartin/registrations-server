@@ -1,21 +1,5 @@
-import Timers from 'timers/promises';
 import { PrismaClient } from './client/default';
 
-const prismaBase = new PrismaClient();
-const prisma = prismaBase.$extends({
-  query: {
-    $allModels: {
-      async $allOperations({ args, query }) {
-        const res = await Promise.race([
-          query(args),
-          Timers.setTimeout(30 * 1000, new Error('Query timeout'))
-        ]);
-        if (res instanceof Error) {
-          throw res;
-        }
-        return res;
-      }
-    }
-  }
-}) as typeof prismaBase;
+const prisma = new PrismaClient();
+
 export default prisma;

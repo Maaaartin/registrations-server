@@ -36,6 +36,7 @@ export const DDiscover = z
   .object({
     datum_prvni_registrace_od: DDate,
     datum_prvni_registrace_do: DDate,
-    pohon: z.string().default('').transform(stringToPohon)
+    pohon: z.string().default('').transform(stringToPohon),
+    imported: z.string().default('').transform(Boolean)
   })
   .merge(DBrandModel);
