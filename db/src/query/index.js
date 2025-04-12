@@ -3,6 +3,6 @@ module.exports = async () => {
   const client = require('../client')();
   await client.connect();
   const res = await client.query(query);
-  console.log(res);
+  console.log(res.rows, res.rowCount);
   await client.end();
 };
