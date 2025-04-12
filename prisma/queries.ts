@@ -1,6 +1,4 @@
-import { unstable_cache } from 'next/cache';
 import prisma from '.';
-import type { Prisma } from './client/default';
 import queries from './client/sql';
 import type { Pohon } from '../src/content/discover';
 
@@ -102,39 +100,3 @@ export type DiscoverVehiclesParams = {
     pageSize: number;
   };
 };
-
-export function discoverVehiclesBaseQuery({
-  tovarni_znacka,
-  typ,
-  datum_prvni_registrace_od,
-  datum_prvni_registrace_do,
-  pohon
-}: DiscoverVehiclesParams): {
-  where: Prisma.registrationsWhereInput;
-  orderBy: Prisma.registrationsOrderByWithRelationInput;
-} {
-  const query = [
-    {
-      key: 'datum_1_registrace',
-      value: { gte: datum_prvni_registrace_od }
-    },
-    {
-      key: 'datum_1_registrace',
-      value: { lte: datum_prvni_registrace_do }
-    }
-  ]
-    .filter(({ value }) => Object.values(value).filter(Boolean).length)
-    .map(({ key, value }) => ({ [key]: value }));
-  return {
-    where: {
-      ...(tovarni_znacka && { tovarni_znacka }),
-      ...(typ && { typ }),
-      AND: query,
-      ...(pohon === 'electric' && { plne_elektricke_vozidlo: true }),
-      ...(pohon === 'hybrid' && { hybridni_vozidlo: true })
-    },
-    orderBy: {
-      id: 'asc'
-    }
-  };
-}

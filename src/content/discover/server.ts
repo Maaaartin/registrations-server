@@ -2,14 +2,10 @@ import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
 import prisma from '../../../prisma';
 import { defaultPageSize, maxPageSize, stringToPohon } from './index';
-import { serialize, vehicleSelect } from '../data';
-import {
-  discoverVehiclesBaseQuery,
-  DiscoverVehiclesParams
-} from '../../../prisma/queries';
+import { serialize } from '../data';
+import { DiscoverVehiclesParams } from '../../../prisma/queries';
 import queries from '../../../prisma/client/sql';
 import { DDiscover, DPage } from '../decoders';
-import { pick } from 'ramda';
 
 export const discoverVehicles = unstable_cache(
   async ({
@@ -20,41 +16,30 @@ export const discoverVehicles = unstable_cache(
     page: number;
     pageSize: number;
   }) => {
-    const joinParams = pick(['imported'], rest);
-    const runJoinQuery = Object.values(joinParams).some(Boolean);
-    if (runJoinQuery) {
-      const {
-        tovarni_znacka,
-        typ,
-        datum_prvni_registrace_od,
-        datum_prvni_registrace_do,
-        pohon
-      } = rest;
-      const result = await prisma.$queryRawTyped(
-        queries.discoverVehicles(
-          tovarni_znacka || null,
-          typ || null,
-          datum_prvni_registrace_od || null,
-          datum_prvni_registrace_do || null,
-          pohon === 'electric' || null,
-          pohon === 'hybrid' || null,
-          rest.imported || null,
-          null,
-          null,
-          null,
-          null,
-          pageSize,
-          pageSize * page
-        )
-      );
-      return result.map(serialize);
-    }
-    const result = await prisma.registrations.findMany({
-      ...discoverVehiclesBaseQuery(rest),
-      skip: pageSize * page,
-      take: pageSize,
-      select: vehicleSelect
-    });
+    const {
+      tovarni_znacka,
+      typ,
+      datum_prvni_registrace_od,
+      datum_prvni_registrace_do,
+      pohon
+    } = rest;
+    const result = await prisma.$queryRawTyped(
+      queries.discoverVehicles(
+        tovarni_znacka || null,
+        typ || null,
+        datum_prvni_registrace_od || null,
+        datum_prvni_registrace_do || null,
+        pohon === 'electric' || null,
+        pohon === 'hybrid' || null,
+        rest.imported || null,
+        null,
+        null,
+        null,
+        null,
+        pageSize,
+        pageSize * page
+      )
+    );
     return result.map(serialize);
   },
 

@@ -25,9 +25,7 @@ FROM
         $8::boolean,
         $9::boolean,
         $10::boolean,
-        $11::boolean
-    )
-LIMIT
-    $12::int
-OFFSET
-    $13::int;
+        $11::boolean,
+        $12::integer,
+        $13::integer
+    );

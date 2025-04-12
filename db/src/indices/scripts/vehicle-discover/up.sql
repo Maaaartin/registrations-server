@@ -22,7 +22,9 @@ OR REPLACE FUNCTION discover_registrations (
   require_owners BOOLEAN,
   require_removed BOOLEAN,
   require_inspections BOOLEAN,
-  require_equipment BOOLEAN
+  require_equipment BOOLEAN,
+  p_limit INT,
+  p_offset INT
 ) RETURNS TABLE (
   id INTEGER,
   tovarni_znacka TEXT,
@@ -71,6 +73,8 @@ BEGIN
     AND (p_require_inspections IS NOT TRUE OR EXISTS (SELECT 1 FROM inspections ins WHERE ins.pcv = r.pcv))
     AND (p_require_equipment IS NOT TRUE OR EXISTS (SELECT 1 FROM equipment e WHERE e.pcv = r.pcv))
   ORDER BY
-    r.id;
+    r.id
+  LIMIT p_limit
+  OFFSET p_offset;
 END
 ' LANGUAGE plpgsql;
