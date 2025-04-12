@@ -1,6 +1,7 @@
 import type { GridLocaleText } from '@mui/x-data-grid';
 import type { PickersInputLocaleText } from '@mui/x-date-pickers';
 import type { DateTime } from 'luxon';
+import { MAX_COUNT } from './data';
 
 export const gridLocaleText: Partial<GridLocaleText> = {
   columnMenuHideColumn: 'Skrýt sloupec',
@@ -10,7 +11,7 @@ export const gridLocaleText: Partial<GridLocaleText> = {
       if (count === -1) {
         return `Strana ${page + 1}`;
       }
-      return `${from} - ${to} z ${count}`;
+      return `${from} - ${to} z ${count}${count === MAX_COUNT ? '+' : ''}`;
     },
     labelRowsPerPage: 'Řádků na stránku'
   },

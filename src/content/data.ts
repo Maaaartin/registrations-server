@@ -57,3 +57,5 @@ export function filterQuery<T>(
     )
   );
 }
+
+export const MAX_COUNT = 10000;

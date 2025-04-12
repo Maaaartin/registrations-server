@@ -9,6 +9,7 @@
 -- @param {Boolean} $9:require_removed?
 -- @param {Boolean} $10:require_inspections?
 -- @param {Boolean} $11:require_equipment?
+-- @param {Int} $12:limit
 SELECT
     COUNT(id)
 FROM
@@ -24,6 +25,6 @@ FROM
         $9::boolean,
         $10::boolean,
         $11::boolean,
-        null,
+        $12::integer,
         null
     );

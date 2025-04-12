@@ -3,6 +3,7 @@ import { DDiscover } from '../../content/decoders';
 import prisma from '../../../prisma';
 import queries from '../../../prisma/client/sql';
 import { unstable_cache } from 'next/cache';
+import { MAX_COUNT } from '../../content/data';
 
 type Params = ReturnType<typeof DDiscover.parse>;
 
@@ -28,7 +29,8 @@ const fetchCount = unstable_cache(
         null,
         null,
         null,
-        null
+        null,
+        MAX_COUNT
       )
     );
     const count = Number(result?.[0].count || 0);
