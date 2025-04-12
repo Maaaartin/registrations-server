@@ -12,8 +12,8 @@ CREATE INDEX idx_registrations_brand_id ON registrations (tovarni_znacka);
 
 CREATE
 OR REPLACE FUNCTION discover_registrations (
-    tovarni_znacka TEXT,
-    typ TEXT,
+    brand TEXT,
+    typ_ TEXT,
     datum_od DATE,
     datum_do DATE,
     electric BOOLEAN,
@@ -23,10 +23,19 @@ OR REPLACE FUNCTION discover_registrations (
     require_removed BOOLEAN,
     require_inspections BOOLEAN,
     require_equipment BOOLEAN
-) RETURNS SETOF registrations AS '
+) RETURNS TABLE (
+    id INTEGER,
+    tovarni_znacka TEXT,
+    typ TEXT,
+    datum_1_registrace DATE,
+    pcv BIGINT,
+    cislo_orv TEXT,
+    cislo_tp TEXT,
+    vin TEXT
+) AS '
 DECLARE
-  p_brand ALIAS FOR tovarni_znacka;
-  p_typ ALIAS FOR typ;
+  p_brand ALIAS FOR brand;
+  p_typ ALIAS FOR typ_;
   p_datum_od ALIAS FOR datum_od;
   p_datum_do ALIAS FOR datum_do;
   p_electric ALIAS FOR electric;
@@ -38,7 +47,7 @@ DECLARE
   p_require_equipment ALIAS FOR require_equipment;
 BEGIN
   RETURN QUERY
-  SELECT r.*
+  SELECT r.id, r.tovarni_znacka, r.typ, r.datum_1_registrace, r.pcv, r.cislo_orv, r.cislo_tp, r.vin
   FROM registrations r
   WHERE
     (p_brand IS NULL OR r.tovarni_znacka = p_brand)
