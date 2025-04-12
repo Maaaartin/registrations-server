@@ -1,4 +1,3 @@
-
 FROM node:18-alpine
 
 WORKDIR /app
@@ -13,4 +12,4 @@ RUN apk add --no-cache curl
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "yarn start"]
+CMD ["sh", "-c", "yarn prisma:generate && yarn start"]
