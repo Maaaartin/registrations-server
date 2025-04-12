@@ -21,6 +21,8 @@ services:
     image: nextjs-image:latest
     container_name: nextjs
     restart: always
+    depends_on:
+      - postgres
     networks:
       - app_network
     environment:
