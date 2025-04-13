@@ -15,7 +15,7 @@
     "start": "sh entrypoint.sh yarn next start",
     "lint": "next lint",
     "build:image": "sh build-image.sh",
-    "postinstall": "prisma generate && next telemetry disable"
+    "postinstall": "sh -c 'for i in 1 2 3 4 5; do prisma generate && break || sleep 2; done || exit 1 && next telemetry disable'"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
