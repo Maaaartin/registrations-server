@@ -15,6 +15,9 @@ import {
   datePickersCustomizations,
   treeViewCustomizations
 } from '../theme/customizations';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { CircularProgress } from '@mui/material';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -23,7 +26,39 @@ const xThemeComponents = {
   ...treeViewCustomizations
 };
 
+const getPathName = (url: string) => url.split('/')[1].split('?')[0];
+
 const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
+  const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
+
+  useEffect(() => {
+    const handleStart = (url: string) => {
+      if (getPathName(url) !== getPathName(window.location.pathname)) {
+        console.log('start');
+        setLoading(true);
+      }
+    };
+
+    const handleComplete = () => {
+      setLoading(false);
+    };
+
+    const handleError = () => {
+      setLoading(false);
+    };
+
+    router.events.on('routeChangeStart', handleStart);
+    router.events.on('routeChangeComplete', handleComplete);
+    router.events.on('routeChangeError', handleError);
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart);
+      router.events.off('routeChangeComplete', handleComplete);
+      router.events.off('routeChangeError', handleError);
+    };
+  }, [router]);
+
   return (
     <>
       <Head>
@@ -58,6 +93,15 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
                   maxWidth: { sm: '100%', md: '1700px' }
                 }}
               >
+                {loading && (
+                  <CircularProgress
+                    sx={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%'
+                    }}
+                  />
+                )}
                 <Component {...pageProps} />
               </Box>
             </Stack>
