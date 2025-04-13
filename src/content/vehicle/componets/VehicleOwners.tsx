@@ -17,7 +17,7 @@ export default function VehicleOwners({
   vehicleOwners: SerializableOwner[];
 }) {
   return (
-    <Section label="Vlastníci a provozovatelé">
+    <Section label={`Vlastníci a provozovatelé (${vehicleOwners.length})`}>
       <Table>
         <TableHead>
           <TableRow>
