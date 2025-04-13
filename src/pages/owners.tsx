@@ -54,7 +54,6 @@ export default function Owners({ ico, vehicles }: OwnersProps) {
       <VehicleDataGrid
         loading={loading}
         rows={vehicles}
-        rowCount={vehicles.length}
         slots={{
           toolbar: Toolbar as React.JSXElementConstructor<
             GridSlotProps['toolbar']
