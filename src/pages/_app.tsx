@@ -86,22 +86,22 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
               }}
             >
               <Header />
+              {loading && (
+                <CircularProgress
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    zIndex: 1
+                  }}
+                />
+              )}
               <Box
                 sx={{
                   width: '100%',
                   maxWidth: { sm: '100%', md: '1700px' }
                 }}
               >
-                {loading && (
-                  <CircularProgress
-                    sx={{
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      zIndex: 1
-                    }}
-                  />
-                )}
                 <Component {...pageProps} />
               </Box>
             </Stack>
