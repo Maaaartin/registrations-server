@@ -1,0 +1,1 @@
+REINDEX INDEX owners_ico_idx;
