@@ -83,7 +83,7 @@ export const getServerSideProps: GetServerSideProps<OwnersProps> = async (
     ico
   });
   if (!owners) {
-    return { notFound: true };
+    return { props: { vehicles: [], ico } };
   }
   return {
     props: {
