@@ -11,6 +11,6 @@ else
   HOST="localhost"
 fi
 
-export DATABASE_URL="postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$HOST/$POSTGRES_DB?schema=public"
+export DATABASE_URL="postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$HOST/$POSTGRES_DB?connection_limit=20"
 
 exec "$@"
