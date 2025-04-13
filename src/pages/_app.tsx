@@ -35,7 +35,6 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
     const handleStart = (url: string) => {
       if (getPathName(url) !== getPathName(window.location.pathname)) {
-        console.log('start');
         setLoading(true);
       }
     };
@@ -98,7 +97,8 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
                     sx={{
                       position: 'absolute',
                       top: '50%',
-                      left: '50%'
+                      left: '50%',
+                      zIndex: 1
                     }}
                   />
                 )}
