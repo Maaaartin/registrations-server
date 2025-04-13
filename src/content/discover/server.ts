@@ -1,7 +1,7 @@
 import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
 import prisma from '../../../prisma';
-import { defaultPageSize, maxPageSize, stringToPohon } from './index';
+import { defaultPageSize, maxPageSize } from './index';
 import { serialize } from '../data';
 import { DiscoverVehiclesParams } from '../../../prisma/queries';
 import queries from '../../../prisma/client/sql';
@@ -11,18 +11,14 @@ export const discoverVehicles = unstable_cache(
   async ({
     page,
     pageSize,
-    ...rest
-  }: DiscoverVehiclesParams & {
-    page: number;
-    pageSize: number;
-  }) => {
-    const {
-      tovarni_znacka,
-      typ,
-      datum_prvni_registrace_od,
-      datum_prvni_registrace_do,
-      pohon
-    } = rest;
+    tovarni_znacka,
+    typ,
+    datum_prvni_registrace_od,
+    datum_prvni_registrace_do,
+    pohon,
+    imported,
+    removed
+  }: DiscoverVehiclesParams) => {
     const result = await prisma.$queryRawTyped(
       queries.discoverVehicles(
         tovarni_znacka || null,
@@ -31,9 +27,9 @@ export const discoverVehicles = unstable_cache(
         datum_prvni_registrace_do || null,
         pohon === 'electric' || null,
         pohon === 'hybrid' || null,
-        rest.imported || null,
+        imported || null,
         null,
-        null,
+        removed || null,
         null,
         null,
         pageSize,
@@ -63,10 +59,4 @@ const pageSizeDecoder = z.object({
     })
 });
 
-const additionalDecoder = z.object({
-  pohon: z.string().default('').transform(stringToPohon)
-});
-
-export const queryDecoder = DDiscover.merge(DPage)
-  .merge(pageSizeDecoder)
-  .merge(additionalDecoder);
+export const queryDecoder = DDiscover.merge(DPage).merge(pageSizeDecoder);

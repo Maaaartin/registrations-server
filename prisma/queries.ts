@@ -95,8 +95,7 @@ export type DiscoverVehiclesParams = {
   datum_prvni_registrace_do: Date | null;
   pohon: Pohon;
   imported: boolean;
-  pagination?: {
-    page: number;
-    pageSize: number;
-  };
+  removed: boolean;
+  page: number;
+  pageSize: number;
 };

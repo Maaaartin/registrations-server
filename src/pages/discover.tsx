@@ -4,7 +4,8 @@ import {
   FormControl,
   InputLabel,
   Checkbox,
-  FormControlLabel
+  FormControlLabel,
+  Grid
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import BrandAutocomplete from '../components/BrandAutocomplete';
@@ -34,6 +35,7 @@ import useFetch from '../hooks/useFetch';
 import { DNumber } from '../content/decoders';
 import { filterQuery } from '../content/data';
 import { useEffect, useState } from 'react';
+import { DiscoverVehiclesParams } from '../../prisma/queries';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
@@ -45,14 +47,11 @@ type DateSearchParams = {
   datum_prvni_registrace_do: string | null;
 };
 
-type SearchParams = AutocompleteParams &
-  DateSearchParams & {
-    page: number;
-    pageSize: number;
-    pohon: Pohon | '';
-    imported: boolean;
-  };
-
+type SearchParams = Omit<
+  DiscoverVehiclesParams,
+  'datum_prvni_registrace_od' | 'datum_prvni_registrace_do'
+> &
+  DateSearchParams;
 type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
 
 type ToolbarProps = GridSlotProps['toolbar'] &
@@ -66,7 +65,7 @@ const AutocompleteSearchForm = ({
   onSubmit
 }: SubmitProps & AutocompleteParams) => {
   return (
-    <>
+    <Stack direction="row" spacing={2} padding={2}>
       <BrandAutocomplete
         value={tovarni_znacka}
         onSelect={(value) => {
@@ -86,7 +85,7 @@ const AutocompleteSearchForm = ({
         }}
         disabled={loading || !tovarni_znacka}
       />
-    </>
+    </Stack>
   );
 };
 
@@ -130,30 +129,32 @@ const DateSearch = ({
       adapterLocale="cs"
       localeText={datePickerLocaleText}
     >
-      <DatePicker
-        {...datePickerProps}
-        disabled={loading}
-        label="Datum první registrace od"
-        value={fromDate}
-        maxDate={toDate || undefined}
-        onChange={(newValue) => {
-          onSubmit({
-            datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || ''
-          });
-        }}
-      />
-      <DatePicker
-        {...datePickerProps}
-        disabled={loading}
-        label="Datum první registrace do"
-        minDate={fromDate || undefined}
-        value={toDate}
-        onChange={(newValue) => {
-          onSubmit({
-            datum_prvni_registrace_do: newValue?.toFormat(DateFormat) || ''
-          });
-        }}
-      />
+      <Stack direction="row" spacing={2} padding={2}>
+        <DatePicker
+          {...datePickerProps}
+          disabled={loading}
+          label="Datum první registrace od"
+          value={fromDate}
+          maxDate={toDate || undefined}
+          onChange={(newValue) => {
+            onSubmit({
+              datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || ''
+            });
+          }}
+        />
+        <DatePicker
+          {...datePickerProps}
+          disabled={loading}
+          label="Datum první registrace do"
+          minDate={fromDate || undefined}
+          value={toDate}
+          onChange={(newValue) => {
+            onSubmit({
+              datum_prvni_registrace_do: newValue?.toFormat(DateFormat) || ''
+            });
+          }}
+        />
+      </Stack>
     </LocalizationProvider>
   );
 };
@@ -176,7 +177,7 @@ function PohonSelector({
           id: 'pohon'
         }}
         onChange={(e) => {
-          onSubmit({ pohon: stringToPohon(e.target.value) || '' });
+          onSubmit({ pohon: stringToPohon(e.target.value) || null });
         }}
       >
         <option></option>
@@ -194,25 +195,48 @@ const Toolbar = (props: ToolbarProps) => {
       page: 0
     });
   return (
-    <Stack direction="row" spacing={2} padding={2}>
-      <AutocompleteSearchForm {...props} onSubmit={onSubmit_} />
-      <DateSearch {...props} onSubmit={onSubmit_} />
-      <PohonSelector
-        pohon={props.pohon}
-        onSubmit={onSubmit_}
-        loading={props.loading}
-      />
-      <FormControlLabel
-        checked={props.imported}
-        control={
-          <Checkbox
-            checked={props.imported}
-            onChange={(e) => onSubmit_({ imported: e.target.checked })}
-          />
-        }
-        label="Dovezeno"
-      />
-    </Stack>
+    <Grid
+      container
+      spacing={2}
+      columns={12}
+      sx={{ mb: (theme) => theme.spacing(2) }}
+    >
+      <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <AutocompleteSearchForm {...props} onSubmit={onSubmit_} />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <DateSearch {...props} onSubmit={onSubmit_} />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <PohonSelector
+          pohon={props.pohon}
+          onSubmit={onSubmit_}
+          loading={props.loading}
+        />
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <FormControlLabel
+          checked={props.imported}
+          control={
+            <Checkbox
+              checked={props.imported}
+              onChange={(e) => onSubmit_({ imported: e.target.checked })}
+            />
+          }
+          label="Dovezeno"
+        />
+        <FormControlLabel
+          checked={props.removed}
+          control={
+            <Checkbox
+              checked={props.removed}
+              onChange={(e) => onSubmit_({ removed: e.target.checked })}
+            />
+          }
+          label="Vyřazeno z provozu"
+        />
+      </Grid>
+    </Grid>
   );
 };
 
@@ -222,7 +246,8 @@ const searchKeys = [
   'datum_prvni_registrace_od',
   'datum_prvni_registrace_do',
   'pohon',
-  'imported'
+  'imported',
+  'removed'
 ] as const;
 
 export default function Discover(props: DiscoverProps) {
@@ -235,7 +260,8 @@ export default function Discover(props: DiscoverProps) {
     datum_prvni_registrace_do,
     pageSize,
     pohon,
-    imported
+    imported,
+    removed
   } = props;
   const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
@@ -245,7 +271,8 @@ export default function Discover(props: DiscoverProps) {
     datum_prvni_registrace_do,
     pageSize,
     pohon,
-    imported
+    imported,
+    removed
   });
   const searchProps = pick(searchKeys, props);
   const [countParams, setCountParams] =
@@ -299,7 +326,8 @@ export default function Discover(props: DiscoverProps) {
             onSubmit: onSubmit_,
             loading,
             pohon,
-            imported
+            imported,
+            removed
           } as ToolbarProps
         }}
       />
@@ -318,7 +346,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     datum_prvni_registrace_do,
     pageSize,
     pohon,
-    imported
+    imported,
+    removed
   } = queryDecoder.parse(context.query);
 
   const vehicles = await discoverVehicles({
@@ -329,7 +358,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     datum_prvni_registrace_od,
     datum_prvni_registrace_do,
     pohon,
-    imported
+    imported,
+    removed
   });
   return {
     props: {
@@ -340,6 +370,7 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
       pageSize,
       pohon,
       imported,
+      removed,
       datum_prvni_registrace_od: datum_prvni_registrace_od
         ? DateTime.fromJSDate(datum_prvni_registrace_od).toFormat(DateFormat)
         : null,

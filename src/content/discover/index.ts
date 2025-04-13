@@ -22,4 +22,5 @@ export type DiscoverProps = {
   pageSize: number;
   pohon: Pohon;
   imported: boolean;
+  removed: boolean;
 };

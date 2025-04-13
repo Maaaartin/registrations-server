@@ -15,7 +15,8 @@ const fetchCount = unstable_cache(
       datum_prvni_registrace_do,
       datum_prvni_registrace_od,
       pohon,
-      imported
+      imported,
+      removed
     } = params;
     const result = await prisma.$queryRawTyped(
       queries.discoverVehiclesCount(
@@ -27,7 +28,7 @@ const fetchCount = unstable_cache(
         pohon === 'hybrid' || null,
         imported || null,
         null,
-        null,
+        removed || null,
         null,
         null,
         MAX_COUNT
