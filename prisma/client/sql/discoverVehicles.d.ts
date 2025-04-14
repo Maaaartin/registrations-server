@@ -5,20 +5,19 @@ import * as $runtime from "../runtime/library"
  * @param model
  * @param datum_od
  * @param datum_do
+ * @param production_year_from
+ * @param production_year_to
  * @param electric
  * @param hybrid
  * @param require_imports
- * @param require_owners
  * @param require_removed
- * @param require_inspections
- * @param require_equipment
  * @param limit
  * @param offset
  */
-export const discoverVehicles: (brand: string | null, model: string | null, datum_od: Date | null, datum_do: Date | null, electric: boolean | null, hybrid: boolean | null, require_imports: boolean | null, require_owners: boolean | null, require_removed: boolean | null, require_inspections: boolean | null, require_equipment: boolean | null, limit: number, offset: number) => $runtime.TypedSql<discoverVehicles.Parameters, discoverVehicles.Result>
+export const discoverVehicles: (brand: string | null, model: string | null, datum_od: Date | null, datum_do: Date | null, production_year_from: number | bigint | null, production_year_to: number | bigint | null, electric: boolean | null, hybrid: boolean | null, require_imports: boolean | null, require_removed: boolean | null, limit: number, offset: number) => $runtime.TypedSql<discoverVehicles.Parameters, discoverVehicles.Result>
 
 export namespace discoverVehicles {
-  export type Parameters = [brand: string | null, model: string | null, datum_od: Date | null, datum_do: Date | null, electric: boolean | null, hybrid: boolean | null, require_imports: boolean | null, require_owners: boolean | null, require_removed: boolean | null, require_inspections: boolean | null, require_equipment: boolean | null, limit: number, offset: number]
+  export type Parameters = [brand: string | null, model: string | null, datum_od: Date | null, datum_do: Date | null, production_year_from: number | bigint | null, production_year_to: number | bigint | null, electric: boolean | null, hybrid: boolean | null, require_imports: boolean | null, require_removed: boolean | null, limit: number, offset: number]
   export type Result = {
     id: number | null
     tovarni_znacka: string | null

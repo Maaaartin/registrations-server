@@ -38,6 +38,14 @@ export const DDiscover = z
     datum_prvni_registrace_do: DDate,
     pohon: z.string().default('').transform(stringToPohon),
     imported: z.string().default('').transform(Boolean),
-    removed: z.string().default('').transform(Boolean)
+    removed: z.string().default('').transform(Boolean),
+    rok_vyroby_od: z
+      .string()
+      .default('')
+      .transform((val) => Number(val) || null),
+    rok_vyroby_do: z
+      .string()
+      .default('')
+      .transform((val) => Number(val) || null)
   })
   .merge(DBrandModel);

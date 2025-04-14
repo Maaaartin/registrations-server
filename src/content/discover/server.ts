@@ -17,7 +17,9 @@ export const discoverVehicles = unstable_cache(
     datum_prvni_registrace_do,
     pohon,
     imported,
-    removed
+    removed,
+    rok_vyroby_od,
+    rok_vyroby_do
   }: DiscoverVehiclesParams) => {
     const result = await prisma.$transaction(async (tx) => {
       await tx.$executeRawUnsafe(`SET LOCAL statement_timeout = 30000`);
@@ -27,13 +29,12 @@ export const discoverVehicles = unstable_cache(
           typ || null,
           datum_prvni_registrace_od || null,
           datum_prvni_registrace_do || null,
+          rok_vyroby_od || null,
+          rok_vyroby_do || null,
           pohon === 'electric' || null,
           pohon === 'hybrid' || null,
           imported || null,
-          null,
           removed || null,
-          null,
-          null,
           pageSize,
           pageSize * page
         )

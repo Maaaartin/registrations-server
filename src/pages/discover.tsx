@@ -45,6 +45,8 @@ type AutocompleteParams = {
 type DateSearchParams = {
   datum_prvni_registrace_od: string | null;
   datum_prvni_registrace_do: string | null;
+  rok_vyroby_od: number | null;
+  rok_vyroby_do: number | null;
 };
 
 type SearchParams = Omit<
@@ -114,6 +116,8 @@ const datePickerProps: Partial<DatePickerProps<DateTime>> = {
 const DateSearch = ({
   datum_prvni_registrace_od,
   datum_prvni_registrace_do,
+  rok_vyroby_od,
+  rok_vyroby_do,
   onSubmit,
   loading
 }: SubmitProps & DateSearchParams) => {
@@ -123,38 +127,80 @@ const DateSearch = ({
   const toDate = datum_prvni_registrace_do
     ? DateTime.fromFormat(datum_prvni_registrace_do, DateFormat)
     : null;
+  const fromYear = rok_vyroby_od
+    ? DateTime.fromObject({ year: rok_vyroby_od })
+    : null;
+  const toYear = rok_vyroby_do
+    ? DateTime.fromObject({ year: rok_vyroby_do })
+    : null;
   return (
     <LocalizationProvider
       dateAdapter={AdapterLuxon}
       adapterLocale="cs"
       localeText={datePickerLocaleText}
     >
-      <Stack direction="row" spacing={2} padding={2}>
-        <DatePicker
-          {...datePickerProps}
-          disabled={loading}
-          label="Datum první registrace od"
-          value={fromDate}
-          maxDate={toDate || undefined}
-          onChange={(newValue) => {
-            onSubmit({
-              datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || ''
-            });
-          }}
-        />
-        <DatePicker
-          {...datePickerProps}
-          disabled={loading}
-          label="Datum první registrace do"
-          minDate={fromDate || undefined}
-          value={toDate}
-          onChange={(newValue) => {
-            onSubmit({
-              datum_prvni_registrace_do: newValue?.toFormat(DateFormat) || ''
-            });
-          }}
-        />
-      </Stack>
+      <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Stack direction="row" spacing={2} padding={2}>
+          <DatePicker
+            {...datePickerProps}
+            disabled={loading}
+            label="Datum první registrace od"
+            value={fromDate}
+            maxDate={toDate || undefined}
+            onChange={(newValue) => {
+              onSubmit({
+                datum_prvni_registrace_od: newValue?.toFormat(DateFormat) || ''
+              });
+            }}
+          />
+          <DatePicker
+            {...datePickerProps}
+            disabled={loading}
+            label="Datum první registrace do"
+            minDate={fromDate || undefined}
+            value={toDate}
+            onChange={(newValue) => {
+              onSubmit({
+                datum_prvni_registrace_do: newValue?.toFormat(DateFormat) || ''
+              });
+            }}
+          />
+        </Stack>
+      </Grid>
+      <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        <Stack direction="row" spacing={2} padding={2}>
+          <DatePicker
+            {...datePickerProps}
+            view="year"
+            views={['year']}
+            format={undefined}
+            value={fromYear}
+            maxDate={toYear || undefined}
+            disabled={loading}
+            label="Rok výroby od"
+            onChange={(newValue) => {
+              onSubmit({
+                rok_vyroby_od: newValue?.year || NaN
+              });
+            }}
+          />
+          <DatePicker
+            {...datePickerProps}
+            view="year"
+            views={['year']}
+            format={undefined}
+            value={toYear}
+            minDate={fromYear || undefined}
+            disabled={loading}
+            label="Rok výroby do"
+            onChange={(newValue) => {
+              onSubmit({
+                rok_vyroby_do: newValue?.year || NaN
+              });
+            }}
+          />
+        </Stack>
+      </Grid>
     </LocalizationProvider>
   );
 };
@@ -165,26 +211,28 @@ function PohonSelector({
   loading
 }: SubmitProps & { pohon: Pohon }) {
   return (
-    <FormControl fullWidth>
-      <InputLabel variant="standard" htmlFor="pohon">
-        Pohon
-      </InputLabel>
-      <NativeSelect
-        disabled={loading}
-        defaultValue={pohon}
-        inputProps={{
-          name: 'pohon',
-          id: 'pohon'
-        }}
-        onChange={(e) => {
-          onSubmit({ pohon: stringToPohon(e.target.value) || '' });
-        }}
-      >
-        <option></option>
-        <option value={'electric'}>Elektrický</option>
-        <option value={'hybrid'}>Hybridní</option>
-      </NativeSelect>
-    </FormControl>
+    <Stack direction="row" spacing={2} padding={2}>
+      <FormControl fullWidth>
+        <InputLabel variant="standard" htmlFor="pohon">
+          Pohon
+        </InputLabel>
+        <NativeSelect
+          disabled={loading}
+          defaultValue={pohon}
+          inputProps={{
+            name: 'pohon',
+            id: 'pohon'
+          }}
+          onChange={(e) => {
+            onSubmit({ pohon: stringToPohon(e.target.value) || '' });
+          }}
+        >
+          <option></option>
+          <option value={'electric'}>Elektrický</option>
+          <option value={'hybrid'}>Hybridní</option>
+        </NativeSelect>
+      </FormControl>
+    </Stack>
   );
 }
 
@@ -204,9 +252,7 @@ const Toolbar = (props: ToolbarProps) => {
       <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
         <AutocompleteSearchForm {...props} onSubmit={onSubmit_} />
       </Grid>
-      <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-        <DateSearch {...props} onSubmit={onSubmit_} />
-      </Grid>
+      <DateSearch {...props} onSubmit={onSubmit_} />
       <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
         <PohonSelector
           pohon={props.pohon}
@@ -215,26 +261,28 @@ const Toolbar = (props: ToolbarProps) => {
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-        <FormControlLabel
-          checked={props.imported}
-          control={
-            <Checkbox
-              checked={props.imported}
-              onChange={(e) => onSubmit_({ imported: e.target.checked })}
-            />
-          }
-          label="Dovezeno"
-        />
-        <FormControlLabel
-          checked={props.removed}
-          control={
-            <Checkbox
-              checked={props.removed}
-              onChange={(e) => onSubmit_({ removed: e.target.checked })}
-            />
-          }
-          label="Vyřazeno z provozu"
-        />
+        <Stack direction="row" spacing={2} padding={2}>
+          <FormControlLabel
+            checked={props.imported}
+            control={
+              <Checkbox
+                checked={props.imported}
+                onChange={(e) => onSubmit_({ imported: e.target.checked })}
+              />
+            }
+            label="Dovezeno"
+          />
+          <FormControlLabel
+            checked={props.removed}
+            control={
+              <Checkbox
+                checked={props.removed}
+                onChange={(e) => onSubmit_({ removed: e.target.checked })}
+              />
+            }
+            label="Vyřazeno z provozu"
+          />
+        </Stack>
       </Grid>
     </Grid>
   );
@@ -247,7 +295,9 @@ const searchKeys = [
   'datum_prvni_registrace_do',
   'pohon',
   'imported',
-  'removed'
+  'removed',
+  'rok_vyroby_od',
+  'rok_vyroby_do'
 ] as const;
 
 export default function Discover(props: DiscoverProps) {
@@ -261,7 +311,9 @@ export default function Discover(props: DiscoverProps) {
     pageSize,
     pohon,
     imported,
-    removed
+    removed,
+    rok_vyroby_od,
+    rok_vyroby_do
   } = props;
   const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
@@ -272,7 +324,9 @@ export default function Discover(props: DiscoverProps) {
     pageSize,
     pohon,
     imported,
-    removed
+    removed,
+    rok_vyroby_od,
+    rok_vyroby_do
   });
   const searchProps = pick(searchKeys, props);
   const [countParams, setCountParams] =
@@ -327,7 +381,9 @@ export default function Discover(props: DiscoverProps) {
             loading,
             pohon,
             imported,
-            removed
+            removed,
+            rok_vyroby_od,
+            rok_vyroby_do
           } as ToolbarProps
         }}
       />
@@ -347,7 +403,9 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     pageSize,
     pohon,
     imported,
-    removed
+    removed,
+    rok_vyroby_od,
+    rok_vyroby_do
   } = queryDecoder.parse(context.query);
 
   const vehicles = await discoverVehicles({
@@ -359,7 +417,9 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     datum_prvni_registrace_do,
     pohon,
     imported,
-    removed
+    removed,
+    rok_vyroby_od,
+    rok_vyroby_do
   });
   return {
     props: {
@@ -371,6 +431,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
       pohon,
       imported,
       removed,
+      rok_vyroby_od,
+      rok_vyroby_do,
       datum_prvni_registrace_od: datum_prvni_registrace_od
         ? DateTime.fromJSDate(datum_prvni_registrace_od).toFormat(DateFormat)
         : null,

@@ -96,6 +96,8 @@ export type DiscoverVehiclesParams = {
   pohon: Pohon;
   imported: boolean;
   removed: boolean;
+  rok_vyroby_od: number | null;
+  rok_vyroby_do: number | null;
   page: number;
   pageSize: number;
 };

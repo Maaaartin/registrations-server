@@ -16,7 +16,9 @@ const fetchCount = unstable_cache(
       datum_prvni_registrace_od,
       pohon,
       imported,
-      removed
+      removed,
+      rok_vyroby_od,
+      rok_vyroby_do
     } = params;
     try {
       const result = await prisma.$transaction(async (tx) => {
@@ -27,13 +29,12 @@ const fetchCount = unstable_cache(
             typ || null,
             datum_prvni_registrace_od || null,
             datum_prvni_registrace_do || null,
+            rok_vyroby_od || null,
+            rok_vyroby_do || null,
             pohon === 'electric' || null,
             pohon === 'hybrid' || null,
             imported || null,
-            null,
             removed || null,
-            null,
-            null,
             MAX_COUNT
           )
         );

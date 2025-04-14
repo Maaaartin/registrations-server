@@ -17,3 +17,5 @@ DROP INDEX IF EXISTS idx_registrations_electric_true;
 DROP INDEX IF EXISTS idx_registrations_hybrid;
 
 DROP INDEX IF EXISTS idx_registrations_brand;
+
+DROP INDEX IF EXISTS idx_registrations_brand;
