@@ -132,9 +132,17 @@ dist
 next-env.d.ts
 temp
 *.env
+# Ignore everything in prisma/client
 prisma/client/*
+
+# But do not ignore the sql directory itself
 !prisma/client/sql/
-!prisma/client/sql/**
+
+# And do not ignore .js and .ts files inside sql
+prisma/client/sql/*.mjs
+prisma/client/sql/*.edge.js
+
+
 
 nginx/certs/*
 !nginx/certs/.gitkeep
