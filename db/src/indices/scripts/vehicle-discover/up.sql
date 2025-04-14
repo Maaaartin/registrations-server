@@ -1,14 +1,16 @@
-CREATE INDEX idx_registrations_paginated ON registrations (
-  tovarni_znacka,
-  typ,
-  datum_1_registrace,
+CREATE INDEX idx_registrations_common_filters ON registrations (
   plne_elektricke_vozidlo,
-  hybridni_vozidlo
+  hybridni_vozidlo,
+  datum_1_registrace
 ) INCLUDE (id);
 
-CREATE INDEX idx_vehicle_search_id ON registrations (id);
+CREATE INDEX idx_registrations_electric ON registrations (plne_elektricke_vozidlo) INCLUDE (id);
 
-CREATE INDEX idx_registrations_brand_id ON registrations (tovarni_znacka);
+CREATE INDEX idx_registrations_hybrid ON registrations (hybridni_vozidlo) INCLUDE (id);
+
+CREATE INDEX idx_registrations_brand ON registrations (tovarni_znacka) INCLUDE (id);
+
+CREATE INDEX idx_vehicle_search_id ON registrations (id);
 
 CREATE
 OR REPLACE FUNCTION discover_registrations (
