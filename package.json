@@ -8,7 +8,7 @@
     "url": "https://github.com/Maaaartin/registrations-server.git"
   },
   "scripts": {
-    "prisma:generate": "sh entrypoint.sh prisma generate --sql",
+    "prisma:generate": "rm -rf prisma/client/sql && sh entrypoint.sh prisma generate --sql",
     "prisma:pull": "sh entrypoint.sh prisma db pull --force",
     "dev": "rm -rf ./.next/cache && sh entrypoint.sh yarn next dev",
     "build": "next build",
