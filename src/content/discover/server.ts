@@ -19,27 +19,26 @@ export const discoverVehicles = unstable_cache(
     imported,
     removed
   }: DiscoverVehiclesParams) => {
-    const result = await prisma.$transaction(
-      (tx) =>
-        tx.$queryRawTyped(
-          queries.discoverVehicles(
-            tovarni_znacka || null,
-            typ || null,
-            datum_prvni_registrace_od || null,
-            datum_prvni_registrace_do || null,
-            pohon === 'electric' || null,
-            pohon === 'hybrid' || null,
-            imported || null,
-            null,
-            removed || null,
-            null,
-            null,
-            pageSize,
-            pageSize * page
-          )
-        ),
-      { timeout: 30 * 1000 }
-    );
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.$executeRawUnsafe(`SET LOCAL statement_timeout = 30000`);
+      return tx.$queryRawTyped(
+        queries.discoverVehicles(
+          tovarni_znacka || null,
+          typ || null,
+          datum_prvni_registrace_od || null,
+          datum_prvni_registrace_do || null,
+          pohon === 'electric' || null,
+          pohon === 'hybrid' || null,
+          imported || null,
+          null,
+          removed || null,
+          null,
+          null,
+          pageSize,
+          pageSize * page
+        )
+      );
+    });
 
     return result.map(serialize);
   },
