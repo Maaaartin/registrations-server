@@ -12,8 +12,7 @@ import AppTheme from '../theme/AppTheme';
 import {
   chartsCustomizations,
   dataGridCustomizations,
-  datePickersCustomizations,
-  treeViewCustomizations
+  datePickersCustomizations
 } from '../theme/customizations';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -22,8 +21,7 @@ import { CircularProgress } from '@mui/material';
 const xThemeComponents = {
   ...chartsCustomizations,
   ...dataGridCustomizations,
-  ...datePickersCustomizations,
-  ...treeViewCustomizations
+  ...datePickersCustomizations
 };
 
 const getPathName = (url: string) => url.split('/')[1].split('?')[0];
