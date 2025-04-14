@@ -18,24 +18,39 @@ const fetchCount = unstable_cache(
       imported,
       removed
     } = params;
-    const result = await prisma.$queryRawTyped(
-      queries.discoverVehiclesCount(
-        tovarni_znacka || null,
-        typ || null,
-        datum_prvni_registrace_od || null,
-        datum_prvni_registrace_do || null,
-        pohon === 'electric' || null,
-        pohon === 'hybrid' || null,
-        imported || null,
-        null,
-        removed || null,
-        null,
-        null,
-        MAX_COUNT
-      )
-    );
-    const count = Number(result?.[0].count || 0);
-    return count;
+    try {
+      const result = await prisma.$transaction(
+        (tx) =>
+          tx.$queryRawTyped(
+            queries.discoverVehiclesCount(
+              tovarni_znacka || null,
+              typ || null,
+              datum_prvni_registrace_od || null,
+              datum_prvni_registrace_do || null,
+              pohon === 'electric' || null,
+              pohon === 'hybrid' || null,
+              imported || null,
+              null,
+              removed || null,
+              null,
+              null,
+              MAX_COUNT
+            )
+          ),
+        { timeout: 10 * 1000 }
+      );
+
+      const count = Number(result?.[0].count || 0);
+      return count;
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        (error as NodeJS.ErrnoException)?.code === 'P2028'
+      ) {
+        return MAX_COUNT;
+      }
+      throw error;
+    }
   },
   ['discoverCount'],
   { revalidate: 3600, tags: ['discoverCount'] }
