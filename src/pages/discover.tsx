@@ -177,7 +177,7 @@ function PohonSelector({
           id: 'pohon'
         }}
         onChange={(e) => {
-          onSubmit({ pohon: stringToPohon(e.target.value) || null });
+          onSubmit({ pohon: stringToPohon(e.target.value) || '' });
         }}
       >
         <option></option>

@@ -5,7 +5,7 @@ export const maxPageSize = 100;
 
 export const DateFormat = 'yyyy-MM-dd';
 
-export type Pohon = 'electric' | 'hybrid' | null;
+export type Pohon = 'electric' | 'hybrid' | '' | null;
 
 export const stringToPohon = (val: string): Pohon =>
   val === 'hybrid' || val === 'electric' ? val : null;
