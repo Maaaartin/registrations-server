@@ -1,10 +1,9 @@
 import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
 import queries from '../../../prisma/client/sql';
-import prisma from '../../../prisma';
 import { defaultPageSize, maxPageSize } from './index';
 import { serialize } from '../data';
-import { DiscoverVehiclesParams } from '../../../prisma/queries';
+import { DiscoverVehiclesParams, transaction } from '../../../prisma/queries';
 import { DDiscover, DPage } from '../decoders';
 
 export const discoverVehicles = unstable_cache(
@@ -20,11 +19,10 @@ export const discoverVehicles = unstable_cache(
     removed,
     rok_vyroby_od,
     rok_vyroby_do
-  }: DiscoverVehiclesParams) => {
-    try {
-      const result = await prisma.$transaction(async (tx) => {
-        await tx.$executeRawUnsafe(`SET LOCAL statement_timeout = 30000`);
-        return tx.$queryRawTyped(
+  }: DiscoverVehiclesParams) =>
+    transaction(
+      async (tx) => {
+        const result = await tx.$queryRawTyped(
           queries.discoverVehicles(
             tovarni_znacka || null,
             typ || null,
@@ -40,18 +38,11 @@ export const discoverVehicles = unstable_cache(
             pageSize * page
           )
         );
-      });
-
-      return result.map(serialize);
-    } catch (error) {
-      if (
-        error instanceof Error &&
-        (error as NodeJS.ErrnoException)?.code === 'P2028'
-      ) {
-        return null;
-      }
-    }
-  },
+        return result.map(serialize);
+      },
+      [],
+      30000
+    ),
 
   ['discover'],
   { revalidate: 3600, tags: ['discover'] }

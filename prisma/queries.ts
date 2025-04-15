@@ -101,3 +101,29 @@ export type DiscoverVehiclesParams = {
   page: number;
   pageSize: number;
 };
+
+type A = Parameters<typeof prisma.$transaction>[0];
+type B = Parameters<A>[0];
+
+export async function transaction<T>(
+  cb: (tx: B) => Promise<T>,
+  defaultValue: T,
+  timeout: number
+) {
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.$executeRawUnsafe(`SET LOCAL statement_timeout = ${timeout}`);
+      return cb(tx);
+    });
+
+    return result;
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      (error as NodeJS.ErrnoException)?.code === 'P2028'
+    ) {
+      return defaultValue;
+    }
+    throw error;
+  }
+}
