@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { DDiscover } from '../../content/decoders';
-import prisma from '../../../prisma';
 import queries from '../../../prisma/client/sql';
+import prisma from '../../../prisma';
 import { unstable_cache } from 'next/cache';
 import { MAX_COUNT } from '../../content/data';
 

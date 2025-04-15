@@ -1,10 +1,10 @@
 import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
+import queries from '../../../prisma/client/sql';
 import prisma from '../../../prisma';
 import { defaultPageSize, maxPageSize } from './index';
 import { serialize } from '../data';
 import { DiscoverVehiclesParams } from '../../../prisma/queries';
-import queries from '../../../prisma/client/sql';
 import { DDiscover, DPage } from '../decoders';
 
 export const discoverVehicles = unstable_cache(
