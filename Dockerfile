@@ -6,6 +6,7 @@ COPY package.json yarn.lock entrypoint.sh ./
 
 RUN yarn --frozen-lockfile --production
 RUN rm -rf .next
+RUN rm -rf prisma
 RUN apk add --no-cache curl
 
 EXPOSE 3000
