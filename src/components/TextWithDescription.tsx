@@ -10,7 +10,7 @@ export default function TextWithDescription({
   if (description) {
     return (
       <Tooltip title={description}>
-        <span>{name} *</span>
+        <span style={{ whiteSpace: 'nowrap' }}>{name} *</span>
       </Tooltip>
     );
   }

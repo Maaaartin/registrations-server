@@ -23,7 +23,8 @@ export default function Section({
         timeout={0}
         unmountOnExit
         sx={{
-          width: '100%'
+          width: '100%',
+          overflow: 'scroll'
         }}
       >
         <Divider />
