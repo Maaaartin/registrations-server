@@ -132,6 +132,7 @@ dist
 next-env.d.ts
 temp
 *.env
+*.tar
 # Ignore everything in prisma/client
 prisma/client/*
 

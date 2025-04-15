@@ -29,6 +29,9 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - ./dist.tar:/app/dist.tar:ro
+      - ./entrypoint-runner.sh:/app/entrypoint-runner.sh:ro
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000/api/health']
       interval: 10s
