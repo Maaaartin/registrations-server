@@ -5,7 +5,8 @@ import {
   InputLabel,
   Checkbox,
   FormControlLabel,
-  Grid
+  Grid,
+  Typography
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import BrandAutocomplete from '../components/BrandAutocomplete';
@@ -56,9 +57,7 @@ type SearchParams = Omit<
   DateSearchParams;
 type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
 
-type ToolbarProps = GridSlotProps['toolbar'] &
-  Omit<DiscoverProps, 'vehicles'> &
-  SubmitProps;
+type ToolbarProps = GridSlotProps['toolbar'] & DiscoverProps & SubmitProps;
 
 const AutocompleteSearchForm = ({
   tovarni_znacka,
@@ -283,6 +282,11 @@ const Toolbar = (props: ToolbarProps) => {
             label="Vyřazeno z provozu"
           />
         </Stack>
+        {!props.vehicles && (
+          <Typography color="error">
+            Hledání trvalo příliš dlouho, zkuste zůžit filter.
+          </Typography>
+        )}
       </Grid>
     </Grid>
   );
@@ -338,7 +342,7 @@ export default function Discover(props: DiscoverProps) {
 
   const { data: fetchedRowCount } = useFetch({
     url:
-      vehicles.length < pageSize
+      (vehicles || []).length < pageSize
         ? null
         : `/api/discover-count?${new URLSearchParams(
             filterQuery(Object.entries(countParams as Record<string, string>))
@@ -354,14 +358,14 @@ export default function Discover(props: DiscoverProps) {
 
   const rowCount =
     fetchedRowCount ??
-    (vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1);
+    ((vehicles || []).length < pageSize ? (currentPage + 1) * pageSize : -1);
   return (
     <>
       <VehicleDataGrid
         paginationMode="server"
         filterMode="server"
         loading={loading}
-        rows={vehicles}
+        rows={vehicles || []}
         paginationModel={{ page: currentPage, pageSize }}
         pageSizeOptions={[10, defaultPageSize, 50, maxPageSize]}
         onPaginationModelChange={onSubmit}
@@ -373,6 +377,7 @@ export default function Discover(props: DiscoverProps) {
         }}
         slotProps={{
           toolbar: {
+            vehicles,
             tovarni_znacka,
             typ,
             datum_prvni_registrace_od,
@@ -423,7 +428,7 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
   });
   return {
     props: {
-      vehicles,
+      vehicles: vehicles || null,
       currentPage: page,
       tovarni_znacka,
       typ,

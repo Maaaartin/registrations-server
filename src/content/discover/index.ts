@@ -1,4 +1,4 @@
-import { discoverVehicles } from './server';
+import type { discoverVehicles } from './server';
 
 export const defaultPageSize = 20;
 export const maxPageSize = 100;

@@ -21,27 +21,36 @@ export const discoverVehicles = unstable_cache(
     rok_vyroby_od,
     rok_vyroby_do
   }: DiscoverVehiclesParams) => {
-    const result = await prisma.$transaction(async (tx) => {
-      await tx.$executeRawUnsafe(`SET LOCAL statement_timeout = 30000`);
-      return tx.$queryRawTyped(
-        queries.discoverVehicles(
-          tovarni_znacka || null,
-          typ || null,
-          datum_prvni_registrace_od || null,
-          datum_prvni_registrace_do || null,
-          rok_vyroby_od || null,
-          rok_vyroby_do || null,
-          pohon === 'electric' || null,
-          pohon === 'hybrid' || null,
-          imported || null,
-          removed || null,
-          pageSize,
-          pageSize * page
-        )
-      );
-    });
+    try {
+      const result = await prisma.$transaction(async (tx) => {
+        await tx.$executeRawUnsafe(`SET LOCAL statement_timeout = 30000`);
+        return tx.$queryRawTyped(
+          queries.discoverVehicles(
+            tovarni_znacka || null,
+            typ || null,
+            datum_prvni_registrace_od || null,
+            datum_prvni_registrace_do || null,
+            rok_vyroby_od || null,
+            rok_vyroby_do || null,
+            pohon === 'electric' || null,
+            pohon === 'hybrid' || null,
+            imported || null,
+            removed || null,
+            pageSize,
+            pageSize * page
+          )
+        );
+      });
 
-    return result.map(serialize);
+      return result.map(serialize);
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        (error as NodeJS.ErrnoException)?.code === 'P2028'
+      ) {
+        return null;
+      }
+    }
   },
 
   ['discover'],
