@@ -6,4 +6,4 @@ else
 fi
 
 sshpass -p "$REMOTE_PASSWORD" ssh root@$REMOTE_ADDRESS "rm -rf /root/app/$1"
-sshpass -p "$REMOTE_PASSWORD" rsync -avP scp -v -C -r ./$1 root@$REMOTE_ADDRESS:/root/app/
+sshpass -p "$REMOTE_PASSWORD" rsync -avP scp -v -C -r ./$1 root@$REMOTE_ADDRESS:/root/app/$1

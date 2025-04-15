@@ -6,4 +6,4 @@ else
 fi
 
 sshpass -p "$REMOTE_PASSWORD" ssh root@$REMOTE_ADDRESS "rm -f /root/app/$1"
-sshpass -p "$REMOTE_PASSWORD" rsync -azP "./$1" root@$REMOTE_ADDRESS:/root/app/
+sshpass -p "$REMOTE_PASSWORD" rsync -azP "./$1" root@$REMOTE_ADDRESS:/root/app/$1

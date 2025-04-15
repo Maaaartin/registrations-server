@@ -2,6 +2,8 @@ sh prepare.sh
 COMMANDS=$(cat <<'EOF'
 yarn --frozen-lockfile
 yarn build
+rm -rf ./.next/cache
+rm -rf ./prisma/client
 tar -cf dist.tar .next prisma public
 EOF
 )
