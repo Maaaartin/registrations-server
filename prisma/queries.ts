@@ -133,6 +133,9 @@ export async function withCache<T>(
   cb: (client: typeof prisma) => T,
   key: string
 ) {
+  if (!redis.isOpen) {
+    await redis.connect();
+  }
   const cached = await redis.get(key);
   if (cached !== null) {
     return JSON.parse(cached) as T;
