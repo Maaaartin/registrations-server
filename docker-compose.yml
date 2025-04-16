@@ -23,6 +23,7 @@ services:
     restart: always
     depends_on:
       - postgres
+      - redis
     networks:
       - app_network
     environment:
@@ -39,6 +40,10 @@ services:
       retries: 10
       start_period: 5s
 
+  redis:
+    image: redis:7
+    networks:
+      - app_network
   postgres:
     image: postgres:15
     container_name: postgres

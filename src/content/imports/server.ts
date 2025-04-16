@@ -1,10 +1,9 @@
 import { z } from 'zod';
 import { DPage, DStringDefault } from '../decoders';
-import { unstable_cache } from 'next/cache';
-import prisma from '../../../prisma';
 import { importsWithMatchingVehicle } from '../../../prisma/client/sql';
 import { serialize, vehicleSelect } from '../data';
 import { pageSize } from '.';
+import { withCache } from '../../../prisma/queries';
 
 export const queryDecoder = z
   .object({
@@ -12,8 +11,8 @@ export const queryDecoder = z
   })
   .merge(DPage);
 
-export const searchImports = unstable_cache(
-  async (page: number, importCountry: string) => {
+export const searchImports = (page: number, importCountry: string) =>
+  withCache(async (prisma) => {
     const result = await prisma.$queryRawTyped(
       importsWithMatchingVehicle(
         pageSize,
@@ -47,9 +46,6 @@ export const searchImports = unstable_cache(
       };
     });
     return vehiclesWithImports.map(serialize);
-  },
-  ['imports'],
-  { revalidate: 3600, tags: ['imports'] }
-);
+  }, `search${page}${importCountry}`);
 
 export type VehiclesWithImportData = Awaited<ReturnType<typeof searchImports>>;

@@ -1,12 +1,11 @@
-import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
 import { OwnersParams } from '.';
-import prisma from '../../../prisma';
 import { serialize, vehicleSelect } from '../data';
 import { uniq } from 'ramda';
+import { withCache } from '../../../prisma/queries';
 
-export const getVehiclesAndOwnerFromIco = unstable_cache(
-  async ({ ico }: OwnersParams) => {
+export const getVehiclesAndOwnerFromIco = async ({ ico }: OwnersParams) => {
+  return withCache(async (prisma) => {
     const ownersResult = await prisma.owners.findMany({
       where: { ico, pcv: { not: null } },
       select: { pcv: true }
@@ -25,10 +24,8 @@ export const getVehiclesAndOwnerFromIco = unstable_cache(
       owners: ownersResult.length,
       registrations: registrations.map(serialize)
     };
-  },
-  ['getVehiclesFromIco'],
-  { revalidate: 3600, tags: ['getVehiclesFromIco'] }
-);
+  }, 'owners' + ico);
+};
 
 export type VehiclesPerOwner = Awaited<
   ReturnType<typeof getVehiclesAndOwnerFromIco>
