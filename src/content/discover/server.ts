@@ -45,7 +45,7 @@ export const discoverVehicles = (params: DiscoverVehiclesParams) =>
           );
           return result.map(serialize);
         },
-        [],
+        null,
         30000
       ),
     'discover' + JSON.stringify(params)
