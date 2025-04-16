@@ -91,6 +91,10 @@ export const getServerSideProps: GetServerSideProps<ImportsProps> = async (
 ) => {
   const { country, page } = queryDecoder.parse(context.query);
   const vehiclesWithImports = await searchImports(page, country);
+  context.res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=3600, stale-while-revalidate=3600'
+  );
   return {
     props: {
       vehiclesWithImports,

@@ -75,6 +75,10 @@ export const getServerSideProps: GetServerSideProps<OwnersProps> = async (
   context
 ) => {
   const { ico } = queryDecoder.parse(context.query);
+  context.res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=3600, stale-while-revalidate=3600'
+  );
   if (!ico) {
     return { props: { vehicles: [], ico } };
   }
