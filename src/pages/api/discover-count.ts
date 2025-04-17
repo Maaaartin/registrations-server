@@ -40,7 +40,7 @@ const fetchCount = (params: Params) =>
           return Number(result?.[0].count || 0);
         },
         MAX_COUNT,
-        10000
+        20000
       );
     },
     'discoverCount' + JSON.stringify(params)
