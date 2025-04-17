@@ -77,3 +77,23 @@ BEGIN
   OFFSET p_offset;
 END
 ' LANGUAGE plpgsql;
+
+CREATE INDEX idx_registrations_brand_typ ON registrations (tovarni_znacka, typ);
+
+CREATE INDEX idx_registrations_datum_1_registrace ON registrations (datum_1_registrace);
+
+CREATE INDEX idx_registrations_rok_vyroby ON registrations (rok_vyroby);
+
+CREATE INDEX idx_registrations_electric_true ON registrations (plne_elektricke_vozidlo)
+WHERE
+  plne_elektricke_vozidlo = TRUE;
+
+CREATE INDEX idx_registrations_hybrid_true ON registrations (hybridni_vozidlo)
+WHERE
+  hybridni_vozidlo = TRUE;
+
+CREATE INDEX idx_brand_typ_regdate ON registrations (tovarni_znacka, typ, datum_1_registrace);
+
+CREATE INDEX idx_brand_typ_rok_vyroby ON registrations (tovarni_znacka, typ, rok_vyroby);
+
+CREATE INDEX idx_rok_vyroby ON registrations (rok_vyroby);

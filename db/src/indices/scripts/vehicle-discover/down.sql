@@ -19,3 +19,7 @@ DROP INDEX IF EXISTS idx_registrations_hybrid;
 DROP INDEX IF EXISTS idx_registrations_brand;
 
 DROP INDEX IF EXISTS idx_registrations_brand;
+
+DROP INDEX IF EXISTS idx_registrations_brand_typ;
+
+DROP INDEX IF EXISTS idx_vehicle_search_id;
