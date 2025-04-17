@@ -426,10 +426,6 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     rok_vyroby_od,
     rok_vyroby_do
   });
-  context.res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=3600, stale-while-revalidate=3600'
-  );
   return {
     props: {
       vehicles: vehicles || null,

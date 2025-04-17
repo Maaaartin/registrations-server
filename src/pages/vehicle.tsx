@@ -123,10 +123,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   res
 }) => {
   const { id } = queryDecoder.parse(query);
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=3600, stale-while-revalidate=3600'
-  );
   if (!id) return { notFound: true };
   const vehicle = await getVehicle(id);
   if (!vehicle) return { notFound: true };
