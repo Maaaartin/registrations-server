@@ -1,12 +1,11 @@
 import { Client } from '@elastic/elasticsearch';
-import { DiscoverVehiclesParams } from '../../prisma/queries';
 import {
   QueryDslQueryContainer,
   QueryDslRangeQueryBase
 } from '@elastic/elasticsearch/lib/api/types';
 import { DDiscover } from '../content/decoders';
 
-export const es = new Client({ node: 'http://localhost:9200' });
+export const es = new Client({ node: process.env.ELASTIC_URL });
 
 export function getDiscoverQuery({
   tovarni_znacka,
