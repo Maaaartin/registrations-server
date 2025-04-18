@@ -23,8 +23,7 @@ async function run() {
     } else if (command === 'download') {
       await runDownload();
     } else if (command === 'elastic') {
-      const fromLine = Number(process.argv[3]);
-      await runElastic(fromLine);
+      await runElastic();
     } else {
       console.error(`unknown command ${command}`);
     }

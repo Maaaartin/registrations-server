@@ -37,27 +37,30 @@ function mapSchema() {
   return Object.fromEntries(mappedEntries);
 }
 
-module.exports = async function (fromLine = 0) {
+async function create() {
+  await es.indices.delete({ index: 'registrations' });
+  await es.indices.create({
+    index: 'registrations',
+    body: {
+      mappings: {
+        properties: {
+          ...mapSchema(),
+          imported: { type: 'boolean' },
+          removed: { type: 'boolean' }
+        }
+      }
+    }
+  });
+}
+
+async function sync() {
+  const fromLine = Number(process.argv[4]) || 0;
   await client.connect();
 
   const batchSize = 1000;
   let lastId = fromLine;
 
   try {
-    // await es.indices.delete({ index: 'registrations' });
-    // await es.indices.create({
-    //   index: 'registrations',
-    //   body: {
-    //     mappings: {
-    //       properties: {
-    //         ...mapSchema(),
-    //         imported: { type: 'boolean' },
-    //         removed: { type: 'boolean' }
-    //       }
-    //     }
-    //   }
-    // });
-
     while (true) {
       const res = await client.query(
         `SELECT ${searchFields} FROM registrations WHERE id > $1 ORDER BY id ASC LIMIT $2`,
@@ -98,5 +101,17 @@ module.exports = async function (fromLine = 0) {
     console.log('Synced to Elasticsearch');
   } finally {
     await client.end();
+  }
+}
+
+module.exports = function () {
+  const action = process.argv[3];
+  switch (action) {
+    case 'create':
+      return create();
+    case 'sync':
+      return sync();
+    default:
+      throw new Error(`unknown action ${action}`);
   }
 };
