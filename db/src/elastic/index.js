@@ -38,7 +38,9 @@ function mapSchema() {
 }
 
 async function create() {
-  await es.indices.delete({ index: 'registrations' });
+  await es.indices.delete({ index: 'registrations' }).catch(() => {
+    console.log('index doesnt exist');
+  });
   await es.indices.create({
     index: 'registrations',
     body: {
