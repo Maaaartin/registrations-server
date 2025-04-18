@@ -123,6 +123,7 @@ export async function transaction<T>(
       error instanceof Error &&
       (error as NodeJS.ErrnoException)?.code === 'P2028'
     ) {
+      console.warn('transaction', error);
       return defaultValue;
     }
     throw error;
