@@ -2,10 +2,11 @@ import { z } from 'zod';
 import { OwnersParams } from '.';
 import { serialize, vehicleSelect } from '../data';
 import { uniq } from 'ramda';
-import { withCache } from '../../../prisma/queries';
+import { withCache } from '../../redis';
+import prisma from '../../../prisma';
 
 export const getVehiclesAndOwnerFromIco = async ({ ico }: OwnersParams) => {
-  return withCache(async (prisma) => {
+  return withCache(async () => {
     const ownersResult = await prisma.owners.findMany({
       where: { ico, pcv: { not: null } },
       select: { pcv: true }

@@ -426,24 +426,33 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     rok_vyroby_od,
     rok_vyroby_do
   });
+  const props = {
+    vehicles: vehicles || null,
+    currentPage: page,
+    tovarni_znacka,
+    typ,
+    pageSize,
+    pohon,
+    imported,
+    removed,
+    rok_vyroby_od,
+    rok_vyroby_do,
+    datum_prvni_registrace_od: datum_prvni_registrace_od
+      ? DateTime.fromJSDate(datum_prvni_registrace_od).toFormat(DateFormat)
+      : null,
+    datum_prvni_registrace_do: datum_prvni_registrace_do
+      ? DateTime.fromJSDate(datum_prvni_registrace_do).toFormat(DateFormat)
+      : null
+  };
+  if (vehicles.length === 1) {
+    return {
+      redirect: {
+        destination: `/vehicle?id=${vehicles[0].id}`
+      },
+      props
+    };
+  }
   return {
-    props: {
-      vehicles: vehicles || null,
-      currentPage: page,
-      tovarni_znacka,
-      typ,
-      pageSize,
-      pohon,
-      imported,
-      removed,
-      rok_vyroby_od,
-      rok_vyroby_do,
-      datum_prvni_registrace_od: datum_prvni_registrace_od
-        ? DateTime.fromJSDate(datum_prvni_registrace_od).toFormat(DateFormat)
-        : null,
-      datum_prvni_registrace_do: datum_prvni_registrace_do
-        ? DateTime.fromJSDate(datum_prvni_registrace_do).toFormat(DateFormat)
-        : null
-    }
+    props
   };
 };

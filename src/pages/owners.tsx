@@ -84,10 +84,17 @@ export const getServerSideProps: GetServerSideProps<OwnersProps> = async (
   if (!owners) {
     return { props: { vehicles: [], ico } };
   }
-  return {
-    props: {
-      vehicles,
-      ico
-    }
+  const props = {
+    vehicles,
+    ico
   };
+  if (vehicles.length === 1) {
+    return {
+      redirect: {
+        destination: `/vehicle?id=${vehicles[0].id}`
+      },
+      props
+    };
+  }
+  return { props };
 };
