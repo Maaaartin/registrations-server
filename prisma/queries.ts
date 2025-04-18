@@ -1,7 +1,6 @@
 import queries from './client/sql';
 import prisma from '.';
 import type { Pohon } from '../src/content/discover';
-import redis from '../src/redis';
 
 export async function count_() {
   const [result] = await prisma.$queryRawTyped(queries.count());
@@ -102,46 +101,3 @@ export type DiscoverVehiclesParams = {
   page: number;
   pageSize: number;
 };
-
-type A = Parameters<typeof prisma.$transaction>[0];
-type B = Parameters<A>[0];
-
-export async function transaction<T>(
-  cb: (tx: B) => Promise<T>,
-  defaultValue: T,
-  timeout: number
-) {
-  try {
-    const result = await prisma.$transaction(async (tx) => {
-      await tx.$executeRawUnsafe(`SET LOCAL statement_timeout = ${timeout}`);
-      return cb(tx);
-    });
-
-    return result;
-  } catch (error) {
-    if (
-      error instanceof Error &&
-      (error as NodeJS.ErrnoException)?.code === 'P2028'
-    ) {
-      console.warn('transaction', error);
-      return defaultValue;
-    }
-    throw error;
-  }
-}
-
-export async function withCache<T>(
-  cb: (client: typeof prisma) => T,
-  key: string
-) {
-  if (!redis.isOpen) {
-    await redis.connect();
-  }
-  const cached = await redis.get(key);
-  if (cached !== null) {
-    return JSON.parse(cached) as T;
-  }
-  const result = await cb(prisma);
-  redis.set(key, JSON.stringify(result), { EX: 5 * 60 });
-  return result;
-}

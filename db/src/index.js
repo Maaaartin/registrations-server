@@ -3,6 +3,7 @@ const runImport = require('./dataImport/index');
 const helpers = require('./dataImport/helpers');
 const runQuery = require('./query/index');
 const runDownload = require('./download');
+const runElastic = require('./elastic');
 
 async function run() {
   try {
@@ -21,6 +22,9 @@ async function run() {
       await runQuery();
     } else if (command === 'download') {
       await runDownload();
+    } else if (command === 'elastic') {
+      const fromLine = Number(process.argv[3]);
+      await runElastic(fromLine);
     } else {
       console.error(`unknown command ${command}`);
     }

@@ -11,7 +11,7 @@ export default function Document() {
           name="Info o vozidlech"
           content="Portál pro vyhledávání v registru vozidel Ministerstva dopravy"
         />
-        <meta http-equiv="Cache-control" content="public"></meta>
+        <meta httpEquiv="Cache-control" content="public"></meta>
       </Head>
       <body>
         <Main />

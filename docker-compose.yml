@@ -56,9 +56,21 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app_network
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    networks:
+      - app_network
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
 
 volumes:
   postgres_data:
+  esdata:
 
 networks:
   app_network:

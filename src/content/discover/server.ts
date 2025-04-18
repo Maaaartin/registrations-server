@@ -1,55 +1,38 @@
 import { z } from 'zod';
-import queries from '../../../prisma/client/sql';
 import { defaultPageSize, maxPageSize } from './index';
-import { serialize } from '../data';
-import {
-  DiscoverVehiclesParams,
-  transaction,
-  withCache
-} from '../../../prisma/queries';
+import { serialize, vehicleSelect } from '../data';
+import { DiscoverVehiclesParams } from '../../../prisma/queries';
 import { DDiscover, DPage } from '../decoders';
+import prisma from '../../../prisma';
+import { es, getDiscoverQuery } from '../../elastic';
+import { withCache } from '../../redis';
 
-export const discoverVehicles = (params: DiscoverVehiclesParams) =>
-  withCache(
-    () =>
-      transaction(
-        async (tx) => {
-          const {
-            page,
-            pageSize,
-            tovarni_znacka,
-            typ,
-            datum_prvni_registrace_od,
-            datum_prvni_registrace_do,
-            pohon,
-            imported,
-            removed,
-            rok_vyroby_od,
-            rok_vyroby_do
-          } = params;
-          const result = await tx.$queryRawTyped(
-            queries.discoverVehicles(
-              tovarni_znacka || null,
-              typ || null,
-              datum_prvni_registrace_od || null,
-              datum_prvni_registrace_do || null,
-              rok_vyroby_od || null,
-              rok_vyroby_do || null,
-              pohon === 'electric' || null,
-              pohon === 'hybrid' || null,
-              imported || null,
-              removed || null,
-              pageSize,
-              pageSize * page
-            )
-          );
-          return result.map(serialize);
-        },
-        null,
-        60000
-      ),
+const discoverDecoder = z.object({ id: z.number() });
+
+export const discoverVehicles = (params: DiscoverVehiclesParams) => {
+  return withCache(
+    async () => {
+      const result = await es.search({
+        index: 'registrations',
+        from: params.pageSize * params.page,
+        size: params.pageSize,
+        _source: ['id'],
+        sort: [{ id: 'asc' }],
+        query: getDiscoverQuery(params)
+      });
+
+      const ids = result.hits.hits.map(
+        (hit) => discoverDecoder.parse(hit._source).id
+      );
+      const vehicles = await prisma.registrations.findMany({
+        where: { id: { in: ids } },
+        select: vehicleSelect
+      });
+      return vehicles.map(serialize);
+    },
     'discover' + JSON.stringify(params)
   );
+};
 
 const pageSizeDecoder = z.object({
   pageSize: z

@@ -14,3 +14,6 @@ services:
   redis:
     ports:
       - '6379:6379'
+  elasticsearch:
+    ports:
+      - '9200:9200'

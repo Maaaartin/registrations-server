@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import prisma from '../../../prisma';
 import { serialize } from '../data';
-import { withCache } from '../../../prisma/queries';
+import { withCache } from '../../redis';
 
 export const queryDecoder = z.object({
   id: z
@@ -21,7 +21,7 @@ const omit = { id: true, pcv: true } as const;
 
 export const getImportFromPcv = (pcv: number | null) => {
   if (pcv == null) return null;
-  return withCache(async (prisma) => {
+  return withCache(async () => {
     const result = await prisma.imports.findFirst({
       where: { pcv },
       omit
@@ -37,7 +37,7 @@ export type VehicleImportFromPcv = Exclude<
 
 export const getInspectionsFromPcv = (pcv: number | null) => {
   if (pcv == null) return [];
-  return withCache(async (prisma) => {
+  return withCache(async () => {
     const result = await prisma.inspections.findMany({
       where: { pcv },
       omit: { ...omit, aktualni: true },
@@ -53,7 +53,7 @@ export type VehicleInspectionFromPcv = Awaited<
 
 export const getVehicleRemoval = (pcv: number | null) => {
   if (pcv == null) return null;
-  return withCache(async (prisma) => {
+  return withCache(async () => {
     const result = await prisma.removed_vehicles.findFirst({
       where: { pcv },
       omit
@@ -69,7 +69,7 @@ export type VehicleRemovalFromPcv = Exclude<
 
 export const getVehicleOwnerFromPcv = async (pcv: number | null) => {
   if (pcv == null) return [];
-  return withCache(async (prisma) => {
+  return withCache(async () => {
     const result = await prisma.owners.findMany({
       where: { pcv },
       omit: { ...omit, aktualni: true },
@@ -85,7 +85,7 @@ export type VehicleOwnerFromPcv = Awaited<
 
 export function getVehicleEquipmentFromPcv(pcv: number | null) {
   if (pcv == null) return [];
-  return withCache(async (prisma) => {
+  return withCache(async () => {
     const result = await prisma.equipment.findMany({
       where: { pcv },
       omit: { ...omit, datum_do: true, datum_od: true },
