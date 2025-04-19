@@ -59,7 +59,7 @@ async function sync() {
   const fromLine = Number(process.argv[4]) || 0;
   await client.connect();
 
-  const batchSize = 1000;
+  const batchSize = 10000;
   let lastId = fromLine;
 
   try {
@@ -84,21 +84,36 @@ async function sync() {
       ]);
       const importedSet = new Set(imported.rows.map((i) => i.pcv));
       const removedSet = new Set(removed.rows.map((i) => i.pcv));
-      for (const row of res.rows) {
+      const body = res.rows.flatMap((row) => {
         const i = importedSet.has(row.pcv);
         const r = removedSet.has(row.pcv);
-        await es.index({
-          index: 'registrations',
-          id: row.id.toString(),
-          document: {
+        return [
+          { index: { _index: 'registrations', _id: row.id.toString() } },
+          {
             ...row,
             imported: i,
             removed: r
           }
-        });
+        ];
+      });
 
-        lastId = row.id;
-      }
+      await es.bulk({ refresh: true, body });
+      lastId = res.rows[res.rows.length - 1].id;
+      // for (const row of res.rows) {
+      //   const i = importedSet.has(row.pcv);
+      //   const r = removedSet.has(row.pcv);
+      //   await es.index({
+      //     index: 'registrations',
+      //     id: row.id.toString(),
+      //     document: {
+      //       ...row,
+      //       imported: i,
+      //       removed: r
+      //     }
+      //   });
+
+      //   lastId = row.id;
+      // }
     }
     console.log('Synced to Elasticsearch');
   } finally {
