@@ -24,6 +24,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - elasticsearch
     networks:
       - app_network
     environment:
