@@ -2,11 +2,6 @@ import queries from './client/sql';
 import prisma from '.';
 import type { Pohon } from '../src/content/discover';
 
-export async function count_() {
-  const [result] = await prisma.$queryRawTyped(queries.count());
-  return Number(result.count);
-}
-
 export async function registrationsPerYear_() {
   const lastYear = new Date().getFullYear() - 1;
   const result = await prisma.$queryRawTyped(
