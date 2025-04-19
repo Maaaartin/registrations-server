@@ -8,7 +8,7 @@ export const topBrandsAction: FetchAction<ValueCountPairs> = {
 };
 
 export const countAction: FetchAction<number> = {
-  url: '/api/count',
+  url: '/api/discover-count',
   decoder: DNumber
 };
 
