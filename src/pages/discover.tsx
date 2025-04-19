@@ -282,11 +282,6 @@ const Toolbar = (props: ToolbarProps) => {
             label="Vyřazeno z provozu"
           />
         </Stack>
-        {!props.vehicles && (
-          <Typography color="error">
-            Hledání trvalo příliš dlouho, zkuste zůžit filter.
-          </Typography>
-        )}
       </Grid>
     </Grid>
   );
@@ -342,7 +337,7 @@ export default function Discover(props: DiscoverProps) {
 
   const { data: fetchedRowCount } = useFetch({
     url:
-      (vehicles || []).length < pageSize
+      vehicles.length < pageSize
         ? null
         : `/api/discover-count?${new URLSearchParams(
             filterQuery(Object.entries(countParams as Record<string, string>))
@@ -358,14 +353,14 @@ export default function Discover(props: DiscoverProps) {
 
   const rowCount =
     fetchedRowCount ??
-    ((vehicles || []).length < pageSize ? (currentPage + 1) * pageSize : -1);
+    (vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1);
   return (
     <>
       <VehicleDataGrid
         paginationMode="server"
         filterMode="server"
         loading={loading}
-        rows={vehicles || []}
+        rows={vehicles}
         paginationModel={{ page: currentPage, pageSize }}
         pageSizeOptions={[10, defaultPageSize, 50, maxPageSize]}
         onPaginationModelChange={onSubmit}
@@ -427,7 +422,7 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     rok_vyroby_do
   });
   const props = {
-    vehicles: vehicles || null,
+    vehicles,
     currentPage: page,
     tovarni_znacka,
     typ,
