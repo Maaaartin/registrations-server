@@ -11,7 +11,7 @@
     "prisma:generate": "rm -rf prisma/client/sql && sh entrypoint.sh prisma generate --sql",
     "prisma:pull": "sh entrypoint.sh prisma db pull --force",
     "dev": "sh entrypoint.sh yarn next dev",
-    "build": "next build",
+    "build": "sh entrypoint.sh yarn next build",
     "start": "sh entrypoint.sh yarn next start",
     "lint": "next lint",
     "build:image": "sh build-image.sh",
