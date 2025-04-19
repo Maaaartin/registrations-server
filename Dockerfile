@@ -3,7 +3,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 COPY package.json yarn.lock entrypoint.sh ./
-
+RUN rm -rf node_modules
 RUN yarn --frozen-lockfile --production
 RUN rm -rf .next
 RUN rm -rf prisma
