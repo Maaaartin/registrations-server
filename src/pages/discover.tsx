@@ -5,8 +5,7 @@ import {
   InputLabel,
   Checkbox,
   FormControlLabel,
-  Grid,
-  Typography
+  Grid
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import BrandAutocomplete from '../components/BrandAutocomplete';
