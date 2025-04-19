@@ -3,7 +3,8 @@ import { DPage, DStringDefault } from '../decoders';
 import { importsWithMatchingVehicle } from '../../../prisma/client/sql';
 import { serialize, vehicleSelect } from '../data';
 import { pageSize } from '.';
-import { withCache } from '../../../prisma/queries';
+import { withCache } from '../../redis';
+import prisma from '../../../prisma';
 
 export const queryDecoder = z
   .object({
@@ -12,7 +13,7 @@ export const queryDecoder = z
   .merge(DPage);
 
 export const searchImports = (page: number, importCountry: string) =>
-  withCache(async (prisma) => {
+  withCache(async () => {
     const result = await prisma.$queryRawTyped(
       importsWithMatchingVehicle(
         pageSize,

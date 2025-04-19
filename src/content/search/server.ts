@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import { limit } from '.';
 import { serialize, vehicleSelect } from '../data';
-import { withCache } from '../../../prisma/queries';
+import { withCache } from '../../redis';
+import prisma from '../../../prisma';
 
 export const searchVehicles = (
   vin: string,
@@ -9,7 +10,7 @@ export const searchVehicles = (
   cislo_orv: string
 ) =>
   withCache(
-    async (prisma) => {
+    async () => {
       const result = await prisma.registrations.findMany({
         where: {
           AND: [
