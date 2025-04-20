@@ -26,6 +26,7 @@ export const discoverVehicles = (params: DiscoverVehiclesParams) => {
       );
       const vehicles = await prisma.registrations.findMany({
         where: { id: { in: ids } },
+        orderBy: { id: 'asc' },
         select: vehicleSelect
       });
       return vehicles.map(serialize);
