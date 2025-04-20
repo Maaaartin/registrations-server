@@ -12,12 +12,11 @@ export default function Footer() {
         }
       ]}
     >
-      Kontakt:{' '}
       <a
         target="_blank"
         href="https://www.linkedin.com/in/martin-svoboda-36a904172/"
       >
-        Martin Svoboda
+        Kontakt
       </a>
     </Typography>
   );

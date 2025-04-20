@@ -16,10 +16,10 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
+        <footer>
+          <Footer />
+        </footer>
       </body>
-      <footer>
-        <Footer />
-      </footer>
     </Html>
   );
 }
