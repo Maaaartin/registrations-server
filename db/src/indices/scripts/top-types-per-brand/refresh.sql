@@ -1,1 +1,0 @@
-REFRESH MATERIALIZED VIEW top_types_per_brand;
