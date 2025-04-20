@@ -225,9 +225,13 @@ function PohonSelector({
             onSubmit({ pohon: stringToPohon(e.target.value) || '' });
           }}
         >
-          <option></option>
-          <option value={'electric'}>Elektrický</option>
-          <option value={'hybrid'}>Hybridní</option>
+          <option selected={!pohon}></option>
+          <option selected={pohon === 'electric'} value={'electric'}>
+            Elektrický
+          </option>
+          <option selected={pohon === 'hybrid'} value={'hybrid'}>
+            Hybridní
+          </option>
         </NativeSelect>
       </FormControl>
     </Stack>
