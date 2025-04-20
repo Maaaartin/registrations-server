@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse<string[]>
 ) {
   const { tovarni_znacka, typ } = DBrandModel.parse(req.query);
-  if (!tovarni_znacka || !typ) return res.send([]);
+  if (!tovarni_znacka) return res.send([]);
   const result = await searchModels_(tovarni_znacka, typ);
   res.send(result);
 }

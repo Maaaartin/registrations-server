@@ -1,0 +1,1 @@
+REFRESH MATERIALIZED VIEW obchodni_oznaceni_per_brand;

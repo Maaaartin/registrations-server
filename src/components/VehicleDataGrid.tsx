@@ -35,7 +35,7 @@ export default function VehicleDataGrid(props: Props) {
           headerName: 'Typ',
           flex: 0.5,
           minWidth: 300,
-          renderCell: (params) => params.row.typ,
+          renderCell: (params) => params.row.obchodni_oznaceni,
           sortable: false,
           filterable: false
         },

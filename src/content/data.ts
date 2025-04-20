@@ -33,7 +33,7 @@ export type ValueCountPairs = ValueCountPair[];
 export const vehicleSelect = {
   id: true,
   tovarni_znacka: true,
-  typ: true,
+  obchodni_oznaceni: true,
   vin: true,
   cislo_tp: true,
   cislo_orv: true,

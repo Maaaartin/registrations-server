@@ -22,10 +22,10 @@ export function getDiscoverQuery({
   const filter: QueryDslQueryContainer[] = [];
 
   if (tovarni_znacka) must.push({ match: { tovarni_znacka } });
-  if (typ) must.push({ match: { typ } });
+  if (typ) must.push({ match: { obchodni_oznaceni: typ } });
 
   if (datum_prvni_registrace_od || datum_prvni_registrace_do) {
-    const range: any = {};
+    const range: QueryDslRangeQueryBase = {};
     if (datum_prvni_registrace_od) range.gte = datum_prvni_registrace_od;
     if (datum_prvni_registrace_do) range.lte = datum_prvni_registrace_do;
     filter.push({ range: { datum_1_registrace: range } });

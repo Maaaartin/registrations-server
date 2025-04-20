@@ -4,7 +4,7 @@ export * from "./registrationCountsByYear"
 
 export * from "./searchBrands"
 
-export * from "./searchTypesForBrand"
+export * from "./searchObchodniOznaceniPerBrand"
 
 export * from "./topBrands"
 
@@ -17,5 +17,3 @@ export * from "./topCountriesImports"
 export * from "./topFuels"
 
 export * from "./topKinds"
-
-export * from "./topTypesForBrand"

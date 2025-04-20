@@ -55,16 +55,9 @@ export async function searchBrands_(brand: string) {
 
 export async function searchModels_(brand: string, model: string) {
   const result = await prisma.$queryRawTyped(
-    queries.searchTypesForBrand(brand, model, 10)
+    queries.searchObchodniOznaceniPerBrand(brand, model || null, 10)
   );
-  return result.map((value) => String(value.typ));
-}
-
-export async function topTypesForBrand_(brand: string) {
-  const result = await prisma.$queryRawTyped(
-    queries.topTypesForBrand(brand, 10)
-  );
-  return result.map((value) => String(value.typ));
+  return result.map((value) => String(value.obchodni_oznaceni));
 }
 
 export async function topFuels_() {

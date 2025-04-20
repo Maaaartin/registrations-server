@@ -1,0 +1,1 @@
+DROP MATERIALIZED VIEW IF EXISTS obchodni_oznaceni_per_brand;

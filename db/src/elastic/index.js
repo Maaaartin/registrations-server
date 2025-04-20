@@ -6,6 +6,7 @@ const searchFields = [
   'id',
   'tovarni_znacka',
   'typ',
+  'obchodni_oznaceni',
   'datum_1_registrace',
   'rok_vyroby',
   'pcv',
