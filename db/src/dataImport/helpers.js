@@ -1,9 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const BATCH_SIZE = 500;
-exports.BATCH_SIZE = BATCH_SIZE;
-
 function escapeCSVValue(value) {
   if (typeof value !== 'string') return value;
   if (
