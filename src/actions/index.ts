@@ -2,11 +2,6 @@ import type { FetchAction } from '../hooks/useFetch';
 import { DValueCountPairs, DNumber, DStringArray } from '../content/decoders';
 import type { ValueCountPairs } from '../content/data';
 
-export const topBrandsAction: FetchAction<ValueCountPairs> = {
-  url: '/api/top-brands',
-  decoder: DValueCountPairs
-};
-
 export const countAction: FetchAction<number> = {
   url: '/api/discover-count',
   decoder: DNumber
@@ -39,7 +34,6 @@ function buildQueryUrl(url: string, queryObj: Record<string, string>) {
 export const searchBrandsAction = (
   tovarni_znacka: string
 ): FetchAction<ValueCountPairs> => {
-  if (!tovarni_znacka) return topBrandsAction;
   return {
     url: buildQueryUrl('/api/search-brands', { tovarni_znacka }),
     decoder: DValueCountPairs

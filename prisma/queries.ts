@@ -13,14 +13,6 @@ export async function registrationsPerYear_() {
   }));
 }
 
-export async function topBrands_() {
-  const result = await prisma.$queryRawTyped(queries.topBrands());
-  return result.map((value) => ({
-    value: String(value.tovarni_znacka),
-    count: Number(value.count)
-  }));
-}
-
 export async function topColors_() {
   const data = await prisma.$queryRawTyped(queries.topColors());
   return data.map((value) => ({
@@ -45,7 +37,7 @@ export async function topCategories_() {
   }));
 }
 
-export async function searchBrands_(brand: string) {
+export async function searchBrands_(brand: string | null) {
   const result = await prisma.$queryRawTyped(queries.searchBrands(brand, 10));
   return result.map((value) => ({
     value: String(value.tovarni_znacka),

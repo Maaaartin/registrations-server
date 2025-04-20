@@ -6,8 +6,6 @@ export * from "./searchBrands"
 
 export * from "./searchObchodniOznaceniPerBrand"
 
-export * from "./topBrands"
-
 export * from "./topCategories"
 
 export * from "./topColors"

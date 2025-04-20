@@ -8,7 +8,7 @@ import useFetch from '../hooks/useFetch';
 import {
   countAction,
   countriesImportsAction,
-  topBrandsAction,
+  searchBrandsAction,
   topCategoriesAction,
   topColorsAction,
   topFuelsAction,
@@ -43,7 +43,7 @@ function CardList<T>({
 }
 
 const BrandsCard = () => {
-  const { data, isLoading } = useFetch(topBrandsAction);
+  const { data, isLoading } = useFetch(searchBrandsAction(''));
   const renderValue = isLoading ? <CircularProgress /> : data;
   const render = (value: ValueCountPair) => ({
     primary: value.value,

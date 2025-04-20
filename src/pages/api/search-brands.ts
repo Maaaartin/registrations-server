@@ -8,7 +8,6 @@ export default async function handler(
   res: NextApiResponse<ValueCountPairs>
 ) {
   const { tovarni_znacka } = DBrand.parse(req.query);
-  if (!tovarni_znacka) return res.send([]);
-  const result = await searchBrands_(tovarni_znacka);
+  const result = await searchBrands_(tovarni_znacka || null);
   res.send(result);
 }

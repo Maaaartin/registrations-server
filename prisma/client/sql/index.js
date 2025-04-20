@@ -3,7 +3,6 @@ exports.importsWithMatchingVehicle = require("./importsWithMatchingVehicle.js").
 exports.registrationCountsByYear = require("./registrationCountsByYear.js").registrationCountsByYear
 exports.searchBrands = require("./searchBrands.js").searchBrands
 exports.searchObchodniOznaceniPerBrand = require("./searchObchodniOznaceniPerBrand.js").searchObchodniOznaceniPerBrand
-exports.topBrands = require("./topBrands.js").topBrands
 exports.topCategories = require("./topCategories.js").topCategories
 exports.topColors = require("./topColors.js").topColors
 exports.topCountriesImports = require("./topCountriesImports.js").topCountriesImports
