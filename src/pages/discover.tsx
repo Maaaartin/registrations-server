@@ -36,6 +36,7 @@ import { DNumber } from '../content/decoders';
 import { filterQuery } from '../content/data';
 import { useEffect, useState } from 'react';
 import { DiscoverVehiclesParams } from '../../prisma/queries';
+import Head from 'next/head';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
@@ -359,6 +360,10 @@ export default function Discover(props: DiscoverProps) {
     (vehicles.length < pageSize ? (currentPage + 1) * pageSize : -1);
   return (
     <>
+      <Head>
+        <title>Databáze registrací – Info o vozidlech</title>
+        <meta name="description" content="Hledání v databázi." />
+      </Head>
       <VehicleDataGrid
         paginationMode="server"
         filterMode="server"

@@ -8,6 +8,7 @@ import {
 } from '../content/owners/server';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
+import Head from 'next/head';
 
 type SubmitProps = ReturnType<typeof useDataGridSubmit<OwnersParams>>;
 type ToolbarProps = GridSlotProps['toolbar'] &
@@ -51,6 +52,15 @@ export default function Owners({ ico, vehicles }: OwnersProps) {
   const { loading, onSubmit } = useDataGridSubmit<OwnersParams>({ ico });
   return (
     <>
+      <Head>
+        <title>
+          Informace o vlastnících a provozovatelích vozidel – Info o vozidlech
+        </title>
+        <meta
+          name="description"
+          content="Informace o vlastnících a provozovatelích vozidel v ČR."
+        />
+      </Head>
       <VehicleDataGrid
         loading={loading}
         rows={vehicles}

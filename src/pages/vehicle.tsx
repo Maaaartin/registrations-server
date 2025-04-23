@@ -27,6 +27,7 @@ import VehicleRemoval from '../content/vehicle/componets/VehicleRemoval';
 import VehicleInspections from '../content/vehicle/componets/VehicleInspections';
 import VehicleOwners from '../content/vehicle/componets/VehicleOwners';
 import VehicleEquipment from '../content/vehicle/componets/VehicleEquipment';
+import Head from 'next/head';
 
 export default function Vehicle(props: Props) {
   const {
@@ -87,40 +88,48 @@ export default function Vehicle(props: Props) {
   }
 
   return (
-    <Grid
-      container
-      spacing={2}
-      columns={12}
-      sx={{ mb: (theme) => theme.spacing(2) }}
-    >
-      <Grid size={{ xs: 12 }}>
-        <Section label="Časová osa">
-          <VehicleTimeline {...props} />
-        </Section>
-      </Grid>
+    <>
+      <Head>
+        <title>
+          Vozidlo {vehicle.tovarni_znacka}, {vehicle.obchodni_oznaceni} – Info o
+          vozidlech
+        </title>
+        <meta name="description" content="Detail vozidla." />
+      </Head>
+      <Grid
+        container
+        spacing={2}
+        columns={12}
+        sx={{ mb: (theme) => theme.spacing(2) }}
+      >
+        <Grid size={{ xs: 12 }}>
+          <Section label="Časová osa">
+            <VehicleTimeline {...props} />
+          </Section>
+        </Grid>
 
-      {Boolean(vehicleInspections.length) && (
-        <Grid size={{ xs: 12 }}>
-          <VehicleInspections vehicleInspections={vehicleInspections} />
-        </Grid>
-      )}
-      {Boolean(vehicleOwners.length) && (
-        <Grid size={{ xs: 12 }}>
-          <VehicleOwners vehicleOwners={vehicleOwners} />
-        </Grid>
-      )}
-      {gridContent.map((Component, index) => (
-        <Grid key={index} size={{ xs: 12, md: 6 }}>
-          {Component}
-        </Grid>
-      ))}
-    </Grid>
+        {Boolean(vehicleInspections.length) && (
+          <Grid size={{ xs: 12 }}>
+            <VehicleInspections vehicleInspections={vehicleInspections} />
+          </Grid>
+        )}
+        {Boolean(vehicleOwners.length) && (
+          <Grid size={{ xs: 12 }}>
+            <VehicleOwners vehicleOwners={vehicleOwners} />
+          </Grid>
+        )}
+        {gridContent.map((Component, index) => (
+          <Grid key={index} size={{ xs: 12, md: 6 }}>
+            {Component}
+          </Grid>
+        ))}
+      </Grid>
+    </>
   );
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({
-  query,
-  res
+  query
 }) => {
   const { id } = queryDecoder.parse(query);
   if (!id) return { notFound: true };

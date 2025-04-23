@@ -8,6 +8,7 @@ import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import useFetch from '../hooks/useFetch';
 import { countriesImportsAction } from '../actions';
 import AutocompleteBase from '../components/AutocompleteBase';
+import Head from 'next/head';
 
 type SubmitProps = ReturnType<
   typeof useDataGridSubmit<Omit<ImportsProps, 'vehiclesWithImports'>>
@@ -55,6 +56,13 @@ export default function Search({
     vehiclesWithImports.length < pageSize ? (page + 1) * pageSize : -1;
   return (
     <>
+      <Head>
+        <title>Informace o dovozech – Info o vozidlech</title>
+        <meta
+          name="description"
+          content="Informace o vozidlech dovezených do ČR."
+        />
+      </Head>
       <VehicleDataGrid
         paginationMode="server"
         filterMode="server"

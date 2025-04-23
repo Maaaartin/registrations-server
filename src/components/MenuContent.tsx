@@ -15,11 +15,11 @@ import { Home } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 
 export const mainListItems = [
-  { text: 'Domů', icon: <Home />, route: '/' },
+  { text: 'Info o stránce', icon: <Home />, route: '/' },
   { text: 'Statistiky', icon: <Analytics />, route: '/stats' },
-  { text: 'Hledat', icon: <Search />, route: '/search' },
+  { text: 'Hledání', icon: <Search />, route: '/search' },
   { text: 'Dovozy', icon: <GetApp />, route: '/imports' },
-  { text: 'Prozkoumat databázi', icon: <Storage />, route: '/discover' },
+  { text: 'Databáze registrací', icon: <Storage />, route: '/discover' },
   { text: 'Vlastníci a provozovatelé', icon: <Person />, route: '/owners' }
 ];
 

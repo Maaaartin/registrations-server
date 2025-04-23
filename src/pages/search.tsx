@@ -11,6 +11,7 @@ import {
 import { searchVehicles, queryDecoder } from '../content/search/server';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
+import Head from 'next/head';
 
 type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchState>>;
 
@@ -119,6 +120,10 @@ export default function Search({
 
   return (
     <>
+      <Head>
+        <title>Hledání vozidel – Info o vozidlech</title>
+        <meta name="description" content="Hledání podle VIN, TP nebo ORV." />
+      </Head>
       <VehicleDataGrid
         rows={vehicles}
         loading={loading}

@@ -1,8 +1,33 @@
 import { TextField } from '@mui/material';
+import Head from 'next/head';
 
 export default function HomePage() {
   return (
     <>
+      <Head>
+        <title>Info o vozidlech – Vyhledávání v registru vozidel ČR</title>
+        <meta
+          name="description"
+          content="Zjistěte informace o vozech podle SPZ nebo VIN."
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'Info o vozidlech',
+              url: 'https://info-o-vozidlech.cz/',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target:
+                  'https://info-o-vozidlech.cz/search?vin={search_term_string}',
+                'query-input': 'required name=search_term_string'
+              }
+            })
+          }}
+        />
+      </Head>
       <h1>Info o vozidlech</h1>
       <p>
         Tento portál unožňuje vyhledávat v databázi vozidel, která je dostupná

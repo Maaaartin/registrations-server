@@ -14,6 +14,7 @@ import {
   topFuelsAction,
   topKindsAction
 } from '../actions';
+import Head from 'next/head';
 
 const CountCard = () => {
   const { data, isLoading } = useFetch(countAction);
@@ -153,6 +154,13 @@ const CountriesImportsCard = () => {
 export default function Stats() {
   return (
     <>
+      <Head>
+        <title>Statistiky – Info o vozidlech</title>
+        <meta
+          name="description"
+          content="Vybrané statistiky z databáze Ministerstva Dopravy."
+        />
+      </Head>
       <Grid
         container
         spacing={2}
