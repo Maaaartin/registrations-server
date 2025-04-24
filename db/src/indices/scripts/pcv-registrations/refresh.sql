@@ -1,1 +1,0 @@
-REINDEX INDEX registrations_pcv_idx;

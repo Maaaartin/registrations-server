@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS owners_pcv_idx ON owners (pcv);

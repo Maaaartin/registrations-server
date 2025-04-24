@@ -1,1 +1,0 @@
-REINDEX INDEX registrations_cislo_tp_idx;

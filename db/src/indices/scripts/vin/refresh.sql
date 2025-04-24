@@ -1,1 +1,0 @@
-REINDEX INDEX registrations_vin_idx;

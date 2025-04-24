@@ -1,1 +1,0 @@
-DROP INDEX IF EXISTS inspections_pcv_idx;

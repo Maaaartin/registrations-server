@@ -1,1 +1,0 @@
-DROP INDEX IF EXISTS registrations_vin_idx;

@@ -1,1 +1,0 @@
-REINDEX INDEX inspections_pcv_idx;

@@ -1,1 +1,0 @@
-CREATE INDEX idx_vehicle_search_id ON registrations (id);

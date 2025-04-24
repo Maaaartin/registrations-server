@@ -1,5 +1,0 @@
-CREATE INDEX IF NOT EXISTS registrations_vin_idx ON registrations (vin)
-WHERE
-    vin IS NOT NULL;
-
-;

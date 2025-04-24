@@ -1,1 +1,0 @@
-REINDEX INDEX imports_pcv_idx;

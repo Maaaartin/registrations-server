@@ -1,1 +1,0 @@
-REINDEX INDEX removed_vehicles_pcv_idx;

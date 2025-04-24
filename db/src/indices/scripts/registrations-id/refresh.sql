@@ -1,1 +1,0 @@
-REINDEX INDEX idx_vehicle_search_id;
