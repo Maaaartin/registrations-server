@@ -94,59 +94,18 @@ async function copyFromCsv(tableName) {
 }
 
 async function copyToTable(tableName) {
-  const batchSize = 5000;
-  const tempTable = `temp_${tableName}`;
-  let offset = 0;
-  let rowCount = 0;
-
   try {
-    console.log(`${tableName}: starting batched copy`);
-
-    do {
-      const batchQuery = `
-        SELECT * FROM ${tempTable}
-        ORDER BY id
-        OFFSET $1 LIMIT $2;
-      `;
-      const { rows } = await client.query(batchQuery, [offset, batchSize]);
-      rowCount = rows.length;
-      offset += rowCount;
-
-      if (rowCount > 0) {
-        const columns = Object.keys(rows[0]);
-        const columnList = columns.map((c) => `"${c}"`).join(', ');
-        const valuePlaceholders = rows
-          .map(
-            (_, i) =>
-              `(${columns.map((_, j) => `$${i * columns.length + j + 1}`).join(', ')})`
-          )
-          .join(', ');
-
-        const updateClause = columns
-          .filter((c) => c !== 'id')
-          .map((c) => `"${c}" = EXCLUDED."${c}"`)
-          .join(', ');
-
-        const values = rows.flatMap((row) => columns.map((col) => row[col]));
-
-        const upsertQuery = `
-          INSERT INTO ${tableName} (${columnList})
-          VALUES ${valuePlaceholders}
-          ON CONFLICT (id) DO UPDATE SET ${updateClause};
-        `;
-
-        await client.query(upsertQuery, values);
-
-        console.log(
-          `${tableName}: inserted/updated ${rowCount} rows (offset ${offset})`
-        );
-      }
-    } while (rowCount === batchSize);
-
-    await client.query(`DROP TABLE ${tempTable}`);
-    console.log(`${tableName}: finished copying and dropped temp table`);
+    await client.query('BEGIN');
+    await client.query(`TRUNCATE ${tableName}`);
+    console.log(tableName, 'copying table');
+    await client.query(`INSERT INTO ${tableName}
+  SELECT * FROM temp_${tableName};`);
+    await client.query('COMMIT');
+    console.log(tableName, 'copied table');
+    await client.query(`DROP TABLE temp_${tableName};`);
   } catch (error) {
-    console.error(error);
+    console.log(error);
+    await client.query('ROLLBACK');
     throw error;
   }
 }
