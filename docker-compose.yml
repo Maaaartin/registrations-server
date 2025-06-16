@@ -1,6 +1,17 @@
 version: '3.8'
 
 services:
+  status:
+    build: .
+    image: status-image:latest
+    container_name: status
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - app_network
+    ports:
+      - '8080:8080'
   nginx:
     image: nginx:latest
     container_name: nginx
