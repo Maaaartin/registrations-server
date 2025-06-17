@@ -60,19 +60,23 @@ function runChildImport(tableName) {
 
 function runRefreshIndices() {
   return new Promise((resolve, reject) => {
-    const child = exec('yarn start indices refresh', { cwd: projectRoot });
+    const child = spawn('yarn', ['start', 'indices', 'refresh'], {
+      cwd: projectRoot,
+      stdio: 'inherit',
+      shell: true
+    });
 
+    child.on('error', (err) => {
+      reject(new Error(`Worker ${tableName} failed to start: ${err.message}`));
+    });
+
+    // Handle process exit
     child.on('exit', (code) => {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`Process exited with code ${code}`));
+        reject(new Error(`Worker ${tableName} exited with code ${code}`));
       }
-    });
-
-    child.on('error', (err) => {
-      console.error(`Error executing command: ${err.message}`);
-      reject(err);
     });
   });
 }
