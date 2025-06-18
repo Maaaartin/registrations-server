@@ -1,7 +1,14 @@
 import { TextField } from '@mui/material';
 import Head from 'next/head';
+import { z } from 'zod';
+import useFetch from '../hooks/useFetch';
 
 export default function HomePage() {
+  useFetch({
+    url: '/api/register-load',
+    decoder: z.void(),
+    init: { method: 'POST' }
+  });
   return (
     <>
       <Head>

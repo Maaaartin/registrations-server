@@ -8,13 +8,18 @@ export type FetchAction<T> =
   | {
       url: string;
       decoder: ZodType<T>;
+      init?: RequestInit;
     }
   | { url: null };
 
-const fetcher = <T>(decoder: Decoder<T> | void, signal: AbortSignal) => {
+const fetcher = <T>(
+  decoder: Decoder<T> | void,
+  signal: AbortSignal,
+  init?: RequestInit
+) => {
   return (url: string): Promise<T> => {
     if (!decoder) return Promise.resolve(undefined!);
-    return fetch(url, { signal })
+    return fetch(url, { ...init, signal })
       .then((res) => {
         if (!res.ok) {
           return res.text().then((msg) => Promise.reject(new Error(msg)));
@@ -37,7 +42,8 @@ export default function useFetch<T>(props: FetchAction<T>) {
     props.url,
     fetcher(
       'decoder' in props ? props.decoder : undefined,
-      abortController.signal
+      abortController.signal,
+      'init' in props ? props.init : undefined
     )
   );
 }

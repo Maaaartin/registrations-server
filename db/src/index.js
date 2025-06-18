@@ -4,6 +4,7 @@ const helpers = require('./dataImport/helpers');
 const runQuery = require('./query/index');
 const runDownload = require('./download');
 const runElastic = require('./elastic');
+const createVisits = require('./visits');
 
 async function run() {
   try {
@@ -24,6 +25,8 @@ async function run() {
       await runDownload();
     } else if (command === 'elastic') {
       await runElastic();
+    } else if (command === 'visits') {
+      await createVisits();
     } else {
       console.error(`unknown command ${command}`);
     }

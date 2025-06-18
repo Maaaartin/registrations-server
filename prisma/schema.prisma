@@ -15,6 +15,8 @@ model equipment {
   typ      String?
   datum_od DateTime? @db.Date
   datum_do DateTime? @db.Date
+
+  @@index([pcv])
 }
 
 model imports {
@@ -22,6 +24,9 @@ model imports {
   pcv         BigInt?
   country     String?
   import_date DateTime? @db.Date
+
+  @@index([pcv], map: "idx_imports_pcv")
+  @@index([pcv])
 }
 
 model inspections {
@@ -35,6 +40,8 @@ model inspections {
   platnost_do     DateTime? @db.Date
   cislo_protokolu String?
   aktualni        Boolean?
+
+  @@index([pcv])
 }
 
 model owners {
@@ -48,6 +55,8 @@ model owners {
   adresa          String?
   datum_od        DateTime? @db.Date
   datum_do        DateTime? @db.Date
+
+  @@index([pcv])
 }
 
 model registrations {
@@ -169,7 +178,10 @@ model registrations {
   typ_kod                                                         String?
   rm_zaniku                                                       String?
 
-  @@index([tovarni_znacka, typ, datum_1_registrace], map: "idx_vehicle_search_base")
+  @@index([tovarni_znacka], map: "idx_registrations_brand_id")
+  @@index([plne_elektricke_vozidlo, id], map: "idx_registrations_electric")
+  @@index([rok_vyroby], map: "idx_registrations_rok_vyroby")
+  @@index([pcv])
 }
 
 model removed_vehicles {
@@ -180,4 +192,16 @@ model removed_vehicles {
   duvod    String?
   rm_kod   BigInt?
   rm_nazev String?
+
+  @@index([pcv], map: "idx_removed_vehicles_pcv")
+  @@index([pcv])
+}
+
+model visits {
+  id              Int       @id @default(autoincrement())
+  ip              String?
+  user_agent      String?
+  accept_language String?
+  referer         String?
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
 }
