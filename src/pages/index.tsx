@@ -6,7 +6,7 @@ import useFetch from '../hooks/useFetch';
 export default function HomePage() {
   useFetch({
     url: '/api/register-load',
-    decoder: z.string(),
+    decoder: z.object({}),
     init: { method: 'POST' }
   });
   return (

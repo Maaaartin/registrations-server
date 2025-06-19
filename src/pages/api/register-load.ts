@@ -3,9 +3,8 @@ import prisma from '../../../prisma';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<string>
+  res: NextApiResponse<{}>
 ) {
-  console.log(req.method);
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
     return res.status(405).send('Method not allowed');
@@ -24,5 +23,5 @@ export default async function handler(
       referer: req.headers['referer'] || null
     }
   });
-  res.status(200).send('OK');
+  res.status(200).send({});
 }

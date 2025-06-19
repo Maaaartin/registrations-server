@@ -28,6 +28,7 @@ const fetcher = <T>(
       })
       .catch((error) => {
         if (error?.name === 'AbortError') return undefined!;
+        console.error(error);
         throw error;
       });
   };
