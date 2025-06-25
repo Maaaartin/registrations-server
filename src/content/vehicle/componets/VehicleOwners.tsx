@@ -5,11 +5,23 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
+import { z } from 'zod';
 import { SerializableOwner, valueToString } from '..';
 import Section from './Section';
 import ownersColumnsMap from '../ownersColumnsMap';
 import TextWithDescription from '../../../components/TextWithDescription';
 import { toTypedEntries } from '../../data';
+import useFetch from '../../../hooks/useFetch';
+import Link from 'next/link';
+
+function VehicleCount({ ico }: { ico: string }) {
+  const searchParams = new URLSearchParams({ ico });
+  const { data } = useFetch({
+    url: `/api/vehicle-count?${new URLSearchParams({ ico })}`,
+    decoder: z.number()
+  });
+  return <Link href={`/owners?${searchParams}`}>{data}</Link>;
+}
 
 export default function VehicleOwners({
   vehicleOwners
@@ -31,13 +43,14 @@ export default function VehicleOwners({
                 />
               </TableCell>
             ))}
+            <TableCell>Počet vozidel</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {vehicleOwners.map((inspection, index) => (
+          {vehicleOwners.map((owner, index) => (
             <TableRow key={index}>
               {toTypedEntries(ownersColumnsMap).map(([key, mapping]) => {
-                const value = inspection[key];
+                const value = owner[key];
                 if (key === 'ico' && value) {
                   return (
                     <TableCell key={key}>
@@ -58,6 +71,9 @@ export default function VehicleOwners({
                   </TableCell>
                 );
               })}
+              <TableCell>
+                {owner.ico && <VehicleCount ico={owner.ico} />}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
