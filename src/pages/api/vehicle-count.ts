@@ -9,7 +9,10 @@ export default async function handler(
   res: NextApiResponse<number>
 ) {
   const { ico } = decoder.parse(req.query);
-  const owners = await prisma.owners.findMany({ where: { ico } });
+  const owners = await prisma.owners.findMany({
+    where: { ico },
+    select: { pcv: true }
+  });
   if (!owners.length) {
     return res.send(0);
   }
