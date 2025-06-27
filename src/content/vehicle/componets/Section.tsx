@@ -1,15 +1,30 @@
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren } from 'react';
 import StatCard from '../../../components/StatCard';
 import { Collapse, Divider } from '@mui/material';
+import { useRouter } from 'next/router';
 
 export default function Section({
   label,
-  children
+  children,
+  openKey
 }: PropsWithChildren<{
   label: string;
+  openKey: string;
 }>) {
-  const [open, setOpen] = useState(false);
-  const onToggle = () => setOpen(!open);
+  const router = useRouter();
+  const open = openKey in router.query;
+
+  const onToggle = () => {
+    const updatedQuery = { ...router.query };
+    if (openKey in updatedQuery) {
+      delete updatedQuery[openKey];
+    } else {
+      updatedQuery[openKey] = '1';
+    }
+    return router.push({ query: updatedQuery }, undefined, {
+      shallow: true
+    });
+  };
   return (
     <StatCard
       title={label}

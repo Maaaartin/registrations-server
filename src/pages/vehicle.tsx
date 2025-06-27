@@ -56,7 +56,7 @@ export default function Vehicle(props: Props) {
     })
     .map((section) => {
       return (
-        <Section key={section.key} label={section.label}>
+        <Section key={section.key} label={section.label} openKey={section.key}>
           <DataPairsTable
             data={toTypedEntries(vehicle).filter(
               ([key, value]) =>
@@ -103,7 +103,7 @@ export default function Vehicle(props: Props) {
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
         <Grid size={{ xs: 12 }}>
-          <Section label="Časová osa">
+          <Section label="Časová osa" openKey="timeline">
             <VehicleTimeline {...props} />
           </Section>
         </Grid>

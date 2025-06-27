@@ -17,7 +17,10 @@ export default function VehicleInspections({
   vehicleInspections: SerializableInspection[];
 }) {
   return (
-    <Section label={`Technické prohlídky (${vehicleInspections.length})`}>
+    <Section
+      label={`Technické prohlídky (${vehicleInspections.length})`}
+      openKey="inspections"
+    >
       <Table>
         <TableHead>
           <TableRow>

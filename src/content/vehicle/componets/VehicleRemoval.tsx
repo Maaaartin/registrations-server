@@ -10,7 +10,7 @@ export default function VehicleRemoval({
   vehicleRemoval: SerializableRemoval;
 }) {
   return (
-    <Section label="Info o vyřazení z provozu">
+    <Section label="Info o vyřazení z provozu" openKey="removals">
       <DataPairsTable
         data={toTypedEntries(vehicleRemoval).filter(([, value]) =>
           includeValue(value)

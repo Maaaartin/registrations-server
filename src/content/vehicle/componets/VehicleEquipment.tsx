@@ -8,7 +8,7 @@ export default function VehicleEquipment({
   vehicleEquipment: SerializableEquipment[];
 }) {
   return (
-    <Section label="Doplňková výbava">
+    <Section label="Doplňková výbava" openKey="equipment">
       <DataPairsTable
         data={vehicleEquipment.filter(({ typ }) => includeValue(typ))}
         renderRow={({ typ }) => ({

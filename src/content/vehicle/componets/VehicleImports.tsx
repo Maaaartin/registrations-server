@@ -10,7 +10,7 @@ export default function VehicleImport({
   vehicleImport: SerializableImport;
 }) {
   return (
-    <Section label="Info o dovozu">
+    <Section label="Info o dovozu" openKey="imports">
       <DataPairsTable
         data={toTypedEntries(vehicleImport).filter(([, value]) =>
           includeValue(value)
