@@ -17,8 +17,3 @@ export async function withCache<T>(cb: () => T, key: string) {
   redis.set(key, JSON.stringify(result), { EX: 5 * 60 });
   return result;
 }
-
-const shutdown = () => redis.disconnect();
-
-process.on('SIGINT', shutdown);
-process.on('SIGTERM', shutdown);

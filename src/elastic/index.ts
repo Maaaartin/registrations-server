@@ -7,11 +7,6 @@ import { DDiscover } from '../content/decoders';
 
 export const es = new Client({ node: process.env.ELASTIC_URL });
 
-const shutdown = () => es.close();
-
-process.on('SIGINT', shutdown);
-process.on('SIGTERM', shutdown);
-
 export function getDiscoverQuery({
   tovarni_znacka,
   typ,
