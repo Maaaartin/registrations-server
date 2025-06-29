@@ -3,13 +3,6 @@ import prisma from '../../../prisma';
 import { serialize } from '../data';
 import { withCache } from '../../redis';
 
-export const queryDecoder = z.object({
-  id: z
-    .string()
-    .default('')
-    .transform((value) => parseInt(value))
-});
-
 export async function getVehicle(id: number) {
   const result = await prisma.registrations.findFirst({
     where: { id }

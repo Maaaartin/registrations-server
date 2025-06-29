@@ -15,8 +15,7 @@ import {
   getVehicle,
   getVehicleEquipmentFromPcv,
   getVehicleOwnerFromPcv,
-  getVehicleRemoval,
-  queryDecoder
+  getVehicleRemoval
 } from '../content/vehicle/server';
 import VehicleTimeline from '../content/vehicle/componets/VehicleTimeline';
 import { toTypedEntries } from '../content/data';
@@ -28,6 +27,7 @@ import VehicleInspections from '../content/vehicle/componets/VehicleInspections'
 import VehicleOwners from '../content/vehicle/componets/VehicleOwners';
 import VehicleEquipment from '../content/vehicle/componets/VehicleEquipment';
 import Head from 'next/head';
+import { DId } from '../content/decoders';
 
 export default function Vehicle(props: Props) {
   const {
@@ -123,6 +123,9 @@ export default function Vehicle(props: Props) {
             {Component}
           </Grid>
         ))}
+        <a href={`/api/export-vehicle?id=${vehicle.id}`} download="export.csv">
+          Export (*.csv)
+        </a>
       </Grid>
     </>
   );
@@ -131,7 +134,7 @@ export default function Vehicle(props: Props) {
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   query
 }) => {
-  const { id } = queryDecoder.parse(query);
+  const { id } = DId.parse(query);
   if (!id) return { notFound: true };
   const vehicle = await getVehicle(id);
   if (!vehicle) return { notFound: true };

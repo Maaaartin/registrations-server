@@ -49,3 +49,10 @@ export const DDiscover = z
       .transform((val) => Number(val) || null)
   })
   .merge(DBrandModel);
+
+export const DId = z.object({
+  id: z
+    .string()
+    .default('')
+    .transform((value) => parseInt(value))
+});
