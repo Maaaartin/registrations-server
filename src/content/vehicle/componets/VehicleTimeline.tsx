@@ -145,7 +145,7 @@ export default function VehicleTimeline(props: Props) {
       {data.map(({ date, component }, index) => {
         return (
           <TimelineItem key={index}>
-            <TimelineOppositeContent color="textSecondary">
+            <TimelineOppositeContent>
               {date.toFormat(displayDateFormat)}
             </TimelineOppositeContent>
             <TimelineSeparator>
