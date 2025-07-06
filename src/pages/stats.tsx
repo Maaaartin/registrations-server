@@ -15,6 +15,7 @@ import {
   topKindsAction
 } from '../actions';
 import Head from 'next/head';
+import { sortBy } from 'ramda';
 
 const CountCard = () => {
   const { data, isLoading } = useFetch(countAction);
@@ -139,7 +140,11 @@ const CountriesImportsCard = () => {
     primary: value.value,
     secondary: value.count
   });
-  const renderValue = isLoading ? <CircularProgress /> : data?.splice(0, 10);
+  const renderValue = isLoading ? (
+    <CircularProgress />
+  ) : (
+    sortBy((a) => -a.count, data || []).splice(0, 10)
+  );
   return (
     <StatCard title="Top země dovozu">
       {Array.isArray(renderValue) ? (
