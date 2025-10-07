@@ -35,32 +35,9 @@ async function downloadFile(tableName, url, outputPath) {
   });
 }
 
-function runChildImport(tableName) {
+function runProcess(cmd) {
   return new Promise((resolve, reject) => {
-    const child = spawn('yarn', ['start', 'import', tableName], {
-      cwd: projectRoot,
-      stdio: 'inherit',
-      shell: true
-    });
-
-    child.on('error', (err) => {
-      reject(new Error(`Worker ${tableName} failed to start: ${err.message}`));
-    });
-
-    // Handle process exit
-    child.on('exit', (code) => {
-      if (code === 0) {
-        resolve();
-      } else {
-        reject(new Error(`Worker ${tableName} exited with code ${code}`));
-      }
-    });
-  });
-}
-
-function runRefreshIndices() {
-  return new Promise((resolve, reject) => {
-    const child = spawn('yarn', ['start', 'indices', 'refresh'], {
+    const child = spawn('yarn', cmd, {
       cwd: projectRoot,
       stdio: 'inherit',
       shell: true
@@ -95,7 +72,7 @@ module.exports = async () => {
       const outputPath = path.join(outputDir, tableName + '.csv');
       await downloadFile(tableName, url, outputPath);
       results.push({ name: 'download', tableName });
-      const importPromise = runChildImport(tableName)
+      const importPromise = runProcess(['start', 'import', tableName])
         .then(() => {
           results.push({ name: 'import', tableName });
           const outputPath = path.join(outputDir, tableName + '.csv');
@@ -120,7 +97,8 @@ module.exports = async () => {
 
   if (results.every((res) => !res.error)) {
     try {
-      await runRefreshIndices();
+      await runProcess(['start', 'indices', 'refresh']);
+      await runProcess(['start', 'elastic', 'sync']);
     } catch (error) {
       fs.writeFileSync(
         path.join(outputDir, `errors-${new Date()}.json`),
