@@ -46,7 +46,7 @@ export default function RegistrationsChart() {
             }}
           >
             <Typography variant="h4" component="p">
-              {sum}
+              {sum.toLocaleString()}
             </Typography>
           </Stack>
         </Stack>
@@ -56,7 +56,7 @@ export default function RegistrationsChart() {
             {
               scaleType: 'point',
               data: years,
-              tickInterval: (index, i) => (i + 1) % 5 === 0
+              tickInterval: (_index, i) => (i + 1) % 5 === 0
             }
           ]}
           series={[

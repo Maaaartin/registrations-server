@@ -19,7 +19,7 @@ import { sortBy } from 'ramda';
 
 const CountCard = () => {
   const { data, isLoading } = useFetch(countAction);
-  const renderValue = isLoading ? <CircularProgress /> : data;
+  const renderValue = isLoading ? <CircularProgress /> : data?.toLocaleString();
   return <StatCard title="Celkový počet záznamů">{renderValue}</StatCard>;
 };
 
@@ -36,7 +36,14 @@ function CardList<T>({
         const { primary, secondary } = render(value);
         return (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemText primary={primary} secondary={secondary} />
+            <ListItemText
+              primary={primary}
+              secondary={
+                typeof secondary === 'number'
+                  ? secondary.toLocaleString()
+                  : secondary
+              }
+            />
           </ListItem>
         );
       })}
