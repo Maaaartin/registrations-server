@@ -47,6 +47,16 @@ exports.createTableFromHeaders = async (tableName) => {
         );
       `;
 
+  const createOriginalTable = `
+        CREATE TABLE IF NOT EXISTS ${originalTableName} (
+          id SERIAL PRIMARY KEY,
+          ${Object.entries(schema)
+            .map(([column, type]) => `"${column}" ${type}`)
+            .join(',\n')}
+        );
+      `;
+
+  await client.query(createOriginalTable);
   await client.query(createTableQuery);
   await client.end();
   console.log(`Table '${tableName}' created successfully.`);
