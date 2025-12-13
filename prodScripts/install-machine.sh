@@ -40,3 +40,20 @@ sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw reload
 mkdir -p ./nginx/html/.well-known/acme-challenge/
+
+mkdir app
+
+if [ -f .env ]; then
+  source .env
+else
+  echo ".env file not found!"
+  exit 1
+fi
+
+echo "Copying prod scripts to remote /root/app..."
+sshpass -p "$REMOTE_PASSWORD" ssh root@$REMOTE_ADDRESS "mkdir -p /root/app"
+sshpass -p "$REMOTE_PASSWORD" rsync -azP ./prodScripts/ root@$REMOTE_ADDRESS:/root/app/
+sshpass -p "$REMOTE_PASSWORD" rsync -azP ./generate-env-prod.sh root@$REMOTE_ADDRESS:/root/app/generate-env-prod.sh
+
+echo "Generating production env file on remote..."
+sshpass -p "$REMOTE_PASSWORD" ssh root@$REMOTE_ADDRESS "cd /root/app && sh ./generate-env-prod.sh"
