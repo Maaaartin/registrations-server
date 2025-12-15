@@ -19,6 +19,7 @@ rm -rf "$TEMP_DIR"
 
 echo "Done."
 
+yarn prisma:pull
 yarn prisma:generate
 yarn next telemetry disable
 yarn start
