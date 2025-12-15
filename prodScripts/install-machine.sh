@@ -20,6 +20,8 @@ echo "deb [signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/l
 echo "Updating package lists..."
 sudo apt update
 
+sudo apt-get install tree
+
 echo "Installing Docker and Docker Compose..."
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
