@@ -19,8 +19,16 @@ CREATE INDEX IF NOT EXISTS registrations_brand_trgm_idx
 CREATE INDEX IF NOT EXISTS registrations_obchodni_oznaceni_trgm_idx
     ON registrations USING gin (obchodni_oznaceni gin_trgm_ops);
 
--- Speed up range filters
-CREATE INDEX IF NOT EXISTS registrations_datum_1_registrace_idx
-    ON registrations (datum_1_registrace);
-CREATE INDEX IF NOT EXISTS registrations_hybridni_vozidlo_id_idx
-    ON registrations (hybridni_vozidlo, id);
+-- Speed up range filters + pagination order
+CREATE INDEX IF NOT EXISTS registrations_datum_1_registrace_id_idx
+    ON registrations (datum_1_registrace, id);
+CREATE INDEX IF NOT EXISTS registrations_rok_vyroby_id_idx
+    ON registrations (rok_vyroby, id);
+
+-- Narrow boolean filters and keep results ordered for LIMIT/OFFSET
+CREATE INDEX IF NOT EXISTS registrations_hybridni_true_id_idx
+    ON registrations (id)
+    WHERE hybridni_vozidlo IS TRUE;
+CREATE INDEX IF NOT EXISTS registrations_plne_elektricke_true_id_idx
+    ON registrations (id)
+    WHERE plne_elektricke_vozidlo IS TRUE;

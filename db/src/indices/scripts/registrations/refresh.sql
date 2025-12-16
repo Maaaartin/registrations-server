@@ -5,3 +5,8 @@ REINDEX INDEX registrations_cislo_tp_idx;
 REINDEX INDEX registrations_vin_idx;
 
 REINDEX INDEX idx_vehicle_search_id;
+
+REINDEX INDEX registrations_datum_1_registrace_id_idx;
+REINDEX INDEX registrations_rok_vyroby_id_idx;
+REINDEX INDEX registrations_hybridni_true_id_idx;
+REINDEX INDEX registrations_plne_elektricke_true_id_idx;
