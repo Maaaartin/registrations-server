@@ -25,7 +25,6 @@ model imports {
   country     String?
   import_date DateTime? @db.Date
 
-  @@index([pcv], map: "idx_imports_pcv")
   @@index([pcv])
 }
 
@@ -178,9 +177,6 @@ model registrations {
   typ_kod                                                         String?
   rm_zaniku                                                       String?
 
-  @@index([tovarni_znacka], map: "idx_registrations_brand_id")
-  @@index([plne_elektricke_vozidlo, id], map: "idx_registrations_electric")
-  @@index([rok_vyroby], map: "idx_registrations_rok_vyroby")
   @@index([id], map: "idx_vehicle_search_id")
   @@index([tovarni_znacka(ops: raw("gin_trgm_ops"))], map: "registrations_brand_trgm_idx", type: Gin)
   @@index([datum_1_registrace])
@@ -198,28 +194,7 @@ model removed_vehicles {
   rm_kod   BigInt?
   rm_nazev String?
 
-  @@index([pcv], map: "idx_removed_vehicles_pcv")
   @@index([pcv])
-}
-
-model temp_imports {
-  id          Int       @id @default(autoincrement())
-  pcv         BigInt?
-  country     String?
-  import_date DateTime? @db.Date
-}
-
-model temp_inspections {
-  id              Int       @id @default(autoincrement())
-  pcv             BigInt?
-  typ             String?
-  stav            String?
-  kod_stk         String?
-  nazev_stk       String?
-  platnost_od     DateTime? @db.Date
-  platnost_do     DateTime? @db.Date
-  cislo_protokolu String?
-  aktualni        Boolean?
 }
 
 model visits {
