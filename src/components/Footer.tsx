@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 export default function Footer() {
   return (
@@ -13,10 +14,19 @@ export default function Footer() {
       ]}
     >
       <a
+        href="https://github.com/Maaaartin/registrations-server"
         target="_blank"
-        href="https://www.linkedin.com/in/martin-svoboda-36a904172/"
+        rel="noopener noreferrer"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '4px',
+          color: 'inherit',
+          textDecoration: 'none'
+        }}
       >
-        Kontakt
+        <GitHubIcon fontSize="small" />
+        GitHub
       </a>
     </Typography>
   );
