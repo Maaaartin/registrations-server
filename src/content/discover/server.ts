@@ -75,7 +75,9 @@ export const buildDiscoverWhere = ({
     : Prisma.sql``;
 };
 
-type DiscoverRow = Prisma.registrationsGetPayload<{ select: typeof vehicleSelect }>;
+type DiscoverRow = Prisma.registrationsGetPayload<{
+  select: typeof vehicleSelect;
+}>;
 
 export const discoverVehicles = (params: DiscoverVehiclesParams) => {
   return withCache(
