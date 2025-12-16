@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { DDiscover } from '../../content/decoders';
-import { es, getDiscoverQuery } from '../../elastic';
+import { buildDiscoverWhere } from '../../content/discover/server';
+import prisma from '../../../prisma';
+import { Prisma } from '../../../prisma/client';
 import { withCache } from '../../redis';
 
 type Params = ReturnType<typeof DDiscover.parse>;
@@ -8,11 +10,20 @@ type Params = ReturnType<typeof DDiscover.parse>;
 const fetchCount = async (params: Params) =>
   withCache(
     async () => {
-      const result = await es.count({
-        index: 'registrations',
-        query: getDiscoverQuery(params)
+      const whereClause = buildDiscoverWhere({
+        ...params,
+        page: 0,
+        pageSize: 0
       });
-      return result.count;
+
+      const [{ count }] = await prisma.$queryRaw<{ count: bigint }[]>(
+        Prisma.sql`
+          SELECT COUNT(*)::bigint AS count
+          FROM registrations r
+          ${whereClause}
+        `
+      );
+      return Number(count);
     },
     'discoverCount' + JSON.stringify(params)
   );

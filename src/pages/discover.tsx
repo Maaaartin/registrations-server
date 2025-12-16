@@ -217,7 +217,7 @@ function PohonSelector({
         </InputLabel>
         <NativeSelect
           disabled={loading}
-          defaultValue={pohon}
+          value={pohon ?? ''}
           inputProps={{
             name: 'pohon',
             id: 'pohon'
@@ -226,13 +226,9 @@ function PohonSelector({
             onSubmit({ pohon: stringToPohon(e.target.value) || '' });
           }}
         >
-          <option selected={!pohon}></option>
-          <option selected={pohon === 'electric'} value={'electric'}>
-            Elektrický
-          </option>
-          <option selected={pohon === 'hybrid'} value={'hybrid'}>
-            Hybridní
-          </option>
+          <option value=""></option>
+          <option value="electric">Elektrický</option>
+          <option value="hybrid">Hybridní</option>
         </NativeSelect>
       </FormControl>
     </Stack>
