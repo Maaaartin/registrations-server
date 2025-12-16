@@ -10,7 +10,6 @@
     "build:image": "sh build-image.sh"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "8.17.0",
     "csv-parse": "^5.6.0",
     "pg": "^8.13.3",
     "pg-copy-streams": "^6.0.6"
