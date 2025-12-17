@@ -76,7 +76,7 @@ export const buildDiscoverWhere = ({
 };
 
 type DiscoverRow = Prisma.registrationsGetPayload<{
-  select: Pick<typeof vehicleSelect, 'id'>;
+  select: typeof vehicleSelect;
 }>;
 
 export const discoverVehicles = (params: DiscoverVehiclesParams) => {
@@ -84,7 +84,7 @@ export const discoverVehicles = (params: DiscoverVehiclesParams) => {
     async () => {
       const whereClause = buildDiscoverWhere(params);
 
-      const rows = await prisma.$queryRaw<DiscoverRow[]>(Prisma.sql`
+      const vehicles = await prisma.$queryRaw<DiscoverRow[]>(Prisma.sql`
         WITH filtered AS (
           SELECT r.id
           FROM registrations r
@@ -93,17 +93,17 @@ export const discoverVehicles = (params: DiscoverVehiclesParams) => {
           LIMIT ${params.pageSize}
           OFFSET ${params.pageSize * params.page}
         )
-        SELECT r.id
+        SELECT r.id,
+               r.tovarni_znacka,
+               r.obchodni_oznaceni,
+               r.vin,
+               r.cislo_tp,
+               r.cislo_orv,
+               r.pcv
         FROM registrations r
         INNER JOIN filtered f ON f.id = r.id
         ORDER BY r.id ASC
       `);
-      const ids = rows.map((row) => row.id);
-      const vehicles = await prisma.registrations.findMany({
-        select: vehicleSelect,
-        where: { id: { in: ids } },
-        orderBy: { id: 'asc' }
-      });
 
       return vehicles.map(serialize);
     },
