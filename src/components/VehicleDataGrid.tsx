@@ -9,7 +9,7 @@ export default function VehicleDataGrid(props: Props) {
   const router = useRouter();
   return (
     <DataGrid
-      localeText={gridLocaleText}
+      localeText={props.localeText || gridLocaleText}
       rowSelection={false}
       onRowClick={(params) => {
         router.push({ pathname: '/vehicle', query: { id: params.row.id } });

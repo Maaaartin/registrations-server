@@ -15,6 +15,7 @@ export const gridLocaleText: Partial<GridLocaleText> = {
     },
     labelRowsPerPage: 'Řádků na stránku'
   },
+  noResultsOverlayLabel: 'Žádné výsledky',
   columnMenuSortAsc: 'Seřadit vzestupně',
   columnMenuSortDesc: 'Seřadit sestupně',
   filterPanelColumns: 'Sloupec',

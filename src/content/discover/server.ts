@@ -84,11 +84,10 @@ export const discoverVehicles = (params: DiscoverVehiclesParams) => {
     async () => {
       const whereClause = buildDiscoverWhere(params);
 
-      const vehicles = await prisma
-        .$transaction(
-          [
-            prisma.$executeRaw`SET LOCAL statement_timeout = '10s'`,
-            prisma.$queryRaw<DiscoverRow[]>(Prisma.sql`
+      const rows = await prisma.$transaction(
+        [
+          prisma.$executeRaw`SET LOCAL statement_timeout = '10s'`,
+          prisma.$queryRaw<DiscoverRow[]>(Prisma.sql`
             WITH filtered AS (
               SELECT r.id
               FROM registrations r
@@ -103,19 +102,12 @@ export const discoverVehicles = (params: DiscoverVehiclesParams) => {
             INNER JOIN filtered f ON f.id = r.id
             ORDER BY r.id ASC
           `)
-          ],
-          { isolationLevel: 'ReadCommitted' } // optional
-        )
-        .catch((error) => {
-          if ((error as NodeJS.ErrnoException).code === 'P2010') {
-            console.warn('discoverVehicles timeout');
-            return [, []] as const;
-          }
-          throw error;
-        });
+        ],
+        { isolationLevel: 'ReadCommitted' } // optional
+      );
 
-      const [, rows] = vehicles;
-      return rows.map(serialize);
+      const [, vehicles] = rows;
+      return vehicles.map(serialize);
     },
     'discover' + JSON.stringify(params)
   );

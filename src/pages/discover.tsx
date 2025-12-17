@@ -30,7 +30,7 @@ import {
 } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { discoverVehicles, queryDecoder } from '../content/discover/server';
-import { datePickerLocaleText } from '../content/localization';
+import { datePickerLocaleText, gridLocaleText } from '../content/localization';
 import useFetch from '../hooks/useFetch';
 import { DNumber } from '../content/decoders';
 import { filterQuery } from '../content/data';
@@ -312,7 +312,8 @@ export default function Discover(props: DiscoverProps) {
     imported,
     removed,
     rok_vyroby_od,
-    rok_vyroby_do
+    rok_vyroby_do,
+    error
   } = props;
   const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
@@ -361,6 +362,12 @@ export default function Discover(props: DiscoverProps) {
         <meta name="description" content="Hledání v databázi." />
       </Head>
       <VehicleDataGrid
+        localeText={{
+          ...gridLocaleText,
+          noResultsOverlayLabel: error
+            ? 'Data se nepovedlo načíst'
+            : gridLocaleText.noResultsOverlayLabel
+        }}
         paginationMode="server"
         filterMode="server"
         loading={loading}
@@ -412,21 +419,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     rok_vyroby_do
   } = queryDecoder.parse(context.query);
 
-  const vehicles = await discoverVehicles({
-    page,
-    pageSize,
-    tovarni_znacka,
-    typ,
-    datum_prvni_registrace_od,
-    datum_prvni_registrace_do,
-    pohon,
-    imported,
-    removed,
-    rok_vyroby_od,
-    rok_vyroby_do
-  });
   const props = {
-    vehicles,
+    vehicles: [],
     currentPage: page,
     tovarni_znacka,
     typ,
@@ -443,15 +437,34 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
       ? DateTime.fromJSDate(datum_prvni_registrace_do).toFormat(DateFormat)
       : null
   };
-  if (vehicles.length === 1) {
-    return {
-      redirect: {
-        destination: `/vehicle?id=${vehicles[0].id}`
-      },
-      props
-    };
+
+  try {
+    const vehicles = await discoverVehicles({
+      page,
+      pageSize,
+      tovarni_znacka,
+      typ,
+      datum_prvni_registrace_od,
+      datum_prvni_registrace_do,
+      pohon,
+      imported,
+      removed,
+      rok_vyroby_od,
+      rok_vyroby_do
+    });
+
+    if (vehicles.length === 1) {
+      return {
+        redirect: { destination: `/vehicle?id=${vehicles[0].id}` },
+        props
+      };
+    }
+    return { props: { ...props, vehicles } };
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'P2010') {
+      console.warn('discoverVehicles timeout');
+      return { props: { ...props, error: true } };
+    }
+    throw error;
   }
-  return {
-    props
-  };
 };
