@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { defaultPageSize, maxPageSize } from './index';
-import { serialize, vehicleSelect } from '../data';
+import { MAX_COUNT, serialize, vehicleSelect } from '../data';
 import { DiscoverVehiclesParams } from '../../../prisma/queries';
 import { DDiscover, DPage } from '../decoders';
 import prisma from '../../../prisma';
@@ -128,3 +128,35 @@ const pageSizeDecoder = z.object({
 });
 
 export const queryDecoder = DDiscover.merge(DPage).merge(pageSizeDecoder);
+
+type Params = ReturnType<typeof DDiscover.parse>;
+
+export const fetchCount = async (params: Params, withLimit = true) =>
+  withCache(
+    async () => {
+      const whereClause = buildDiscoverWhere({
+        ...params,
+        page: 0,
+        pageSize: 0
+      });
+      const limitClause = withLimit
+        ? Prisma.sql`LIMIT ${MAX_COUNT + 1}`
+        : Prisma.sql``;
+
+      const [{ count }] = await prisma.$queryRaw<
+        { count: bigint }[]
+      >(Prisma.sql`
+        SELECT COUNT(*)::bigint AS count
+        FROM (
+          SELECT 1
+          FROM registrations r
+          ${whereClause}
+          ${limitClause}
+        ) limited
+      `);
+
+      const numericCount = Number(count);
+      return withLimit ? Math.min(numericCount, MAX_COUNT) : numericCount;
+    },
+    'discoverCount' + JSON.stringify(params) + String(withLimit)
+  );

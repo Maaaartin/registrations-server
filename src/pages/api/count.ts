@@ -7,6 +7,6 @@ export default async function handler(
   res: NextApiResponse<number>
 ) {
   const params = DDiscover.parse(req.query);
-  const count = await fetchCount(params);
+  const count = await fetchCount(params, false);
   res.send(count);
 }

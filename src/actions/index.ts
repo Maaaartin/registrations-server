@@ -3,7 +3,7 @@ import { DValueCountPairs, DNumber, DStringArray } from '../content/decoders';
 import type { ValueCountPairs } from '../content/data';
 
 export const countAction: FetchAction<number> = {
-  url: '/api/discover-count',
+  url: '/api/count',
   decoder: DNumber
 };
 
