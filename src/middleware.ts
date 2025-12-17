@@ -1,6 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
-export function middleware() {
+export function middleware(req: NextRequest) {
+  const { method, nextUrl } = req;
+  console.info(`[middleware] ${method} ${nextUrl.pathname}${nextUrl.search}`);
+
   const response = NextResponse.next();
   response.headers.set(
     'Cache-Control',
