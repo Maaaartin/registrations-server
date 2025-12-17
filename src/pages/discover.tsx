@@ -365,7 +365,7 @@ export default function Discover(props: DiscoverProps) {
         localeText={{
           ...gridLocaleText,
           noResultsOverlayLabel: error
-            ? 'Data se nepovedlo načíst'
+            ? 'Data se nepovedlo načíst, zkuste zúžit filtr'
             : gridLocaleText.noResultsOverlayLabel
         }}
         paginationMode="server"
