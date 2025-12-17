@@ -1,10 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Keep source maps for both client and server to map stack traces back to TypeScript.
-  productionBrowserSourceMaps: true,
+  // productionBrowserSourceMaps: true,
   experimental: {
-    serverSourceMaps: true,
+    serverSourceMaps: true
   },
+  logging: {
+    incomingRequests: true,
+    fetches: {
+      fullUrl: true
+    }
+  }
 };
 
 module.exports = nextConfig;
