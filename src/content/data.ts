@@ -59,4 +59,4 @@ export function filterQuery<T>(
   );
 }
 
-export const MAX_COUNT = 1000;
+export const MAX_COUNT = 10_000;

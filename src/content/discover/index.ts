@@ -26,3 +26,5 @@ export type DiscoverProps = {
   rok_vyroby_od: number | null;
   rok_vyroby_do: number | null;
 };
+
+export const MAX_COUNT = 10_000;
