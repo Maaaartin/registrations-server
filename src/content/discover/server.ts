@@ -87,7 +87,7 @@ export const discoverVehicles = (params: DiscoverVehiclesParams) => {
       const vehicles = await prisma
         .$transaction(
           [
-            prisma.$executeRaw`SET LOCAL statement_timeout = '5s'`,
+            prisma.$executeRaw`SET LOCAL statement_timeout = '10s'`,
             prisma.$queryRaw<DiscoverRow[]>(Prisma.sql`
             WITH filtered AS (
               SELECT r.id
