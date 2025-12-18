@@ -15,7 +15,7 @@
     "start": "NODE_OPTIONS=--enable-source-maps sh entrypoint.sh yarn next start",
     "lint": "eslint --ext .js,.ts,.tsx src",
     "build:image": "sh build-image.sh",
-    "postinstall": "next telemetry disable"
+    "postinstall": "next telemetry disable && DATABASE_URL=\"file:dev.db\" yarn prisma generate --schema=./prisma/schema.prisma"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
