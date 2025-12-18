@@ -39,7 +39,7 @@
     "react-dom": "19",
     "redis": "^5.10.0",
     "swr": "^2.3.8",
-    "zod": "^3.25.76"
+    "zod": "4"
   },
   "devDependencies": {
     "@types/luxon": "^3.7.1",
