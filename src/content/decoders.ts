@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import z from 'zod';
 import { stringToPohon } from './discover';
 export const DStringArray = z.string().array();
 export const DStringDefault = z.string().default('');

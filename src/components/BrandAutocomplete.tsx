@@ -10,6 +10,7 @@ export default function BrandAutocomplete({
   disabled
 }: {
   value: string;
+  // eslint-disable-next-line no-unused-vars
   onSelect: (brand: string) => void;
   disabled?: boolean;
 }) {

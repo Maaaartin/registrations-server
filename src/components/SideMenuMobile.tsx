@@ -6,6 +6,7 @@ import MenuContent from './MenuContent';
 
 interface SideMenuMobileProps {
   open: boolean | undefined;
+  // eslint-disable-next-line no-unused-vars
   toggleDrawer: (newOpen: boolean) => () => void;
 }
 

@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { GridSlotProps } from '@mui/x-data-grid';

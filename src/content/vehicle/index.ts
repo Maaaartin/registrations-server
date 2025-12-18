@@ -62,7 +62,7 @@ export function shouldIncludeRegistrationField(
   key: keyof SerializableRegistration
 ) {
   const record = getColumnName(key);
-  return !Boolean(record.dependsOn);
+  return !record.dependsOn;
 }
 
 type SectionType = {

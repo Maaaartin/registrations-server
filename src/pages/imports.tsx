@@ -1,3 +1,4 @@
+import type React from 'react';
 import { Stack } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { GridSlotProps } from '@mui/x-data-grid';

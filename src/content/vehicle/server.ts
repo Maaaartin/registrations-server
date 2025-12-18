@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import prisma from '../../../prisma';
 import { serialize } from '../data';
 import { withCache } from '../../redis';

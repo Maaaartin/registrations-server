@@ -1,6 +1,5 @@
 import type { GridLocaleText } from '@mui/x-data-grid';
 import type { PickersInputLocaleText } from '@mui/x-date-pickers';
-import type { DateTime } from 'luxon';
 import { MAX_COUNT } from './data';
 
 export const gridLocaleText: Partial<GridLocaleText> = {

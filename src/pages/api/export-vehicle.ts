@@ -35,7 +35,7 @@ export default async function handler(
       `attachment; filename="${vehicle.tovarni_znacka}_${vehicle.obchodni_oznaceni}_${vehicle.vin}.csv"`
     );
     res.send(csv);
-  } catch (error) {
+  } catch {
     res.status(500).send('Server error');
   }
 }
