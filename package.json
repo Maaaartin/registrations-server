@@ -26,7 +26,7 @@
     "@mui/system": "7",
     "@mui/x-charts": "8",
     "@mui/x-data-grid": "^7.29.12",
-    "@mui/x-date-pickers": "^7.29.4",
+    "@mui/x-date-pickers": "8",
     "@prisma/client": "^6.19.1",
     "csv-stringify": "^6.6.0",
     "luxon": "^3.7.2",
