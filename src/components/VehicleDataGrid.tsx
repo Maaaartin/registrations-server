@@ -9,6 +9,7 @@ export default function VehicleDataGrid(props: Props) {
   const router = useRouter();
   return (
     <DataGrid
+      showToolbar
       localeText={props.localeText || gridLocaleText}
       rowSelection={false}
       onRowClick={(params) => {
