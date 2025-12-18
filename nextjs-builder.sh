@@ -1,3 +1,5 @@
+set -e
+
 sh prepare.sh
 COMMANDS=$(cat <<'EOF'
 yarn --frozen-lockfile

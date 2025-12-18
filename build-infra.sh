@@ -1,3 +1,5 @@
+set -e
+
 IMAGE_ID="infra-image"
 cd db
 docker build --no-cache --platform linux/amd64 -t $IMAGE_ID .

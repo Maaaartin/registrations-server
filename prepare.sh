@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [ -f .prod.env ]; then
   source .prod.env
 else

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 IMAGE_NAME="$1"
 IMAGE_TAR="./images/${IMAGE_NAME}.tar"
 
