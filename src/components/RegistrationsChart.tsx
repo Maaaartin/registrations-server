@@ -85,11 +85,7 @@ export default function RegistrationsChart() {
               fill: "url('#direct')"
             }
           }}
-          slotProps={{
-            legend: {
-              hidden: true
-            }
-          }}
+          hideLegend={true}
         >
           <AreaGradient color={theme.palette.primary.dark} id="organic" />
         </LineChart>
