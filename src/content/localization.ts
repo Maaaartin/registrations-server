@@ -33,6 +33,6 @@ export const gridLocaleText: Partial<GridLocaleText> = {
   noRowsLabel: 'Žádná data'
 };
 
-export const datePickerLocaleText: PickersInputLocaleText<DateTime> = {
+export const datePickerLocaleText: PickersInputLocaleText = {
   clearButtonLabel: 'Reset'
 };

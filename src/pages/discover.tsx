@@ -90,7 +90,7 @@ const AutocompleteSearchForm = ({
   );
 };
 
-const datePickerProps: Partial<DatePickerProps<DateTime>> = {
+const datePickerProps: Partial<DatePickerProps> = {
   disableFuture: true,
   slotProps: {
     actionBar: {
