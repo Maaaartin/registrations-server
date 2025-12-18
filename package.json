@@ -30,7 +30,7 @@
     "@prisma/client": "^6.19.1",
     "csv-stringify": "^6.6.0",
     "luxon": "^3.7.2",
-    "next": "15.5.9",
+    "next": "16",
     "prisma": "^6.19.1",
     "ramda": "^0.32.0",
     "react": "19",
