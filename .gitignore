@@ -147,6 +147,7 @@ prisma/client/*
 # And do not ignore .js and .ts files inside sql
 prisma/client/sql/*.mjs
 prisma/client/sql/*.edge.js
+prisma/client/sql/*.wasm-compiler-edge.js
 
 
 
