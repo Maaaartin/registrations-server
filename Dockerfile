@@ -2,7 +2,9 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package.json yarn.lock entrypoint.sh ./
+COPY package.json yarn.lock entrypoint.sh prisma.config.ts ./
+COPY prisma/schema.prisma prisma/schema.prisma
+
 RUN rm -rf node_modules
 RUN yarn --frozen-lockfile --production
 RUN rm -rf .next
