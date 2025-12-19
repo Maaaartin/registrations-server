@@ -461,7 +461,7 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     }
     return { props: { ...props, vehicles } };
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === 'P2010') {
+    if (['P2010', 'P2028'].includes((error as NodeJS.ErrnoException).code!)) {
       console.warn('discoverVehicles timeout');
       return { props: { ...props, error: true } };
     }
