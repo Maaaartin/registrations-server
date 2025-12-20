@@ -1,25 +1,38 @@
 import { z } from 'zod';
-import { DPage, DStringDefault } from '../decoders';
+import { DBrandModel, DPage, DStringDefault } from '../decoders';
 import { importsWithMatchingVehicle } from '../../../prisma/client/sql';
 import { serialize, vehicleSelect } from '../data';
 import { pageSize } from '.';
 import { withCache } from '../../redis';
 import prisma from '../../../prisma';
 
-export const queryDecoder = z
-  .object({
-    country: DStringDefault
-  })
-  .merge(DPage);
+export const queryDecoder = z.object({
+  ...DPage.shape,
+  ...DBrandModel.shape,
+  country: DStringDefault
+});
 
-export const searchImports = (page: number, importCountry: string) =>
+export const searchImports = (
+  page: number,
+  importCountry: string,
+  tovarni_znacka: string,
+  typ: string
+) =>
   withCache(async () => {
-    const result = await prisma.$queryRawTyped(
-      importsWithMatchingVehicle(
-        pageSize,
-        page * pageSize,
-        importCountry || null
-      )
+    const [, result] = await prisma.$transaction(
+      [
+        prisma.$executeRaw`SET LOCAL statement_timeout = '10s'`,
+        prisma.$queryRawTyped(
+          importsWithMatchingVehicle(
+            pageSize,
+            page * pageSize,
+            importCountry || null,
+            tovarni_znacka || null,
+            typ || null
+          )
+        )
+      ],
+      { isolationLevel: 'ReadCommitted' }
     );
 
     const importsIds = result
@@ -47,6 +60,6 @@ export const searchImports = (page: number, importCountry: string) =>
       };
     });
     return vehiclesWithImports.map(serialize);
-  }, `search${page}${importCountry}`);
+  }, `search${page}${importCountry}${tovarni_znacka}${typ}`);
 
 export type VehiclesWithImportData = Awaited<ReturnType<typeof searchImports>>;
