@@ -17,11 +17,11 @@ WITH
             ) -- Optional country filter
             AND (
                 $4::TEXT IS NULL
-                OR r.tovarni_znacka ILIKE $4 || '%'
+                OR r.tovarni_znacka = $4
             ) -- Optional brand filter
             AND (
                 $5::TEXT IS NULL
-                OR r.typ ILIKE $5 || '%'
+                OR r.typ = $5
             ) -- Optional model filter
         ORDER BY
             i.pcv -- Ensure deterministic ordering for pagination
