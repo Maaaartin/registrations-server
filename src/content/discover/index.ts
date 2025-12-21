@@ -27,5 +27,3 @@ export type DiscoverProps = {
   rok_vyroby_do: number | null;
   error?: boolean;
 };
-
-export const MAX_COUNT = 10_000;
