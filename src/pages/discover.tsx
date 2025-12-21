@@ -30,7 +30,10 @@ import {
 } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { discoverVehicles, queryDecoder } from '../content/discover/server';
-import { datePickerLocaleText, gridLocaleText } from '../content/localization';
+import {
+  datePickerLocaleText,
+  getGridLocaleText
+} from '../content/localization';
 import useFetch from '../hooks/useFetch';
 import { DNumber } from '../content/decoders';
 import { filterQuery } from '../content/data';
@@ -362,12 +365,7 @@ export default function Discover(props: DiscoverProps) {
         <meta name="description" content="Hledání v databázi." />
       </Head>
       <VehicleDataGrid
-        localeText={{
-          ...gridLocaleText,
-          noResultsOverlayLabel: error
-            ? 'Data se nepovedlo načíst, zkuste zúžit filtr'
-            : gridLocaleText.noResultsOverlayLabel
-        }}
+        localeText={getGridLocaleText({ error })}
         paginationMode="server"
         filterMode="server"
         loading={loading}

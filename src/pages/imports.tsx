@@ -9,7 +9,7 @@ import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import useFetch from '../hooks/useFetch';
 import { countriesImportsAction } from '../actions';
 import AutocompleteBase from '../components/AutocompleteBase';
-import { gridLocaleText } from '../content/localization';
+import { getGridLocaleText } from '../content/localization';
 import Head from 'next/head';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
@@ -123,12 +123,7 @@ export default function Search({
         paginationMode="server"
         filterMode="server"
         loading={loading}
-        localeText={{
-          ...gridLocaleText,
-          noResultsOverlayLabel: error
-            ? 'Data se nepovedlo načíst, zkuste zúžit filtr'
-            : gridLocaleText.noResultsOverlayLabel
-        }}
+        localeText={getGridLocaleText({ error })}
         rows={vehiclesWithImports}
         initialState={{
           pagination: {
