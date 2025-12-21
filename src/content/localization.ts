@@ -3,7 +3,6 @@ import type { PickersInputLocaleText } from '@mui/x-date-pickers';
 import { MAX_COUNT } from './data';
 
 type Params = { error?: boolean; pageSize?: number };
-// eslint-disable-next-line no-unused-vars
 export const getGridLocaleText: (params: Params) => Partial<GridLocaleText> = ({
   error,
   pageSize

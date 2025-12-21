@@ -6,7 +6,6 @@ export default function DataPairsTable<T>({
   renderRow
 }: {
   data: T[];
-  // eslint-disable-next-line no-unused-vars
   renderRow: (object: T) => {
     name: string;
     description?: string | null;

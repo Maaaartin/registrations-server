@@ -28,7 +28,6 @@ function CardList<T>({
   render
 }: {
   data: T[];
-  // eslint-disable-next-line no-unused-vars
   render: (value: T) => { primary: ReactNode; secondary?: ReactNode };
 }) {
   return (

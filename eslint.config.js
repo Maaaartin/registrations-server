@@ -32,7 +32,11 @@ export default [
       Headers: 'readonly'
     },
     rules: {
-      'prettier/prettier': ['error']
+      'prettier/prettier': ['error'],
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' }
+      ]
     }
   })
 ];

@@ -12,7 +12,6 @@ export default function ModelAutocomplete({
 }: {
   tovarni_znacka: string;
   typ: string;
-  // eslint-disable-next-line no-unused-vars
   onSelect: (tovarni_znacka: string) => void;
   disabled?: boolean;
 }) {
