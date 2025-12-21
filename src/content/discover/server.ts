@@ -22,12 +22,12 @@ export const buildDiscoverWhere = ({
 
   if (tovarni_znacka) {
     const brand = `${tovarni_znacka}%`;
-    whereParts.push(Prisma.sql`r.tovarni_znacka ILIKE ${brand}`);
+    whereParts.push(Prisma.sql`r.tovarni_znacka = ${brand}`);
   }
 
   if (typ) {
     const tradeName = `${typ}%`;
-    whereParts.push(Prisma.sql`r.obchodni_oznaceni ILIKE ${tradeName}`);
+    whereParts.push(Prisma.sql`r.obchodni_oznaceni = ${tradeName}`);
   }
 
   if (datum_prvni_registrace_od) {
