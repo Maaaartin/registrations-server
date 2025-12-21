@@ -21,11 +21,13 @@ export const buildDiscoverWhere = ({
   const whereParts: Prisma.Sql[] = [];
 
   if (tovarni_znacka) {
-    whereParts.push(Prisma.sql`r.tovarni_znacka = ${tovarni_znacka}`);
+    const brand = `${tovarni_znacka}%`;
+    whereParts.push(Prisma.sql`r.tovarni_znacka ILIKE ${brand}`);
   }
 
   if (typ) {
-    whereParts.push(Prisma.sql`r.obchodni_oznaceni = ${typ}`);
+    const tradeName = `${typ}%`;
+    whereParts.push(Prisma.sql`r.obchodni_oznaceni ILIKE ${tradeName}`);
   }
 
   if (datum_prvni_registrace_od) {
