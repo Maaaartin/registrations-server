@@ -1,0 +1,3 @@
+REINDEX INDEX imports_country_pcv_idx;
+
+REINDEX INDEX registrations_tovarni_typ_pcv_idx;
