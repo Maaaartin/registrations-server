@@ -123,7 +123,7 @@ export default function Search({
         paginationMode="server"
         filterMode="server"
         loading={loading}
-        localeText={getGridLocaleText({ error })}
+        localeText={getGridLocaleText({ error, pageSize })}
         rows={vehiclesWithImports}
         initialState={{
           pagination: {

@@ -2,17 +2,25 @@ import type { GridLocaleText } from '@mui/x-data-grid';
 import type { PickersInputLocaleText } from '@mui/x-date-pickers';
 import { MAX_COUNT } from './data';
 
-type Params = Partial<{ error: boolean }>;
+type Params = { error?: boolean; pageSize?: number };
 // eslint-disable-next-line no-unused-vars
 export const getGridLocaleText: (params: Params) => Partial<GridLocaleText> = ({
-  error
+  error,
+  pageSize
 }) => {
   return {
     columnMenuHideColumn: 'Skrýt sloupec',
     columnMenuManageColumns: 'Přizpůsobit sloupce',
     paginationDisplayedRows: ({ estimated, from, to, count }) => {
+      const page =
+        pageSize && Number.isFinite(pageSize)
+          ? Math.floor((from - 1) / pageSize) + 1
+          : undefined;
+
       if (count === -1) {
-        return `Strana ${estimated ?? 0 + 1}`;
+        return page
+          ? `Strana ${page}`
+          : `Strana ${estimated ? estimated : '?'}`;
       }
       return `${from} - ${to} z ${count}${count === MAX_COUNT ? '+' : ''}`;
     },
