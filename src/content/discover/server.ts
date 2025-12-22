@@ -140,10 +140,9 @@ export const queryDecoder = DDiscover.merge(DPage).merge(pageSizeDecoder);
 
 type Params = ReturnType<typeof DDiscover.parse>;
 
-export const fetchCount = async (params: Params, withLimit = true) =>
+export const fetchCount = async (params: Params) =>
   withCache(
     async () => {
-      withLimit = false;
       const {
         tovarni_znacka,
         typ,
@@ -167,12 +166,10 @@ export const fetchCount = async (params: Params, withLimit = true) =>
           pohon === 'hybrid',
           imported,
           removed,
-          withLimit ? MAX_COUNT : null
+          null
         )
       );
-
-      const numericCount = Number(count);
-      return withLimit ? Math.min(numericCount, MAX_COUNT) : numericCount;
+      return Number(count);
     },
-    'discoverCount' + JSON.stringify(params) + String(withLimit)
+    'discoverCount' + JSON.stringify(params)
   );
