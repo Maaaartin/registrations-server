@@ -5,7 +5,8 @@ import {
   InputLabel,
   Checkbox,
   FormControlLabel,
-  Grid
+  Grid,
+  Button
 } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import BrandAutocomplete from '../components/BrandAutocomplete';
@@ -40,6 +41,7 @@ import { filterQuery } from '../content/data';
 import { useEffect, useState } from 'react';
 import { DiscoverVehiclesParams } from '../../prisma/queries';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
@@ -239,11 +241,14 @@ function PohonSelector({
 }
 
 const Toolbar = (props: ToolbarProps) => {
+  const router = useRouter();
   const onSubmit_ = (params: Partial<SearchParams>) =>
     props.onSubmit({
       ...params,
       page: 0
     });
+  const handleReset = () =>
+    router.push(router.pathname, undefined, { scroll: false });
   return (
     <Grid
       container
@@ -284,6 +289,23 @@ const Toolbar = (props: ToolbarProps) => {
             }
             label="Vyřazeno z provozu"
           />
+        </Stack>
+      </Grid>
+      <Grid size={{ xs: 12 }}>
+        <Stack
+          direction="row"
+          spacing={2}
+          padding={2}
+          justifyContent="flex-end"
+          alignItems="flex-end"
+        >
+          <Button
+            variant="outlined"
+            disabled={props.loading}
+            onClick={handleReset}
+          >
+            Reset
+          </Button>
         </Stack>
       </Grid>
     </Grid>
