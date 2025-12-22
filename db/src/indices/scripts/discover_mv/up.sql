@@ -14,15 +14,53 @@ SELECT
 FROM registrations r
 WITH DATA;
 
+-- Ensure extension needed for trigram indexes (used for brand/model search)
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 CREATE UNIQUE INDEX IF NOT EXISTS discover_mv_id_idx ON discover_mv (id);
 
-CREATE INDEX IF NOT EXISTS discover_mv_filters_idx
-  ON discover_mv (tovarni_znacka, obchodni_oznaceni, datum_1_registrace, rok_vyroby, imported, removed);
+-- Equality filters on brand/model + ordering for pagination
+CREATE INDEX IF NOT EXISTS discover_mv_brand_model_id_idx
+  ON discover_mv (tovarni_znacka, obchodni_oznaceni, id);
 
-CREATE INDEX IF NOT EXISTS discover_mv_electric_idx
-  ON discover_mv (plne_elektricke_vozidlo)
+-- Trigram search support for brand/model lookups
+CREATE INDEX IF NOT EXISTS discover_mv_brand_trgm_idx
+  ON discover_mv USING gin (tovarni_znacka gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS discover_mv_obchodni_oznaceni_trgm_idx
+  ON discover_mv USING gin (obchodni_oznaceni gin_trgm_ops);
+
+-- Date/year range filters + pagination ordering
+CREATE INDEX IF NOT EXISTS discover_mv_datum_1_registrace_id_idx
+  ON discover_mv (datum_1_registrace, id);
+
+CREATE INDEX IF NOT EXISTS discover_mv_rok_vyroby_id_idx
+  ON discover_mv (rok_vyroby, id);
+
+CREATE INDEX IF NOT EXISTS discover_mv_datum_rok_id_idx
+  ON discover_mv (datum_1_registrace, rok_vyroby, id);
+
+-- Narrow boolean filters (pohon/imported/removed) with ordering
+CREATE INDEX IF NOT EXISTS discover_mv_plne_elektricke_true_id_idx
+  ON discover_mv (datum_1_registrace, id)
   WHERE plne_elektricke_vozidlo IS TRUE;
 
-CREATE INDEX IF NOT EXISTS discover_mv_hybrid_idx
-  ON discover_mv (hybridni_vozidlo)
+CREATE INDEX IF NOT EXISTS discover_mv_plne_elektricke_rok_vyroby_id_idx
+  ON discover_mv (rok_vyroby, id)
+  WHERE plne_elektricke_vozidlo IS TRUE;
+
+CREATE INDEX IF NOT EXISTS discover_mv_hybridni_true_id_idx
+  ON discover_mv (datum_1_registrace, id)
   WHERE hybridni_vozidlo IS TRUE;
+
+CREATE INDEX IF NOT EXISTS discover_mv_hybridni_rok_vyroby_id_idx
+  ON discover_mv (rok_vyroby, id)
+  WHERE hybridni_vozidlo IS TRUE;
+
+CREATE INDEX IF NOT EXISTS discover_mv_imported_true_id_idx
+  ON discover_mv (datum_1_registrace, id)
+  WHERE imported IS TRUE;
+
+CREATE INDEX IF NOT EXISTS discover_mv_removed_true_id_idx
+  ON discover_mv (datum_1_registrace, id)
+  WHERE removed IS TRUE;
