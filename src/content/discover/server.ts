@@ -21,13 +21,11 @@ export const buildDiscoverWhere = ({
   const whereParts: Prisma.Sql[] = [];
 
   if (tovarni_znacka) {
-    const brand = `${tovarni_znacka}%`;
-    whereParts.push(Prisma.sql`r.tovarni_znacka = ${brand}`);
+    whereParts.push(Prisma.sql`r.tovarni_znacka = ${tovarni_znacka}`);
   }
 
   if (typ) {
-    const tradeName = `${typ}%`;
-    whereParts.push(Prisma.sql`r.obchodni_oznaceni = ${tradeName}`);
+    whereParts.push(Prisma.sql`r.obchodni_oznaceni = ${typ}`);
   }
 
   if (datum_prvni_registrace_od) {
@@ -82,6 +80,7 @@ type DiscoverRow = Prisma.registrationsGetPayload<{
 export const discoverVehicles = (params: DiscoverVehiclesParams) => {
   return withCache(
     async () => {
+      console.log(params);
       const whereClause = buildDiscoverWhere(params);
 
       const rows = await prisma.$transaction(
