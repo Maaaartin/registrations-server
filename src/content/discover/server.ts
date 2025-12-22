@@ -6,6 +6,7 @@ import { DDiscover, DPage } from '../decoders';
 import prisma from '../../../prisma';
 import { Prisma } from '../../../prisma/client';
 import { withCache } from '../../redis';
+import { discoverMvCount, discoverMvSearch } from '../../../prisma/client/sql';
 
 export const buildDiscoverWhere = ({
   tovarni_znacka,
@@ -78,34 +79,41 @@ type DiscoverRow = Prisma.registrationsGetPayload<{
 }>;
 
 export const discoverVehicles = (params: DiscoverVehiclesParams) => {
+  const {
+    page,
+    pageSize,
+    tovarni_znacka,
+    typ,
+    removed,
+    imported,
+    pohon,
+    datum_prvni_registrace_do,
+    datum_prvni_registrace_od,
+    rok_vyroby_do,
+    rok_vyroby_od
+  } = params;
   return withCache(
     async () => {
-      console.log(params);
-      const whereClause = buildDiscoverWhere(params);
-
-      const rows = await prisma.$transaction(
-        [
-          prisma.$executeRaw`SET LOCAL statement_timeout = '10s'`,
-          prisma.$queryRaw<DiscoverRow[]>(Prisma.sql`
-            WITH filtered AS (
-              SELECT r.id
-              FROM registrations r
-              ${whereClause}
-              ORDER BY r.id ASC
-              LIMIT ${params.pageSize}
-              OFFSET ${params.pageSize * params.page}
-            )
-            SELECT r.id, r.tovarni_znacka, r.obchodni_oznaceni, r.vin,
-                   r.cislo_tp, r.cislo_orv, r.pcv
-            FROM registrations r
-            INNER JOIN filtered f ON f.id = r.id
-            ORDER BY r.id ASC
-          `)
-        ],
-        { isolationLevel: 'ReadCommitted' } // optional
+      const result = await prisma.$queryRawTyped(
+        discoverMvSearch(
+          pageSize,
+          page * pageSize,
+          tovarni_znacka || null,
+          typ || null,
+          datum_prvni_registrace_od || null,
+          datum_prvni_registrace_do || null,
+          rok_vyroby_od || null,
+          rok_vyroby_do || null,
+          pohon === 'electric',
+          pohon === 'hybrid',
+          imported,
+          removed
+        )
       );
-
-      const [, vehicles] = rows;
+      const vehicles = await prisma.registrations.findMany({
+        select: vehicleSelect,
+        where: { id: { in: result.map((row) => row.id) as number[] } }
+      });
       return vehicles.map(serialize);
     },
     'discover' + JSON.stringify(params)
@@ -135,26 +143,33 @@ type Params = ReturnType<typeof DDiscover.parse>;
 export const fetchCount = async (params: Params, withLimit = true) =>
   withCache(
     async () => {
-      const whereClause = buildDiscoverWhere({
-        ...params,
-        page: 0,
-        pageSize: 0
-      });
-      const limitClause = withLimit
-        ? Prisma.sql`LIMIT ${MAX_COUNT + 1}`
-        : Prisma.sql``;
-
-      const [{ count }] = await prisma.$queryRaw<
-        { count: bigint }[]
-      >(Prisma.sql`
-        SELECT COUNT(*)::bigint AS count
-        FROM (
-          SELECT 1
-          FROM registrations r
-          ${whereClause}
-          ${limitClause}
-        ) limited
-      `);
+      withLimit = false;
+      const {
+        tovarni_znacka,
+        typ,
+        rok_vyroby_do,
+        rok_vyroby_od,
+        datum_prvni_registrace_do,
+        datum_prvni_registrace_od,
+        imported,
+        removed,
+        pohon
+      } = params;
+      const [{ count }] = await prisma.$queryRawTyped(
+        discoverMvCount(
+          tovarni_znacka || null,
+          typ || null,
+          datum_prvni_registrace_od || null,
+          datum_prvni_registrace_do || null,
+          rok_vyroby_od || null,
+          rok_vyroby_do || null,
+          pohon === 'electric',
+          pohon === 'hybrid',
+          imported,
+          removed,
+          withLimit ? MAX_COUNT : null
+        )
+      );
 
       const numericCount = Number(count);
       return withLimit ? Math.min(numericCount, MAX_COUNT) : numericCount;

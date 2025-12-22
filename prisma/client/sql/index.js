@@ -3,6 +3,8 @@
 /* eslint-disable */
 // biome-ignore-all lint: generated file
 "use strict"
+exports.discoverMvCount = require("./discoverMvCount.js").discoverMvCount
+exports.discoverMvSearch = require("./discoverMvSearch.js").discoverMvSearch
 exports.importsWithMatchingVehicle = require("./importsWithMatchingVehicle.js").importsWithMatchingVehicle
 exports.registrationCountsByYear = require("./registrationCountsByYear.js").registrationCountsByYear
 exports.searchBrands = require("./searchBrands.js").searchBrands

@@ -1,3 +1,7 @@
+export * from "./discoverMvCount"
+
+export * from "./discoverMvSearch"
+
 export * from "./importsWithMatchingVehicle"
 
 export * from "./registrationCountsByYear"

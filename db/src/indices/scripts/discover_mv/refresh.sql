@@ -1,0 +1,1 @@
+REFRESH MATERIALIZED VIEW discover_mv;
