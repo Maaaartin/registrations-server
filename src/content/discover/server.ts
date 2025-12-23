@@ -1,113 +1,46 @@
 import { z } from 'zod';
-import { defaultPageSize, maxPageSize } from './index';
-import { MAX_COUNT, serialize, vehicleSelect } from '../data';
+import { defaultPageSize, DiscoverParams, maxPageSize } from './index';
+import { serialize, vehicleSelect } from '../data';
 import { DiscoverVehiclesParams } from '../../../prisma/queries';
 import { DDiscover, DPage } from '../decoders';
 import prisma from '../../../prisma';
-import { Prisma } from '../../../prisma/client';
 import { withCache } from '../../redis';
 import { discoverMvCount, discoverMvSearch } from '../../../prisma/client/sql';
 
-export const buildDiscoverWhere = ({
+const parseDiscoverParams = ({
   tovarni_znacka,
   typ,
+  removed,
+  imported,
+  pohon,
   datum_prvni_registrace_do,
   datum_prvni_registrace_od,
   rok_vyroby_do,
-  rok_vyroby_od,
-  pohon,
-  removed,
-  imported
-}: DiscoverVehiclesParams) => {
-  const whereParts: Prisma.Sql[] = [];
-
-  if (tovarni_znacka) {
-    whereParts.push(Prisma.sql`r.tovarni_znacka = ${tovarni_znacka}`);
-  }
-
-  if (typ) {
-    whereParts.push(Prisma.sql`r.obchodni_oznaceni = ${typ}`);
-  }
-
-  if (datum_prvni_registrace_od) {
-    whereParts.push(
-      Prisma.sql`r.datum_1_registrace >= ${datum_prvni_registrace_od}`
-    );
-  }
-
-  if (datum_prvni_registrace_do) {
-    whereParts.push(
-      Prisma.sql`r.datum_1_registrace <= ${datum_prvni_registrace_do}`
-    );
-  }
-
-  if (rok_vyroby_od) {
-    whereParts.push(Prisma.sql`r.rok_vyroby >= ${rok_vyroby_od}`);
-  }
-
-  if (rok_vyroby_do) {
-    whereParts.push(Prisma.sql`r.rok_vyroby <= ${rok_vyroby_do}`);
-  }
-
-  if (pohon === 'electric') {
-    whereParts.push(Prisma.sql`r.plne_elektricke_vozidlo = TRUE`);
-  }
-
-  if (pohon === 'hybrid') {
-    whereParts.push(Prisma.sql`r.hybridni_vozidlo = TRUE`);
-  }
-
-  if (imported) {
-    whereParts.push(
-      Prisma.sql`EXISTS (SELECT 1 FROM imports i WHERE i.pcv = r.pcv)`
-    );
-  }
-
-  if (removed) {
-    whereParts.push(
-      Prisma.sql`EXISTS (SELECT 1 FROM removed_vehicles rv WHERE rv.pcv = r.pcv)`
-    );
-  }
-
-  return whereParts.length
-    ? Prisma.sql`WHERE ${Prisma.join(whereParts, ' AND ')}`
-    : Prisma.sql``;
+  rok_vyroby_od
+}: DiscoverParams) => {
+  return [
+    tovarni_znacka || null,
+    typ || null,
+    datum_prvni_registrace_od || null,
+    datum_prvni_registrace_do || null,
+    rok_vyroby_od || null,
+    rok_vyroby_do || null,
+    pohon === 'electric',
+    pohon === 'hybrid',
+    imported,
+    removed
+  ] as const;
 };
 
-type DiscoverRow = Prisma.registrationsGetPayload<{
-  select: typeof vehicleSelect;
-}>;
-
-export const discoverVehicles = (params: DiscoverVehiclesParams) => {
-  const {
-    page,
-    pageSize,
-    tovarni_znacka,
-    typ,
-    removed,
-    imported,
-    pohon,
-    datum_prvni_registrace_do,
-    datum_prvni_registrace_od,
-    rok_vyroby_do,
-    rok_vyroby_od
-  } = params;
-  return withCache(
+export const discoverVehicles = (params: DiscoverVehiclesParams) =>
+  withCache(
     async () => {
+      const { page, pageSize, ...rest } = params;
       const result = await prisma.$queryRawTyped(
         discoverMvSearch(
           pageSize,
           page * pageSize,
-          tovarni_znacka || null,
-          typ || null,
-          datum_prvni_registrace_od || null,
-          datum_prvni_registrace_do || null,
-          rok_vyroby_od || null,
-          rok_vyroby_do || null,
-          pohon === 'electric',
-          pohon === 'hybrid',
-          imported,
-          removed
+          ...parseDiscoverParams(rest)
         )
       );
       const vehicles = await prisma.registrations.findMany({
@@ -118,7 +51,6 @@ export const discoverVehicles = (params: DiscoverVehiclesParams) => {
     },
     'discover' + JSON.stringify(params)
   );
-};
 
 const pageSizeDecoder = z.object({
   pageSize: z
@@ -138,36 +70,11 @@ const pageSizeDecoder = z.object({
 
 export const queryDecoder = DDiscover.merge(DPage).merge(pageSizeDecoder);
 
-type Params = ReturnType<typeof DDiscover.parse>;
-
-export const fetchCount = async (params: Params) =>
+export const fetchCount = async (params: DiscoverParams) =>
   withCache(
     async () => {
-      const {
-        tovarni_znacka,
-        typ,
-        rok_vyroby_do,
-        rok_vyroby_od,
-        datum_prvni_registrace_do,
-        datum_prvni_registrace_od,
-        imported,
-        removed,
-        pohon
-      } = params;
       const [{ count }] = await prisma.$queryRawTyped(
-        discoverMvCount(
-          tovarni_znacka || null,
-          typ || null,
-          datum_prvni_registrace_od || null,
-          datum_prvni_registrace_do || null,
-          rok_vyroby_od || null,
-          rok_vyroby_do || null,
-          pohon === 'electric',
-          pohon === 'hybrid',
-          imported,
-          removed,
-          null
-        )
+        discoverMvCount(...parseDiscoverParams(params), null)
       );
       return Number(count);
     },

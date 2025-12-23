@@ -1,3 +1,4 @@
+import type { DDiscover } from '../decoders';
 import type { discoverVehicles } from './server';
 
 export const defaultPageSize = 20;
@@ -11,6 +12,8 @@ export const stringToPohon = (val: string): Pohon =>
   val === 'hybrid' || val === 'electric' ? val : null;
 
 export type Vehicles = Awaited<ReturnType<typeof discoverVehicles>>;
+
+export type DiscoverParams = ReturnType<typeof DDiscover.parse>;
 
 export type DiscoverProps = {
   currentPage: number;
