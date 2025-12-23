@@ -424,7 +424,6 @@ export default function Discover(props: DiscoverProps) {
             datum_prvni_registrace_od,
             datum_prvni_registrace_do,
             onSubmit: onSubmit_,
-            loading,
             pohon,
             imported,
             removed,
