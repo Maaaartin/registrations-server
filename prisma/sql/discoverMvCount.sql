@@ -8,7 +8,7 @@
 -- @param {Boolean} $8:only_hybrid?
 -- @param {Boolean} $9:only_imported?
 -- @param {Boolean} $10:only_removed?
--- @param {Int} $11:limit?
+-- @param {String} $11:palivo?
 SELECT
     COUNT(*)::bigint AS count
 FROM
@@ -58,6 +58,8 @@ FROM
                 $10::BOOLEAN IS NOT TRUE
                 OR r.removed = TRUE
             )
-        LIMIT
-            COALESCE($11::INT, 2147483647)
+            AND (
+                $11::TEXT IS NULL
+                OR r.palivo = $11
+            )
     ) limited;

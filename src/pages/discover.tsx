@@ -42,10 +42,12 @@ import { useEffect, useState } from 'react';
 import { DiscoverVehiclesParams } from '../../prisma/queries';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import FuelAutocomplete from '../components/FuelAutocomplete';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
   typ: string;
+  palivo: string;
 };
 
 type DateSearchParams = {
@@ -67,6 +69,7 @@ type ToolbarProps = GridSlotProps['toolbar'] & DiscoverProps & SubmitProps;
 const AutocompleteSearchForm = ({
   tovarni_znacka,
   typ,
+  palivo,
   loading,
   onSubmit
 }: SubmitProps & AutocompleteParams) => {
@@ -90,6 +93,15 @@ const AutocompleteSearchForm = ({
           }
         }}
         disabled={loading || !tovarni_znacka}
+      />
+      <FuelAutocomplete
+        value={palivo}
+        onSelect={(value) => {
+          if (value !== palivo) {
+            onSubmit({ palivo: value });
+          }
+        }}
+        disabled={loading}
       />
     </Stack>
   );
@@ -321,7 +333,8 @@ const searchKeys = [
   'imported',
   'removed',
   'rok_vyroby_od',
-  'rok_vyroby_do'
+  'rok_vyroby_do',
+  'palivo'
 ] as const;
 
 export default function Discover(props: DiscoverProps) {
@@ -338,7 +351,8 @@ export default function Discover(props: DiscoverProps) {
     removed,
     rok_vyroby_od,
     rok_vyroby_do,
-    error
+    error,
+    palivo
   } = props;
   const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
@@ -351,7 +365,8 @@ export default function Discover(props: DiscoverProps) {
     imported,
     removed,
     rok_vyroby_od,
-    rok_vyroby_do
+    rok_vyroby_do,
+    palivo
   });
   const searchProps = pick(searchKeys, props);
   const [countParams, setCountParams] =
@@ -414,7 +429,8 @@ export default function Discover(props: DiscoverProps) {
             imported,
             removed,
             rok_vyroby_od,
-            rok_vyroby_do
+            rok_vyroby_do,
+            palivo
           } as ToolbarProps
         }}
       />
@@ -436,7 +452,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     imported,
     removed,
     rok_vyroby_od,
-    rok_vyroby_do
+    rok_vyroby_do,
+    palivo
   } = queryDecoder.parse(context.query);
 
   const props = {
@@ -455,7 +472,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
       : null,
     datum_prvni_registrace_do: datum_prvni_registrace_do
       ? DateTime.fromJSDate(datum_prvni_registrace_do).toFormat(DateFormat)
-      : null
+      : null,
+    palivo
   };
 
   try {
@@ -470,7 +488,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
       imported,
       removed,
       rok_vyroby_od,
-      rok_vyroby_do
+      rok_vyroby_do,
+      palivo
     });
 
     if (vehicles.length === 1) {

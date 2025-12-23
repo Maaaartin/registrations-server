@@ -4,4 +4,4 @@
 // biome-ignore-all lint: generated file
 "use strict"
 const { makeTypedQueryFactory: $mkFactory } = require("../runtime/client")
-exports.topFuels = /*#__PURE__*/ $mkFactory("SELECT\n*\nFROM\ntop_fuels\nLIMIT\n$1;")
+exports.topFuels = /*#__PURE__*/ $mkFactory("SELECT\n*\nFROM\ntop_fuels\nWHERE\n$2::TEXT IS NULL\nOR palivo ILIKE '%' || $2 || '%'\nLIMIT\n$1;")

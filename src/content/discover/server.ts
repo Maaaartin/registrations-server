@@ -16,7 +16,8 @@ const parseDiscoverParams = ({
   datum_prvni_registrace_do,
   datum_prvni_registrace_od,
   rok_vyroby_do,
-  rok_vyroby_od
+  rok_vyroby_od,
+  palivo
 }: DiscoverParams) => {
   return [
     tovarni_znacka || null,
@@ -28,7 +29,8 @@ const parseDiscoverParams = ({
     pohon === 'electric',
     pohon === 'hybrid',
     imported,
-    removed
+    removed,
+    palivo || null
   ] as const;
 };
 
@@ -68,13 +70,17 @@ const pageSizeDecoder = z.object({
     })
 });
 
-export const queryDecoder = DDiscover.merge(DPage).merge(pageSizeDecoder);
+export const queryDecoder = z.object({
+  ...DDiscover.shape,
+  ...DPage.shape,
+  ...pageSizeDecoder.shape
+});
 
 export const fetchCount = async (params: DiscoverParams) =>
   withCache(
     async () => {
       const [{ count }] = await prisma.$queryRawTyped(
-        discoverMvCount(...parseDiscoverParams(params), null)
+        discoverMvCount(...parseDiscoverParams(params))
       );
       return Number(count);
     },

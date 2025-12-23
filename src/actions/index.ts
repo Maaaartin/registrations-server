@@ -60,3 +60,10 @@ export const countriesImportsAction: FetchAction<ValueCountPairs> = {
   url: '/api/countries-imports',
   decoder: DValueCountPairs
 };
+
+export const searchFuelsAction = (
+  palivo: string
+): FetchAction<ValueCountPairs> => ({
+  url: buildQueryUrl('/api/search-fuels', { palivo }),
+  decoder: DValueCountPairs
+});

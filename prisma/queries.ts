@@ -53,7 +53,7 @@ export async function searchModels_(brand: string, model: string) {
 }
 
 export async function topFuels_() {
-  const data = await prisma.$queryRawTyped(queries.topFuels(10));
+  const data = await prisma.$queryRawTyped(queries.topFuels(10, null));
   return data.map((value) => ({
     value: value.palivo as string,
     count: Number(value.count)
@@ -68,6 +68,14 @@ export async function countriesImports_() {
   }));
 }
 
+export async function searchFuels_(palivo: string | null) {
+  const data = await prisma.$queryRawTyped(queries.topFuels(10, palivo));
+  return data.map((value) => ({
+    value: value.palivo as string,
+    count: Number(value.count)
+  }));
+}
+
 export type DiscoverVehiclesParams = {
   tovarni_znacka: string;
   typ: string;
@@ -78,6 +86,7 @@ export type DiscoverVehiclesParams = {
   removed: boolean;
   rok_vyroby_od: number | null;
   rok_vyroby_do: number | null;
+  palivo: string;
   page: number;
   pageSize: number;
 };

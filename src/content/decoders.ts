@@ -32,23 +32,23 @@ export const DPage = z.object({
     .transform((val) => Number(val) || 0)
 });
 
-export const DDiscover = z
-  .object({
-    datum_prvni_registrace_od: DDate,
-    datum_prvni_registrace_do: DDate,
-    pohon: z.string().default('').transform(stringToPohon),
-    imported: z.string().default('').transform(Boolean),
-    removed: z.string().default('').transform(Boolean),
-    rok_vyroby_od: z
-      .string()
-      .default('')
-      .transform((val) => Number(val) || null),
-    rok_vyroby_do: z
-      .string()
-      .default('')
-      .transform((val) => Number(val) || null)
-  })
-  .merge(DBrandModel);
+export const DDiscover = z.object({
+  datum_prvni_registrace_od: DDate,
+  datum_prvni_registrace_do: DDate,
+  pohon: z.string().default('').transform(stringToPohon),
+  imported: z.string().default('').transform(Boolean),
+  removed: z.string().default('').transform(Boolean),
+  rok_vyroby_od: z
+    .string()
+    .default('')
+    .transform((val) => Number(val) || null),
+  rok_vyroby_do: z
+    .string()
+    .default('')
+    .transform((val) => Number(val) || null),
+  palivo: DStringDefault,
+  ...DBrandModel.shape
+});
 
 export const DId = z.object({
   id: z

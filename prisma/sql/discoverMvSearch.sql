@@ -10,6 +10,7 @@
 -- @param {Boolean} $10:only_hybrid?
 -- @param {Boolean} $11:only_imported?
 -- @param {Boolean} $12:only_removed?
+-- @param {String} $13:palivo?
 SELECT
     r.id
 FROM
@@ -54,6 +55,10 @@ WHERE
     AND (
         $12::BOOLEAN IS NOT TRUE
         OR r.removed = TRUE
+    )
+    AND (
+        $13::TEXT IS NULL
+        OR r.palivo = $13
     )
 ORDER BY
     r.id ASC
