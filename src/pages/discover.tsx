@@ -43,6 +43,7 @@ import { DiscoverVehiclesParams } from '../../prisma/queries';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import FuelAutocomplete from '../components/FuelAutocomplete';
+import { isTimeoutError } from '../../prisma';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
@@ -499,7 +500,7 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     }
     return { props: { ...props, vehicles } };
   } catch (error) {
-    if (['P2010', 'P2028'].includes((error as NodeJS.ErrnoException).code!)) {
+    if (isTimeoutError(error)) {
       console.warn('discoverVehicles timeout');
       return { props: { ...props, error: true } };
     }

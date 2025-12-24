@@ -13,6 +13,7 @@ import { getGridLocaleText } from '../content/localization';
 import Head from 'next/head';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
+import { isTimeoutError } from '../../prisma';
 
 type SubmitProps = ReturnType<
   typeof useDataGridSubmit<Omit<ImportsProps, 'vehiclesWithImports'>>
@@ -183,7 +184,7 @@ export const getServerSideProps: GetServerSideProps<ImportsProps> = async (
       }
     };
   } catch (error) {
-    if (['P2010', 'P2028'].includes((error as NodeJS.ErrnoException).code!)) {
+    if (isTimeoutError(error)) {
       console.warn('searchImports timeout');
       return { props: { ...props, error: true } };
     }
