@@ -5,6 +5,23 @@ const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 
 // ---- helpers ---------------------------------------------------------------
 
+const RQTURN_FIELDS = new Set([
+  'name',
+  'status',
+  'health',
+  'cpuPercent',
+  'memUsage',
+  'memLimit',
+  'memPercent',
+  'diskSizeRw',
+  'diskSizeRootFs',
+  'pids',
+  'netRx',
+  'netTx',
+  'ioRead',
+  'ioWrite'
+]);
+
 function calcCpuPercentUnix(stats) {
   // Based on Docker CLI’s calculation
   const cpuStats = stats.cpu_stats || {};
@@ -146,6 +163,26 @@ const getStatus = async () => {
   return statuses;
 };
 
+function filterSensitive(statuses) {
+  return statuses.map((entry) => {
+    const safeEntry = {};
+
+    // Only expose a strict allowlist of fields
+    for (const key of RQTURN_FIELDS) {
+      if (Object.prototype.hasOwnProperty.call(entry, key)) {
+        safeEntry[key] = entry[key];
+      }
+    }
+
+    // Slightly mask the container name to avoid leaking full host/service details
+    if (safeEntry.name) {
+      safeEntry.name = safeEntry.name.replace(/[^a-zA-Z0-9_.-]/g, '');
+    }
+
+    return safeEntry;
+  });
+}
+
 // ---- server ----------------------------------------------------------------
 
 http
@@ -153,8 +190,9 @@ http
     try {
       if (req.url === '/') {
         const statuses = await getStatus();
+        const publicStatuses = filterSensitive(statuses);
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(statuses, null, 2));
+        res.end(JSON.stringify(publicStatuses, null, 2));
       } else {
         res.writeHead(404);
         res.end('Not Found');
