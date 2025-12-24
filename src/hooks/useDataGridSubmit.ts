@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { filterQuery } from '../content/data';
+import { useSearchParams } from 'next/navigation';
 
 export default function useDataGridSubmit<
   T extends Record<string, string | number | null | boolean>
 >(initParams: T) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    setLoading(false);
+  }, [searchParams]);
   const onSubmit = (params: Partial<T>) => {
     setLoading(true);
     const entries = Object.entries(initParams).map(([key, value]) => [
