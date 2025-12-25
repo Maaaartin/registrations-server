@@ -1,12 +1,12 @@
 import React, { useReducer } from 'react';
-import { Button, Stack, TextField, Typography } from '@mui/material';
+import { Button, Stack, TextField } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { GridSlotProps } from '@mui/x-data-grid';
 import {
   SearchProps,
   SearchState,
   formReducer,
-  limit
+  pageSize
 } from '../content/search';
 import { searchVehicles, queryDecoder } from '../content/search/server';
 import VehicleDataGrid from '../components/VehicleDataGrid';
@@ -39,7 +39,7 @@ const Toolbar = ({
         onSubmit={(e) => {
           e.preventDefault();
           if (isEmpty) return;
-          onSubmit(state);
+          onSubmit({ ...state, page: 0 });
         }}
       >
         <Stack spacing={1} padding={1}>
@@ -97,11 +97,6 @@ const Toolbar = ({
           </Button>
         </Stack>
       </form>
-      {resultCount >= limit && (
-        <Typography variant="caption">
-          Bylo nalezeno více než {limit} výsledků. Zkuste zpřesnnit hledání.
-        </Typography>
-      )}
     </>
   );
 };
@@ -110,13 +105,20 @@ export default function Search({
   vehicles,
   vin,
   cislo_tp,
-  cislo_orv
+  cislo_orv,
+  page
 }: SearchProps) {
+  const currentPage = page ?? 0;
   const { loading, onSubmit } = useDataGridSubmit<SearchState>({
     vin,
     cislo_tp,
-    cislo_orv
+    cislo_orv,
+    page: currentPage
   });
+  const rowCount =
+    vehicles.length < pageSize ? currentPage * pageSize + vehicles.length : -1;
+  const resultCount =
+    rowCount === -1 ? currentPage * pageSize + vehicles.length : rowCount;
 
   return (
     <>
@@ -129,9 +131,16 @@ export default function Search({
         loading={loading}
         initialState={{
           pagination: {
-            meta: { hasNextPage: false }
+            paginationModel: { page: currentPage, pageSize },
+            meta: { hasNextPage: true }
           }
         }}
+        onPaginationModelChange={(params) => onSubmit({ page: params.page })}
+        paginationMode="server"
+        filterMode="server"
+        paginationModel={{ page: currentPage, pageSize }}
+        pageSizeOptions={[pageSize]}
+        rowCount={rowCount}
         slots={{
           toolbar: Toolbar as React.JSXElementConstructor<
             GridSlotProps['toolbar']
@@ -143,7 +152,8 @@ export default function Search({
             loading,
             vin,
             cislo_tp,
-            resultCount: vehicles.length
+            cislo_orv,
+            resultCount
           } as ToolbarProps
         }}
       />
@@ -155,14 +165,13 @@ export const getServerSideProps: GetServerSideProps<SearchProps> = async (
   context
 ) => {
   const parsed = queryDecoder.parse(context.query);
-  const { vin, cislo_tp, cislo_orv } = parsed;
-  const values = Object.values(parsed);
-  const vehicles =
-    values.filter(Boolean).length === 0
-      ? []
-      : await searchVehicles(vin, cislo_tp, cislo_orv);
+  const { vin, cislo_tp, cislo_orv, page } = parsed;
+  const hasQuery = [vin, cislo_tp, cislo_orv].some(Boolean);
+  const vehicles = hasQuery
+    ? await searchVehicles(vin, cislo_tp, cislo_orv, page)
+    : [];
 
-  const props = { vehicles, vin, cislo_tp, cislo_orv };
+  const props = { vehicles, vin, cislo_tp, cislo_orv, page };
   if (vehicles.length === 1) {
     return {
       redirect: {

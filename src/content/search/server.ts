@@ -1,13 +1,15 @@
 import { z } from 'zod';
-import { limit } from '.';
+import { pageSize } from '.';
 import { serialize, vehicleSelect } from '../data';
 import { withCache } from '../../redis';
 import prisma from '../../../prisma';
+import { DPage } from '../decoders';
 
 export const searchVehicles = (
   vin: string,
   cislo_tp: string,
-  cislo_orv: string
+  cislo_orv: string,
+  page: number
 ) =>
   withCache(
     async () => {
@@ -22,15 +24,17 @@ export const searchVehicles = (
             .map(({ key, value }) => ({ [key]: { equals: value } }))
         },
         select: vehicleSelect,
-        take: limit
+        take: pageSize,
+        skip: pageSize * page
       });
       return result.map(serialize);
     },
-    'search' + vin + cislo_orv + cislo_tp
+    'search' + vin + cislo_orv + cislo_tp + page + pageSize
   );
 
 export const queryDecoder = z.object({
   vin: z.string().default(''),
   cislo_tp: z.string().default(''),
-  cislo_orv: z.string().default('')
+  cislo_orv: z.string().default(''),
+  ...DPage.shape
 });

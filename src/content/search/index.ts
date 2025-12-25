@@ -6,6 +6,7 @@ export type SearchState = {
   vin: string;
   cislo_tp: string;
   cislo_orv: string;
+  page?: number;
 };
 
 export type SearchProps = {
@@ -35,3 +36,4 @@ export const formReducer = (
 };
 
 export const limit = 100;
+export const pageSize = 20;
