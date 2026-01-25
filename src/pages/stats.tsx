@@ -16,6 +16,7 @@ import {
 } from '../actions';
 import Head from 'next/head';
 import { sortBy } from 'ramda';
+import Link from 'next/link';
 
 const CountCard = () => {
   const { data, isLoading } = useFetch(countAction);
@@ -28,16 +29,20 @@ function CardList<T>({
   render
 }: {
   data: T[];
-  render: (value: T) => { primary: ReactNode; secondary?: ReactNode };
+  render: (value: T) => {
+    primary: ReactNode;
+    secondary?: ReactNode;
+    link?: string;
+  };
 }) {
   return (
     <List dense>
       {data.map((value, index) => {
-        const { primary, secondary } = render(value);
+        const { primary, secondary, link } = render(value);
         return (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
             <ListItemText
-              primary={primary}
+              primary={link ? <Link href={link}>{primary}</Link> : primary}
               secondary={
                 typeof secondary === 'number'
                   ? secondary.toLocaleString()
@@ -56,7 +61,8 @@ const BrandsCard = () => {
   const renderValue = isLoading ? <CircularProgress /> : data;
   const render = (value: ValueCountPair) => ({
     primary: value.value,
-    secondary: value.count
+    secondary: value.count,
+    link: `/discover?${new URLSearchParams({ tovarni_znacka: value.value })}`
   });
   return (
     <StatCard title="Top značky">
@@ -127,7 +133,8 @@ const FuelsCard = () => {
   const { data, isLoading } = useFetch(topFuelsAction);
   const render = (value: { value: string; count: number }) => ({
     primary: value.value,
-    secondary: value.count
+    secondary: value.count,
+    link: `/discover?${new URLSearchParams({ palivo: value.value })}`
   });
   const renderValue = isLoading ? <CircularProgress /> : data;
   return (
@@ -145,7 +152,8 @@ const CountriesImportsCard = () => {
   const { data, isLoading } = useFetch(countriesImportsAction);
   const render = (value: { value: string; count: number }) => ({
     primary: value.value,
-    secondary: value.count
+    secondary: value.count,
+    link: `/imports?${new URLSearchParams({ country: value.value })}`
   });
   const renderValue = isLoading ? (
     <CircularProgress />
