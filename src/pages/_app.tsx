@@ -63,7 +63,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
       </Head>
       <AppTheme themeComponents={xThemeComponents}>
         <CssBaseline />
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', cursor: loading ? 'wait' : 'default' }}>
           <SideMenu />
           <AppNavbar />
           <Box
