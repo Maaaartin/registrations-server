@@ -17,6 +17,7 @@ import {
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { CircularProgress } from '@mui/material';
+import { LoadingProvider, useLoading } from '../hooks/useLoading';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -26,10 +27,9 @@ const xThemeComponents = {
 
 const getPathName = (url: string) => url.split('/')[1].split('?')[0];
 
-const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
+const Content = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
-  const [loading, setLoading] = React.useState(false);
-
+  const { loading, setLoading } = useLoading();
   useEffect(() => {
     const handleStart = (url: string) => {
       if (getPathName(url) !== getPathName(window.location.pathname)) {
@@ -55,59 +55,64 @@ const App: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
       router.events.off('routeChangeError', handleError);
     };
   }, [router]);
-
   return (
-    <>
-      <Head>
-        <title>Info o vozidlech</title>
-      </Head>
-      <AppTheme themeComponents={xThemeComponents}>
-        <CssBaseline />
-        <Box sx={{ display: 'flex', cursor: loading ? 'wait' : 'default' }}>
-          <SideMenu />
-          <AppNavbar />
-          <Box
-            component="main"
-            sx={(theme) => ({
-              flexGrow: 1,
-              backgroundColor: alpha(theme.palette.background.default, 1),
-              overflow: 'auto'
-            })}
-          >
-            <Stack
-              spacing={2}
+    <Box sx={{ display: 'flex', cursor: loading ? 'wait' : 'default' }}>
+      <SideMenu />
+      <AppNavbar />
+      <Box
+        component="main"
+        sx={(theme) => ({
+          flexGrow: 1,
+          backgroundColor: alpha(theme.palette.background.default, 1),
+          overflow: 'auto'
+        })}
+      >
+        <Stack
+          spacing={2}
+          sx={{
+            alignItems: 'center',
+            mx: 3,
+            pb: 5,
+            mt: { xs: 8, md: 0 }
+          }}
+        >
+          <Header />
+          {loading && (
+            <CircularProgress
               sx={{
-                alignItems: 'center',
-                mx: 3,
-                pb: 5,
-                mt: { xs: 8, md: 0 }
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                zIndex: 1
               }}
-            >
-              <Header />
-              {loading && (
-                <CircularProgress
-                  sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    zIndex: 1
-                  }}
-                />
-              )}
-              <Box
-                sx={{
-                  width: '100%',
-                  maxWidth: { sm: '100%', md: '1700px' }
-                }}
-              >
-                <Component {...pageProps} />
-              </Box>
-            </Stack>
+            />
+          )}
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: { sm: '100%', md: '1700px' }
+            }}
+          >
+            <Component {...pageProps} />
           </Box>
-        </Box>
-      </AppTheme>
-    </>
+        </Stack>
+      </Box>
+    </Box>
   );
 };
+
+const App: React.FC<AppProps> = (props: AppProps) => (
+  <>
+    <Head>
+      <title>Info o vozidlech</title>
+    </Head>
+    <AppTheme themeComponents={xThemeComponents}>
+      <CssBaseline />
+      <LoadingProvider>
+        <Content {...props} />
+      </LoadingProvider>
+    </AppTheme>
+  </>
+);
 
 export default App;

@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { filterQuery } from '../content/data';
 import { useSearchParams } from 'next/navigation';
+import { useLoading } from './useLoading';
 
 export default function useDataGridSubmit<
   T extends Record<string, string | number | null | boolean>
 >(initParams: T) {
-  const [loading, setLoading] = useState(false);
+  const { loading, setLoading } = useLoading();
   const router = useRouter();
   const searchParams = useSearchParams();
   useEffect(() => {
