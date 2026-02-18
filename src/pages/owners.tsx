@@ -9,13 +9,15 @@ import {
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import Head from 'next/head';
+import { useLoading } from '../hooks/useLoading';
 
 type SubmitProps = ReturnType<typeof useDataGridSubmit<OwnersParams>>;
 type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<OwnersProps, 'vehiclesWithImports'> &
   SubmitProps;
 
-const Toolbar = ({ ico, loading, onSubmit }: ToolbarProps) => {
+const Toolbar = ({ ico, onSubmit }: ToolbarProps) => {
+  const { loading } = useLoading();
   return (
     <form
       onSubmit={(e) => {
@@ -49,7 +51,7 @@ const Toolbar = ({ ico, loading, onSubmit }: ToolbarProps) => {
 };
 
 export default function Owners({ ico, vehicles }: OwnersProps) {
-  const { loading, onSubmit } = useDataGridSubmit<OwnersParams>({ ico });
+  const { onSubmit } = useDataGridSubmit<OwnersParams>({ ico });
   return (
     <>
       <Head>
@@ -62,7 +64,6 @@ export default function Owners({ ico, vehicles }: OwnersProps) {
         />
       </Head>
       <VehicleDataGrid
-        loading={loading}
         rows={vehicles}
         slots={{
           toolbar: Toolbar as React.JSXElementConstructor<
@@ -72,7 +73,6 @@ export default function Owners({ ico, vehicles }: OwnersProps) {
         slotProps={{
           toolbar: {
             ico,
-            loading,
             onSubmit
           } as ToolbarProps
         }}

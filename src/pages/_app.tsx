@@ -16,7 +16,6 @@ import {
 } from '../theme/customizations';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { CircularProgress } from '@mui/material';
 import { LoadingProvider, useLoading } from '../hooks/useLoading';
 
 const xThemeComponents = {
@@ -77,16 +76,6 @@ const Content = ({ Component, pageProps }: AppProps) => {
           }}
         >
           <Header />
-          {loading && (
-            <CircularProgress
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                zIndex: 1
-              }}
-            />
-          )}
           <Box
             sx={{
               width: '100%',

@@ -44,6 +44,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import FuelAutocomplete from '../components/FuelAutocomplete';
 import { isTimeoutError } from '../../prisma';
+import { useLoading } from '../hooks/useLoading';
 
 type AutocompleteParams = {
   tovarni_znacka: string;
@@ -63,7 +64,9 @@ type SearchParams = Omit<
   'datum_prvni_registrace_od' | 'datum_prvni_registrace_do'
 > &
   DateSearchParams;
-type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>>;
+type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchParams>> & {
+  loading: boolean;
+};
 
 type ToolbarProps = GridSlotProps['toolbar'] & DiscoverProps & SubmitProps;
 
@@ -255,6 +258,7 @@ function PohonSelector({
 
 const Toolbar = (props: ToolbarProps) => {
   const router = useRouter();
+  const { loading } = useLoading();
   const onSubmit_ = (params: Partial<SearchParams>) =>
     props.onSubmit({
       ...params,
@@ -277,7 +281,7 @@ const Toolbar = (props: ToolbarProps) => {
         <PohonSelector
           pohon={props.pohon}
           onSubmit={onSubmit_}
-          loading={props.loading}
+          loading={loading}
         />
       </Grid>
       <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
@@ -312,11 +316,7 @@ const Toolbar = (props: ToolbarProps) => {
           justifyContent="flex-end"
           alignItems="flex-end"
         >
-          <Button
-            variant="outlined"
-            disabled={props.loading}
-            onClick={handleReset}
-          >
+          <Button variant="outlined" disabled={loading} onClick={handleReset}>
             Reset
           </Button>
         </Stack>
@@ -355,7 +355,7 @@ export default function Discover(props: DiscoverProps) {
     error,
     palivo
   } = props;
-  const { loading, onSubmit } = useDataGridSubmit<SearchParams>({
+  const { onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
     tovarni_znacka,
     typ,
@@ -406,7 +406,6 @@ export default function Discover(props: DiscoverProps) {
         localeText={getGridLocaleText({ error })}
         paginationMode="server"
         filterMode="server"
-        loading={loading}
         rows={vehicles}
         paginationModel={{ page: currentPage, pageSize }}
         pageSizeOptions={[10, defaultPageSize, 50, maxPageSize]}

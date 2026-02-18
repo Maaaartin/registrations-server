@@ -12,6 +12,7 @@ import { searchVehicles, queryDecoder } from '../content/search/server';
 import VehicleDataGrid from '../components/VehicleDataGrid';
 import useDataGridSubmit from '../hooks/useDataGridSubmit';
 import Head from 'next/head';
+import { useLoading } from '../hooks/useLoading';
 
 type SubmitProps = ReturnType<typeof useDataGridSubmit<SearchState>>;
 
@@ -19,14 +20,8 @@ type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<SearchProps, 'vehicles'> &
   SubmitProps & { resultCount: number };
 
-const Toolbar = ({
-  vin,
-  cislo_tp,
-  cislo_orv,
-  loading,
-  onSubmit,
-  resultCount
-}: ToolbarProps) => {
+const Toolbar = ({ vin, cislo_tp, cislo_orv, onSubmit }: ToolbarProps) => {
+  const { loading } = useLoading();
   const [state, dispatch] = useReducer(formReducer, {
     vin,
     cislo_tp,
@@ -109,7 +104,7 @@ export default function Search({
   page
 }: SearchProps) {
   const currentPage = page ?? 0;
-  const { loading, onSubmit } = useDataGridSubmit<SearchState>({
+  const { onSubmit } = useDataGridSubmit<SearchState>({
     vin,
     cislo_tp,
     cislo_orv,
@@ -128,7 +123,6 @@ export default function Search({
       </Head>
       <VehicleDataGrid
         rows={vehicles}
-        loading={loading}
         initialState={{
           pagination: {
             paginationModel: { page: currentPage, pageSize },
@@ -149,7 +143,6 @@ export default function Search({
         slotProps={{
           toolbar: {
             onSubmit,
-            loading,
             vin,
             cislo_tp,
             cislo_orv,

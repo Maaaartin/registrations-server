@@ -14,6 +14,7 @@ import Head from 'next/head';
 import BrandAutocomplete from '../components/BrandAutocomplete';
 import ModelAutocomplete from '../components/ModelAutocomplete';
 import { isTimeoutError } from '../../prisma';
+import { useLoading } from '../hooks/useLoading';
 
 type SubmitProps = ReturnType<
   typeof useDataGridSubmit<Omit<ImportsProps, 'vehiclesWithImports'>>
@@ -22,13 +23,8 @@ type ToolbarProps = GridSlotProps['toolbar'] &
   Omit<ImportsProps, 'vehiclesWithImports'> &
   SubmitProps;
 
-const Toolbar = ({
-  country,
-  onSubmit,
-  tovarni_znacka,
-  typ,
-  loading
-}: ToolbarProps) => {
+const Toolbar = ({ country, onSubmit, tovarni_znacka, typ }: ToolbarProps) => {
+  const { loading } = useLoading();
   const { data, isLoading } = useFetch(countriesImportsAction);
   const countries = data?.map((row) => row.value);
   return (
@@ -75,7 +71,7 @@ const Toolbar = ({
           <AutocompleteBase
             defaultValue={country}
             label="Země"
-            loading={isLoading}
+            loading={isLoading || loading}
             options={countries || []}
             onBlur={(e) => {
               const value = (e.target as HTMLInputElement).value;
@@ -103,7 +99,7 @@ export default function Search({
   typ,
   error
 }: ImportsProps) {
-  const { loading, onSubmit } = useDataGridSubmit({
+  const { onSubmit } = useDataGridSubmit({
     page,
     country,
     tovarni_znacka,
@@ -123,7 +119,6 @@ export default function Search({
       <VehicleDataGrid
         paginationMode="server"
         filterMode="server"
-        loading={loading}
         localeText={getGridLocaleText({ error, pageSize })}
         rows={vehiclesWithImports}
         initialState={{
@@ -146,8 +141,7 @@ export default function Search({
             country,
             onSubmit,
             tovarni_znacka,
-            typ,
-            loading
+            typ
           } as ToolbarProps
         }}
       />

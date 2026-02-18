@@ -7,7 +7,7 @@ import { useLoading } from './useLoading';
 export default function useDataGridSubmit<
   T extends Record<string, string | number | null | boolean>
 >(initParams: T) {
-  const { loading, setLoading } = useLoading();
+  const { setLoading } = useLoading();
   const router = useRouter();
   const searchParams = useSearchParams();
   useEffect(() => {
@@ -34,5 +34,5 @@ export default function useDataGridSubmit<
       });
   };
 
-  return { onSubmit, loading };
+  return { onSubmit };
 }
