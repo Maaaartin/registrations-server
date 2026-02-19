@@ -5,25 +5,28 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { useRouter } from 'next/router';
 import { getGridLocaleText } from '../content/localization';
 import { vinValid } from '../content/data';
+import { useLoading } from '../hooks/useLoading';
 
 type Props = Omit<DataGridProps, 'columns'>;
 
 export default function VehicleDataGrid(props: Props) {
   const router = useRouter();
+  const { loading } = useLoading();
   return (
     <DataGrid
       showToolbar
       localeText={props.localeText || getGridLocaleText({})}
       rowSelection={false}
+      loading={loading || props.loading}
       onRowClick={(params) => {
         router.push({ pathname: '/vehicle', query: { id: params.row.id } });
       }}
-      sx={(theme) => ({
+      sx={{
         '& .MuiDataGrid-row': {
           cursor: 'pointer'
         },
         width: '100%'
-      })}
+      }}
       columns={[
         {
           field: 'tovarni_znacka',
