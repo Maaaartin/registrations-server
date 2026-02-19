@@ -9,7 +9,7 @@ const adapter = new PrismaPg(
   })
 );
 const prisma = new PrismaClient({
-  log: ['info', 'query', 'error', 'warn'],
+  log: ['error', 'warn'],
   adapter
 });
 
