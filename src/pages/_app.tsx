@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
-import { alpha } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -17,6 +17,8 @@ import {
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { LoadingProvider, useLoading } from '../hooks/useLoading';
+import { CircularProgress } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -29,6 +31,8 @@ const getPathName = (url: string) => url.split('/')[1].split('?')[0];
 const Content = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
   const { loading, setLoading } = useLoading();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   useEffect(() => {
     const handleStart = (url: string) => {
       if (getPathName(url) !== getPathName(window.location.pathname)) {
@@ -76,6 +80,16 @@ const Content = ({ Component, pageProps }: AppProps) => {
           }}
         >
           <Header />
+          {loading && isMobile && (
+            <CircularProgress
+              sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                zIndex: 1
+              }}
+            />
+          )}
           <Box
             sx={{
               width: '100%',
