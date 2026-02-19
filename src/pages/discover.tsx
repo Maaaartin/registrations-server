@@ -326,7 +326,7 @@ const Toolbar = (props: ToolbarProps) => {
           justifyContent="flex-end"
           alignItems="flex-end"
         >
-          <Button variant="outlined" disabled={loading} onClick={handleReset}>
+          <Button variant="outlined" onClick={handleReset}>
             Reset
           </Button>
         </Stack>
