@@ -442,7 +442,8 @@ export default function Discover(props: DiscoverProps) {
             removed,
             rok_vyroby_od,
             rok_vyroby_do,
-            palivo
+            palivo,
+            valid_vin
           } as ToolbarProps
         }}
       />
