@@ -8,10 +8,10 @@ export function proxy(req: NextRequest) {
     console.info(
       `[proxy] ${timestamp} ${method} ${nextUrl.pathname}${nextUrl.search}`
     );
-    response.headers.set(
-      'Cache-Control',
-      'public, s-maxage=3600, stale-while-revalidate=3600'
-    );
+    // response.headers.set(
+    //   'Cache-Control',
+    //   'public, s-maxage=3600, stale-while-revalidate=3600'
+    // );
   }
 
   return response;
