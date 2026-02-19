@@ -11,7 +11,7 @@ SELECT
   r.plne_elektricke_vozidlo,
   r.hybridni_vozidlo,
   r.palivo,
-  r.vin,
+  r.vin ~ '^[1-9A-HJ-NPR-Z][A-HJ-NPR-Z0-9]{16}$' AS vin_valid,
   EXISTS (
     SELECT
       1

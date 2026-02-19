@@ -65,6 +65,6 @@ FROM
             )
             AND (
                 $12::BOOLEAN IS NOT TRUE
-                OR r.vin ~ '^[1-9A-HJ-NPR-Z][A-HJ-NPR-Z0-9]{16}$'
+                OR r.vin_valid = TRUE
             )
     ) limited;
