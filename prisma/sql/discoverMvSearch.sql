@@ -11,6 +11,7 @@
 -- @param {Boolean} $11:only_imported?
 -- @param {Boolean} $12:only_removed?
 -- @param {String} $13:palivo?
+-- @param {Boolean} $14:valid_vin?
 SELECT
     r.id
 FROM
@@ -59,6 +60,10 @@ WHERE
     AND (
         $13::TEXT IS NULL
         OR r.palivo = $13
+    )
+    AND (
+        $14::BOOLEAN IS NOT TRUE
+        OR r.vin ~ '^[1-9A-HJ-NPR-Z][A-HJ-NPR-Z0-9]{16}$'
     )
 ORDER BY
     r.id ASC

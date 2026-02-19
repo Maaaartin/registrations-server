@@ -29,5 +29,6 @@ export type DiscoverProps = {
   rok_vyroby_od: number | null;
   rok_vyroby_do: number | null;
   palivo: string;
+  valid_vin: boolean;
   error?: boolean;
 };

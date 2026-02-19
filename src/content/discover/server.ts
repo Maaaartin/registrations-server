@@ -17,7 +17,8 @@ const parseDiscoverParams = ({
   datum_prvni_registrace_od,
   rok_vyroby_do,
   rok_vyroby_od,
-  palivo
+  palivo,
+  valid_vin
 }: DiscoverParams) => {
   return [
     tovarni_znacka || null,
@@ -30,7 +31,8 @@ const parseDiscoverParams = ({
     pohon === 'hybrid',
     imported,
     removed,
-    palivo || null
+    palivo || null,
+    valid_vin || null
   ] as const;
 };
 

@@ -1,7 +1,10 @@
 import React from 'react';
 import { DataGrid, DataGridProps } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
+import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 import { useRouter } from 'next/router';
 import { getGridLocaleText } from '../content/localization';
+import { vinValid } from '../content/data';
 
 type Props = Omit<DataGridProps, 'columns'>;
 
@@ -15,12 +18,12 @@ export default function VehicleDataGrid(props: Props) {
       onRowClick={(params) => {
         router.push({ pathname: '/vehicle', query: { id: params.row.id } });
       }}
-      sx={{
+      sx={(theme) => ({
         '& .MuiDataGrid-row': {
           cursor: 'pointer'
         },
         width: '100%'
-      }}
+      })}
       columns={[
         {
           field: 'tovarni_znacka',
@@ -45,7 +48,21 @@ export default function VehicleDataGrid(props: Props) {
           headerName: 'VIN',
           flex: 0.5,
           minWidth: 150,
-          renderCell: (params) => params.row.vin,
+          renderCell: (params) => {
+            const vin = params.row.vin ?? '';
+            const isValid = vinValid(vin);
+            return (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
+                <span>{vin}</span>
+                {!isValid && (
+                  <WarningAmberRoundedIcon
+                    fontSize="small"
+                    sx={{ color: 'warning.main' }}
+                  />
+                )}
+              </Box>
+            );
+          },
           sortable: false,
           filterable: false
         },

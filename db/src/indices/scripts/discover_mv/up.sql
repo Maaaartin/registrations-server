@@ -11,6 +11,7 @@ SELECT
   r.plne_elektricke_vozidlo,
   r.hybridni_vozidlo,
   r.palivo,
+  r.vin,
   EXISTS (
     SELECT
       1

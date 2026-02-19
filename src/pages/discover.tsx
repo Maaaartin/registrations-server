@@ -306,6 +306,16 @@ const Toolbar = (props: ToolbarProps) => {
             }
             label="Vyřazeno z provozu"
           />
+          <FormControlLabel
+            checked={props.valid_vin}
+            control={
+              <Checkbox
+                checked={props.valid_vin}
+                onChange={(e) => onSubmit_({ valid_vin: e.target.checked })}
+              />
+            }
+            label="Platný VIN"
+          />
         </Stack>
       </Grid>
       <Grid size={{ xs: 12 }}>
@@ -335,7 +345,8 @@ const searchKeys = [
   'removed',
   'rok_vyroby_od',
   'rok_vyroby_do',
-  'palivo'
+  'palivo',
+  'valid_vin'
 ] as const;
 
 export default function Discover(props: DiscoverProps) {
@@ -353,7 +364,8 @@ export default function Discover(props: DiscoverProps) {
     rok_vyroby_od,
     rok_vyroby_do,
     error,
-    palivo
+    palivo,
+    valid_vin
   } = props;
   const { onSubmit } = useDataGridSubmit<SearchParams>({
     page: currentPage,
@@ -367,7 +379,8 @@ export default function Discover(props: DiscoverProps) {
     removed,
     rok_vyroby_od,
     rok_vyroby_do,
-    palivo
+    palivo,
+    valid_vin
   });
   const searchProps = pick(searchKeys, props);
   const [countParams, setCountParams] =
@@ -452,7 +465,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     removed,
     rok_vyroby_od,
     rok_vyroby_do,
-    palivo
+    palivo,
+    valid_vin
   } = queryDecoder.parse(context.query);
 
   const props = {
@@ -472,7 +486,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
     datum_prvni_registrace_do: datum_prvni_registrace_do
       ? DateTime.fromJSDate(datum_prvni_registrace_do).toFormat(DateFormat)
       : null,
-    palivo
+    palivo,
+    valid_vin
   };
 
   try {
@@ -488,7 +503,8 @@ export const getServerSideProps: GetServerSideProps<DiscoverProps> = async (
       removed,
       rok_vyroby_od,
       rok_vyroby_do,
-      palivo
+      palivo,
+      valid_vin
     });
 
     if (vehicles.length === 1) {

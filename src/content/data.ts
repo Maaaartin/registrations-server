@@ -60,3 +60,6 @@ export function filterQuery<T>(
 }
 
 export const MAX_COUNT = 10_000;
+
+export const vinValid = (vin?: string) =>
+  !!vin && /^[1-9A-HJ-NPR-Z][A-HJ-NPR-Z0-9]{16}$/.test(vin);

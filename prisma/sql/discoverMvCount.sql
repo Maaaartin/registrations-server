@@ -9,6 +9,7 @@
 -- @param {Boolean} $9:only_imported?
 -- @param {Boolean} $10:only_removed?
 -- @param {String} $11:palivo?
+-- @param {Boolean} $12:valid_vin?
 SELECT
     COUNT(*)::bigint AS count
 FROM
@@ -61,5 +62,9 @@ FROM
             AND (
                 $11::TEXT IS NULL
                 OR r.palivo = $11
+            )
+            AND (
+                $12::BOOLEAN IS NOT TRUE
+                OR r.vin ~ '^[1-9A-HJ-NPR-Z][A-HJ-NPR-Z0-9]{16}$'
             )
     ) limited;

@@ -47,6 +47,7 @@ export const DDiscover = z.object({
     .default('')
     .transform((val) => Number(val) || null),
   palivo: DStringDefault,
+  valid_vin: z.string().default('').transform(Boolean),
   ...DBrandModel.shape
 });
 

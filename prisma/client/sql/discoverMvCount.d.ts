@@ -12,11 +12,12 @@ import * as $runtime from "../runtime/client"
  * @param only_imported
  * @param only_removed
  * @param palivo
+ * @param valid_vin
  */
-export const discoverMvCount: (tovarni_znacka: string | null, typ: string | null, datum_prvni_registrace_od: Date | null, datum_prvni_registrace_do: Date | null, rok_vyroby_od: number | null, rok_vyroby_do: number | null, only_electric: boolean | null, only_hybrid: boolean | null, only_imported: boolean | null, only_removed: boolean | null, palivo: string | null) => $runtime.TypedSql<discoverMvCount.Parameters, discoverMvCount.Result>
+export const discoverMvCount: (tovarni_znacka: string | null, typ: string | null, datum_prvni_registrace_od: Date | null, datum_prvni_registrace_do: Date | null, rok_vyroby_od: number | null, rok_vyroby_do: number | null, only_electric: boolean | null, only_hybrid: boolean | null, only_imported: boolean | null, only_removed: boolean | null, palivo: string | null, valid_vin: boolean | null) => $runtime.TypedSql<discoverMvCount.Parameters, discoverMvCount.Result>
 
 export namespace discoverMvCount {
-  export type Parameters = [tovarni_znacka: string | null, typ: string | null, datum_prvni_registrace_od: Date | null, datum_prvni_registrace_do: Date | null, rok_vyroby_od: number | null, rok_vyroby_do: number | null, only_electric: boolean | null, only_hybrid: boolean | null, only_imported: boolean | null, only_removed: boolean | null, palivo: string | null]
+  export type Parameters = [tovarni_znacka: string | null, typ: string | null, datum_prvni_registrace_od: Date | null, datum_prvni_registrace_do: Date | null, rok_vyroby_od: number | null, rok_vyroby_do: number | null, only_electric: boolean | null, only_hybrid: boolean | null, only_imported: boolean | null, only_removed: boolean | null, palivo: string | null, valid_vin: boolean | null]
   export type Result = {
     count: bigint | null
   }

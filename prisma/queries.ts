@@ -87,6 +87,7 @@ export type DiscoverVehiclesParams = {
   rok_vyroby_od: number | null;
   rok_vyroby_do: number | null;
   palivo: string;
+  valid_vin: boolean;
   page: number;
   pageSize: number;
 };
