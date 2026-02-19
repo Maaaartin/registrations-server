@@ -7,6 +7,11 @@ export const countAction: FetchAction<number> = {
   decoder: DNumber
 };
 
+export const countWithVinAction: FetchAction<number> = {
+  url: buildQueryUrl('/api/count', { valid_vin: String(true) }),
+  decoder: DNumber
+};
+
 export const topCategoriesAction: FetchAction<ValueCountPairs> = {
   url: '/api/top-categories',
   decoder: DValueCountPairs

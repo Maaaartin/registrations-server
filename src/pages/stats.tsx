@@ -8,6 +8,7 @@ import useFetch from '../hooks/useFetch';
 import {
   countAction,
   countriesImportsAction,
+  countWithVinAction,
   searchBrandsAction,
   topCategoriesAction,
   topColorsAction,
@@ -15,13 +16,40 @@ import {
   topKindsAction
 } from '../actions';
 import Head from 'next/head';
-import { sortBy } from 'ramda';
+import { identity, sortBy } from 'ramda';
 import Link from 'next/link';
 
 const CountCard = () => {
-  const { data, isLoading } = useFetch(countAction);
-  const renderValue = isLoading ? <CircularProgress /> : data?.toLocaleString();
-  return <StatCard title="Celkový počet záznamů">{renderValue}</StatCard>;
+  const count = useFetch(countAction);
+  const countWithVin = useFetch(countWithVinAction);
+
+  return (
+    <StatCard title="Počet záznamů">
+      <CardList
+        data={[
+          {
+            primary: 'Celkem',
+            secondary: !count.isLoading ? (
+              count.data?.toLocaleString()
+            ) : (
+              <CircularProgress />
+            ),
+            link: `/discover`
+          },
+          {
+            primary: 'S platným VIN',
+            secondary: !countWithVin.isLoading ? (
+              countWithVin.data?.toLocaleString()
+            ) : (
+              <CircularProgress />
+            ),
+            link: `/discover?${new URLSearchParams({ valid_vin: String(true) })}`
+          }
+        ]}
+        render={identity}
+      />
+    </StatCard>
+  );
 };
 
 function CardList<T>({
