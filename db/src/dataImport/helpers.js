@@ -58,7 +58,7 @@ function parseDate(value) {
   if (isNaN(date.getMilliseconds())) {
     return null;
   }
-  return date;
+  return date.toISOString();
 }
 function parseNumber(value = '') {
   return value.replaceAll(',', '.').replaceAll(' ', '');
