@@ -54,20 +54,11 @@ exports.createTableFromHeaders = async (tableName) => {
 
 const currentYear = new Date().getFullYear();
 function parseDate(value) {
-  const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
-  if (dateRegex.test(value)) {
-    const [day, month, year] = value.split('.').map(Number);
-    const date2 = new Date(year, month - 1, day);
-    if (currentYear < year) return null;
-    if (
-      date2.getFullYear() === year &&
-      date2.getMonth() === month - 1 &&
-      date2.getDate() === day
-    ) {
-      return date2.toISOString();
-    }
+  const date = new Date(value);
+  if (isNaN(date.getMilliseconds())) {
+    return null;
   }
-  return null;
+  return date;
 }
 function parseNumber(value = '') {
   return value.replaceAll(',', '.').replaceAll(' ', '');
